@@ -1,0 +1,8 @@
+node_modules
+build
+.vscode
+yarn.lock
+*.log
+*.env
+*.iml
+*.xml
