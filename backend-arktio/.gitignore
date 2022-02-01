@@ -1,6 +1,7 @@
 node_modules
 build
 .vscode
+.coverage
 yarn.lock
 *.log
 *.env
