@@ -13,7 +13,7 @@ describe("socket io testing", () => {
         io = new Server(httpServer);
         httpServer.listen(() => {
             const port = (httpServer.address() as AddressInfo).port;
-            clientSocket = ioClient.connect('http://localhost:${port}');
+            clientSocket = ioClient.connect(`http://localhost:${port}`);
             
             io.on("connection", (socket) => {
                 serverSocket = socket;

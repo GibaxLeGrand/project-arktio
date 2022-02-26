@@ -24,12 +24,16 @@ export class ChatServer {
 
         this.io.on("connection", (socket: any) => {
             console.log("Connected client on port %s", this.port);
-            socket.join(socket.handshake.query.room);
-            
-            socket.on("message", (player: string, message: string) => {
-                console.log(socket.rooms);
-                console.log("[%s] %s: %s", socket.rooms[Object.keys(socket.rooms)[0]], player, message);
-                this.io.to(socket.rooms[Object.keys(socket.rooms)[0]]).emit("message", { player: player, message: message } );
+            // Assign client to room
+            socket.join(socket.handshake.query.room)
+
+            // Remember room
+            const room = socket.handshake.query.room
+
+            // Message handler
+            socket.on("message", ({player, message} : {player:string, message:string}) => {
+                console.log("[%s] %s: %s", room, player, message);
+                this.io.sockets.in(room).emit("message", { player: player, message: message });
             });
         });
     }
