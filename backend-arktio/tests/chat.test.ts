@@ -1,3 +1,4 @@
+import * as http from 'http';
 import * as io from 'socket.io-client';
 import { ChatServer } from '../src/chat';
 
@@ -6,7 +7,8 @@ describe("chat", () => {
 
     // Create the server
     beforeAll((done) => {
-        chatServer = new ChatServer();
+        const httpServer = http.createServer();
+        chatServer = new ChatServer(httpServer);
         done();
     });
 
