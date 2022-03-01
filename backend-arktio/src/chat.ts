@@ -4,15 +4,13 @@ import { Server } from 'socket.io';
 
 export class ChatServer {
     public static readonly PORT:number = 8080;
-    private app: express.Application;
     private server: http.Server;
     private io: Server;
     private port: string | number;
 
-    constructor() {
-        this.app = express();
-        this.server = http.createServer(this.app);
-        this.io = new Server(this.server);
+    constructor(server : http.Server) {
+        this.server = server;
+        this.io = new Server(server);
         this.port = process.env.PORT || ChatServer.PORT;
         this.listen();
     }

@@ -1,5 +1,8 @@
 import { ChatServer } from './chat';
+import express from 'express';
+import * as http from 'http';
 
-new ChatServer();
+const app = express();
+const server = http.createServer(app);
 
-console.log("Hello World");
+new ChatServer(server);
