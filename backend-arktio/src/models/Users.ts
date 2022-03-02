@@ -1,9 +1,3 @@
-/*
-    Users.ts
-
-    Modèle de la table Users
-*/
-
 import { Model } from "objection";
 
 export class Users extends Model {

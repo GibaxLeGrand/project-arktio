@@ -7,7 +7,7 @@ dotenv.config();
 const config: { [key: string]: Knex.Config } = {
 
 	development: {
-		client: 'mysql',
+		client: 'mysql2',
 		connection: {
 			host : process.env.HOST_DEV,
 			port : parseInt(process.env.PORT_DEV!),
@@ -33,7 +33,7 @@ const config: { [key: string]: Knex.Config } = {
 		  tableName: 'migrations'
 		}
 	}
-	
+
 };
 
 export default config;
