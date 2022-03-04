@@ -12,11 +12,13 @@ enum LobbyState {
 
 export class Lobby {
     private id: string;
-    private players : Player[]; 
-    private state : LobbyState;
+    private players: Player[]; 
+    private state: LobbyState;
+    private server: http.Server;
 
-    constructor(id: string) {
+    constructor(id: string, server: http.Server) {
         this.id = id;
+        this.server = server;
         this.players = [];
         this.state = LobbyState.Lobby;
     }
