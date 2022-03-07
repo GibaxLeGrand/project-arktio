@@ -20,7 +20,8 @@ export class ChatServer {
         this.sockets.clear();
 
         playersAndTheirSocket.forEach((player: Player, socket: any) => {
-            socket.removeAllListeners("send message");    
+            socket.removeAllListeners("send message");
+            socket.join(this.lobby.getUUID);    
             this.sockets.add(socket);
 
             socket.on("send message", (message: string) => {

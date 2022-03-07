@@ -4,11 +4,11 @@ import * as io from 'socket.io-client';
 import { ChatServer } from '../src/chat';
 import { Lobby } from '../src/lobby';
 import { Player } from '../src/player';
+import type { AddressInfo } from 'net';
 
 describe("chat", () => {
     let chatServer: ChatServer | null;
     let clientSocket: any;
-    let port = process.env.PORT || 8080;
 
     // Create the server
     beforeAll((done) => {
@@ -16,12 +16,16 @@ describe("chat", () => {
         let ioServer = new Server(httpServer);
         let lobby = new Lobby("test", ioServer);
 
-        ioServer.on("connection", (socket) => {
-            lobby.addPlayer(new Player('test'), socket);
+        httpServer.listen(() => {
+            const port = (httpServer.address() as AddressInfo).port;
+            clientSocket = io.connect(`http://localhost:${port}`);
+            
+            ioServer.on("connection", (socket) => {
+                lobby.addPlayer(new Player('test'), socket);
+            });
+            
+            clientSocket.on("connect", done);
         });
-
-        clientSocket = io.connect(`http://localhost:${port}`);
-        done();
     });
 
     afterAll((done) => {
@@ -31,7 +35,7 @@ describe("chat", () => {
     });
 
     test("chat server verification", (done) => {
-        clientSocket.on("recv message", ({ player, message } : { string, string }) => {
+        clientSocket.on("recv message", ({ player, message } : { player: string, message: string }) => {
             expect(message).toBe('test');
             expect(player).toBe('test');
             done();

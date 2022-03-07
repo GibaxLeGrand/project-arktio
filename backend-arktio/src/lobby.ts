@@ -33,6 +33,7 @@ export class Lobby {
         if (this.players.size < 4) {
             this.players.set(player, socket);
             this.chat.update();
+            console.log("player %s added on lobby %s", player.getUUID(), this.uuid);
         } else { 
             throw new RangeError("Too many players already here");        
         }
