@@ -1,31 +1,66 @@
 <script lang="ts">
   import Tailwindcss from "./Tailwindcss.svelte";
 
+  enum Pions{
+    Boite_conserve,
+    Terre,
+
+  }
+
+  class Player_lobby{
+    present: boolean;
+    name: string;
+    pion: Pions;
+
+    constructor(present:boolean = false, ){
+      this.present = present;
+    }
+  }
+
   const test = () => {
     return true;
   };
 
-  export let name: string;
+  let name_lobby: string = "XXXX";
+
+  let player_1:Player_lobby = new Player_lobby();
+  let player_2:Player_lobby = new Player_lobby();
+  let player_3:Player_lobby = new Player_lobby();
+  let player_4:Player_lobby = new Player_lobby();
+
 </script>
 
 <Tailwindcss />
-<main />
 
-<h1 class="">Hello {name}!</h1>
-<p>
-  Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how
-  to build Svelte apps.
-</p>
+<main>
 <div class="logo">logo ici</div>
 
-<div class="boutons">
-  <button id="player_name">nom du joueur</button>
-  <button id="game_name">nom de la partie</button>
-  <button id="pion_choice">choix du pion</button>
-  <button id="validate">valider</button>
-</div>
+<h id="lobby_name">Lobby {name_lobby}</h>
+  <div>
+    <label for="players">Joueur-euses :</label>
+      <ol id="players">
+        <li class="player"></li>
+        <li class="player"></li>
+        <li class="player"></li>
+        <li class="player"></li>
+      </ol>
+  </div>
 
-<footer>this is the footer</footer>
+  <div>
+    <input type="radio" value="boite-conserve">
+    <input type="radio" value="terre">
+    <input type="radio" value="plante">
+    <input type="radio" value="grain-cafe">
+    <input type="radio" value="bonnet">
+    <input type="radio" value="papillon">
+    <input type="radio" value="arosoir">
+    <input type="radio" value="nuage">
+  </div>
+
+  <button aria-label="Lancer la partie" id="start_game">Commencer partie</button>
+
+  <footer>this is the footer</footer>
+</main>
 
 <style lang="scss">
   $color: #286143; // PS : c'était juste un test ou ça va servir ?
