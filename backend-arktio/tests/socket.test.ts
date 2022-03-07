@@ -39,7 +39,7 @@ describe("socket io testing", () => {
     });
 
     test("should work (with ack)", (done) => {
-        serverSocket.on("hi", (cb: ((message: string) => string)) => {
+        serverSocket.on("hi", (cb: Function) => {
             cb("hola");
         });
 

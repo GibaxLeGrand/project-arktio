@@ -1,46 +1,42 @@
 import express from 'express';
 import * as http from 'http';
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
+import { Lobby } from './lobby';
+import { Player } from './player';
 
 export class ChatServer {
-    public static readonly PORT:number = 8080;
-    private server: http.Server;
-    private io: Server;
-    private port: string | number;
+    private sockets : Set<any>;
+    private lobby : Lobby;
 
-    constructor(server : http.Server) {
-        this.server = server;
-        this.io = new Server(server);
-        this.port = process.env.PORT || ChatServer.PORT;
-        this.listen();
+    constructor(lobby: Lobby) {
+        this.lobby = lobby;
+        this.sockets = new Set();
     }
 
-    private listen(): void {
-        this.server.listen(this.port, () => {
-            console.log("Running server on port %s", this.port);
-        });
+    public update(): void {
+        let playersAndTheirSocket = this.lobby.getPlayersAndTheirSocket();
+        
+        this.destroy();
+        this.sockets.clear();
 
-        this.io.on("connection", (socket: any) => {
-            console.log("Connected client on port %s", this.port);
-            // Assign client to room
-            socket.join(socket.handshake.query.room)
+        playersAndTheirSocket.forEach((player: Player, socket: any) => {
+            socket.removeAllListeners("send message");    
+            this.sockets.add(socket);
 
-            // Remember room
-            const room = socket.handshake.query.room
-
-            // Message handler
-            socket.on("message", ({player, message} : {player:string, message:string}) => {
-                console.log("[%s] %s: %s", room, player, message);
-                this.io.sockets.in(room).emit("message", { player: player, message: message });
-            });
+            socket.on("send message", (message: string) => {
+                console.log("[%s] %s: %s", this.lobby.getUUID(), player, message);
+                
+                this.lobby.getIO().sockets
+                    .in(this.lobby.getUUID())
+                    .emit("recv message", { player: player.getUUID(), message: message });
+            });   
         });
     }
 
-    public getPort(): string | number {
-        return this.port;
+    public destroy(): void {
+        this.sockets.forEach((socket: any) => {
+            socket.leave(this.lobby.getUUID());
+        });
     }
 
-    public close(): void {
-        this.server.close();
-    }
 }

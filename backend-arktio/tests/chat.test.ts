@@ -1,36 +1,43 @@
 import * as http from 'http';
+import { Server } from 'socket.io';
 import * as io from 'socket.io-client';
 import { ChatServer } from '../src/chat';
+import { Lobby } from '../src/lobby';
+import { Player } from '../src/player';
 
 describe("chat", () => {
     let chatServer: ChatServer | null;
+    let clientSocket: any;
+    let port = process.env.PORT || 8080;
 
     // Create the server
     beforeAll((done) => {
-        const httpServer = http.createServer();
-        chatServer = new ChatServer(httpServer);
+        let httpServer = http.createServer();
+        let ioServer = new Server(httpServer);
+        let lobby = new Lobby("test", ioServer);
+
+        ioServer.on("connection", (socket) => {
+            lobby.addPlayer(new Player('test'), socket);
+        });
+
+        clientSocket = io.connect(`http://localhost:${port}`);
         done();
     });
 
     afterAll((done) => {
-        chatServer?.close();
+        chatServer?.destroy();
+        clientSocket.close();
         done();
     });
 
     test("chat server verification", (done) => {
-        let port: string | number = chatServer?.getPort() || -1;
-        expect(port).toBeGreaterThan(-1);
-
-        let socket: any = io.connect(`http://localhost:${port}`, { query: { room: 'test' } });
-
-        socket.on("message", ({player, message} : {player: string, message: string}) => {
-            expect(player).toBe('testingPlayer');
+        clientSocket.on("recv message", ({ player, message } : { string, string }) => {
             expect(message).toBe('test');
-            socket.close();
+            expect(player).toBe('test');
             done();
         });
 
-        socket.emit("message", {player: 'testingPlayer', message: 'test'} );
+        clientSocket.emit("send message", 'test');
     });
 
 });
