@@ -18,11 +18,12 @@ export async function up(knex: Knex): Promise<void> {
     // Opération de creation d'une table utilisateur
 	return knex.schema.createTable("Users", (table) =>
 	{
-		table.increments("id").primary();
-		table.string("user_name");
+		table.increments("user_id").primary();
+		table.string("user_name").notNullable();
+		table.string("user_email").unique().notNullable();
+		table.string("user_password").notNullable();
 	});
 }
-
 
 export async function down(knex: Knex): Promise<void> {
 	// Opération inverse d'une création de table
