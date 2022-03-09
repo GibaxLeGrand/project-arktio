@@ -1,5 +1,9 @@
-import { knex, Knex } from "knex";
+import { Knex } from "knex";
 import dotenv from "dotenv";
+
+/*
+	BUG : il faut un .env dans ./src pour lancer les migrations/seeds
+*/
 
 // Lecture des variables d'environnement dans un .env
 dotenv.config({ 
