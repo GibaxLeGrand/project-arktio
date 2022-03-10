@@ -114,7 +114,12 @@
   }
 
   #players{
-    color: $caramel;
+    display: flex;
+  }
+
+  .player{
+    background-color: $caramel;
+    padding: 3em;
   }
 
   .select_pion{
