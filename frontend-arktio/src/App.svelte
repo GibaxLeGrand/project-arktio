@@ -25,10 +25,6 @@
     }
   }
 
-  const test = () => {
-    return true;
-  };
-
   let name_lobby: string = "XXXX";
 
   // Joueur-euse local
@@ -77,9 +73,9 @@
   </form>
 
   {#if is_lobby_owner}
-    <button aria-label="Lancer la partie" id="start_game">Commencer partie</button>
+    <button aria-label="Lancer la partie" class="boutons">Commencer partie</button>
   {:else}
-    <button aria-label="Lancer la partie" disabled>En attente du début de partie</button>
+    <button aria-label="Lancer la partie" class="boutons" disabled>En attente du début de partie</button>
   {/if}
 
   <footer>this is the footer</footer>
