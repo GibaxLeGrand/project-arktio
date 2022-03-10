@@ -17,14 +17,14 @@
   class Player_lobby{
     present: boolean;
     name: string;
-    pion: number;
+    pion: {id: number, text: string};
 
     constructor(present:boolean = false, name: string = ""){
       this.present = present;
       this.name = name;
     }
 
-    set_pion(_pion: number){this.pion = _pion;}
+    set_pion(_pion: {id: number, text: string}){this.pion = _pion;}
   }
 
   let name_lobby: string = "XXXX";
@@ -38,8 +38,6 @@
   let player_2: Player_lobby = new Player_lobby();
   let player_3: Player_lobby = new Player_lobby();
 
-  let players = [player_1, player_2, player_3];
-
 </script>
 
 <Tailwindcss />
@@ -50,13 +48,25 @@
 <h id="lobby_name">Lobby {name_lobby}</h>
 <label for="players">Joueur-euses :</label>  
 <div id="players">
-        <div class="player">{player_local.present ? player_local.name : "---------"} </div>
-        <div class="player">{player_1.present ? player_1.name : "---------"} </div>
-        <div class="player">{player_2.present ? player_1.name : "---------"} </div>
-        <div class="player">{player_3.present ? player_1.name : "---------"} </div>
+        <div class="player">
+          <span class="gauche">{player_local.present ? player_local.name : "---------"}</span>
+          <span class="droite">{pion_selectionne ? player_local.pion.text : "---------"}</span>
+        </div>
+        <div class="player">
+          <span class="gauche">{player_1.present ? player_1.name : "---------"}</span>
+          <span class="droite">{player_1.present ? player_1.pion.text : "---------"}</span>
+        </div>
+        <div class="player">
+          <span class="gauche">{player_2.present ? player_2.name : "---------"}</span>
+          <span class="droite">{player_2.present ? player_2.pion.text : "---------"}</span>
+        </div>
+        <div class="player">
+          <span class="gauche">{player_3.present ? player_3.name : "---------"}</span>
+          <span class="droite">{player_3.present ? player_3.pion.text : "---------"}</span>
+        </div>
 </div>
 
-  <select id="select_pion" bind:value ={pion_selectionne} on:change="{() => player_local.pion = pion_selectionne.id}">
+  <select id="select_pion" bind:value ={pion_selectionne} on:change="{() => player_local.pion = pion_selectionne}">
     {#each pions as pion}
       <option value={pion}>{pion.text}</option>
     {/each}
@@ -65,9 +75,9 @@
    
 
   {#if is_lobby_owner}
-    <button aria-label="Lancer la partie" class="boutons">Commencer partie</button>
+    <button aria-label="Lancer la partie">Commencer partie</button>
   {:else}
-    <button aria-label="Lancer la partie" class="boutons" disabled>En attente du début de partie</button>
+    <button aria-label="Lancer la partie" disabled>En attente du début de partie</button>
   {/if}
 
   <footer>this is the footer</footer>
@@ -97,14 +107,6 @@
     background-color: $turquoise;
   }
 
-  h1 {
-    color: $turquoise;
-    text-decoration-color: $blanc;
-    text-transform: uppercase;
-    font-size: 4em;
-    font-weight: 100;
-  }
-
   .logo {
     color: $blanc;
     display: flex;
@@ -115,16 +117,21 @@
 
   #players{
     display: flex;
+    flex-direction: column;
   }
 
   .player{
     background-color: $caramel;
-    padding: 3em;
+    padding: 1em;
+    margin: 5px;
   }
 
-  .select_pion{
-    display: flex;
-    flex-direction: row;
+  .droite{
+    float: right;
+  }
+
+  .gauche{
+    float: left;
   }
 
   .boutons {
@@ -158,9 +165,13 @@
     width: 100%;
   }
 
-  @media (min-width: 640px) {
+  @media (max-width: 640px) {
     main {
       max-width: none;
+    }
+
+    #players {
+      width: 95%;
     }
   }
 </style>
