@@ -1,101 +1,137 @@
-<!-- TAGS -->
-<!-- <div class="logo">
-  <img
-    src="https://www.adobe.com/express/create/logo/media_1ba2722b76062fb428e1071c5cd59a5d9bc7fb94f.jpeg?width=400&format=jpeg&optimize=medium"
-    alt="Logo Arktio"
-  />
-</div> -->
+<script lang="ts">
+  // infos à transmettre pour la création de la partie
+  var infos = {
+    player_name: "Nom du Joueur",
+    game_name: "Nom de la Partie",
+    pion: "Choix du pion",
+  };
 
-<div class="boutons">
-  <button id="player_name">nom du joueur</button>
-  <button id="game_name">nom de la partie</button>
-  <button id="pion_choice">choix du pion</button>
-  <button id="validate">valider</button>
-</div>
-
-<footer>this is the footer</footer>
-
-<!-- STYLE -->
-<style lang="scss">
-  $turquoise: #00a19a;
-  $blanc: #ffffff;
-
-  // main {
-  //   @apply py-32;
-  //   text-align: center;
-  //   padding: 1em;
-  //   max-width: 240px;
-  //   // margin: 0 auto;
-  //   margin: 0;
-  // }
-
-  html {
-    // TODO
-    background-color: $turquoise;
+  function infos_check() {
+    var check: boolean;
+    if (infos.player_name == null || infos.player_name == "Nom du Joueur") {
+      check = false;
+    } else if (
+      infos.game_name == null ||
+      infos.game_name == "Nom de la Partie"
+    ) {
+      check = false;
+    } else if (infos.pion == null || infos.pion == "Choix du pion") {
+      check = false;
+    } else {
+      check = true;
+    }
+    if (check) {
+      console.log("true");
+    } else {
+      console.log("false");
+    }
   }
+</script>
 
-  body {
-    background-color: rgb(187, 95, 29);
-  } // TODO pourquoi ça marche pas ça ?
+<main>
+  <div class="logo">
+    <img
+      src="https://www.adobe.com/express/create/logo/media_1ba2722b76062fb428e1071c5cd59a5d9bc7fb94f.jpeg?width=400&format=jpeg&optimize=medium"
+      alt="Logo Arktio"
+    />
+  </div>
+  <div class="boutons">
+    <input bind:value={infos.player_name} required />
+    <input bind:value={infos.game_name} required />
+    <select bind:value={infos.pion}>
+      <option value="pion 1">pion 1</option>
+      <option value="pion 2">pion 2</option>
+      <option value="pion 3">pion 3</option>
+    </select>
+    <button on:click={infos_check} id="valider">valider</button>
+  </div>
 
-  div {
-    font-family: Raleway;
-    text-decoration-color: $blanc;
-    background-color: $turquoise;
-  }
+  <footer>this is the footer</footer>
 
-  h1 {
-    color: $turquoise;
-    text-decoration-color: $blanc;
-    text-transform: uppercase;
-    font-size: 4em;
-    font-weight: 100;
-  }
+  <style lang="scss">
+    $turquoise: #00a19a;
+    $blanc: #ffffff;
 
-  .logo {
-    color: $blanc;
-    background-color: $turquoise;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 5vh;
-    margin-top: 0;
-  }
+    body {
+      background-color: $turquoise;
+    }
 
-  .boutons {
-    display: flex;
-    flex-flow: column;
-    align-items: center;
-    justify-content: space-around;
-    color: $blanc;
-    block-size: 50vh;
-  }
+    img {
+      width: 100;
+      heigth: 100;
+      margin: 5px;
+    }
 
-  button {
-    color: $turquoise;
-    display: inherit;
-    align-items: center;
-    justify-content: space-around;
-    text-align: center;
-    background-color: $blanc;
-    font-weight: 400;
-    inline-size: 60vw;
-  }
+    div {
+      font-family: Raleway;
+      text-decoration-color: $blanc;
+    }
 
-  footer {
-    text-align: center;
-    font-family: Raleway;
-    color: $blanc;
-    background-color: $turquoise;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-  }
+    input,
+    select,
+    option {
+      color: $turquoise;
+      text-align: center;
+      font-weight: 400;
+      font-size: x-large;
+      height: 7vh;
+      width: 40vw;
+    }
 
-  // @media (min-width: 640px) {
-  //   main {
-  //     max-width: none;
-  //   }
-  // }
-</style>
+    .logo {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 0;
+    }
+
+    .boutons {
+      display: flex;
+      flex-flow: column;
+      align-items: center;
+      justify-content: space-evenly;
+      color: $blanc;
+      block-size: 50vh;
+    }
+
+    button {
+      color: $turquoise;
+      display: inherit;
+      align-items: center;
+      justify-content: space-around;
+      text-align: center;
+      background-color: $blanc;
+      font-weight: 400;
+      font-size: x-large;
+      height: 7vh;
+      width: 40vw;
+    }
+
+    footer {
+      text-align: center;
+      font-family: Raleway;
+      color: $blanc;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: xx-large;
+
+      width: 100%;
+    }
+
+    // @media (min-width: 640px) {
+    //   main {
+    //     max-width: none;
+    //   }
+    // }
+
+    @media (max-width: 900px) {
+      button,
+      input,
+      select,
+      option {
+        width: 60vw;
+      }
+    }
+  </style>
+</main>

@@ -1,6 +1,6 @@
 <script lang="ts">
   import Tailwindcss from "./Tailwindcss.svelte";
-
+  import Accueil from "./accueil.svelte";
   const test = () => {
     return true;
   };
@@ -10,7 +10,9 @@
 
 <Tailwindcss />
 
-<main>
+<Accueil />
+
+<!-- <main>
   <div class="logo">
     <img
       src="https://www.adobe.com/express/create/logo/media_1ba2722b76062fb428e1071c5cd59a5d9bc7fb94f.jpeg?width=400&format=jpeg&optimize=medium"
@@ -102,4 +104,4 @@
     //   }
     // }
   </style>
-</main>
+</main> -->
