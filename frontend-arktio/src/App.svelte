@@ -1,109 +1,133 @@
 <!-- Script -->
 <script lang="ts">
-  import Tailwindcss from "./Tailwindcss.svelte";
-  import Accueil from "./accueil.svelte";
-  const test = () => {
-    return true;
-  };
+	import Tailwindcss from "./Tailwindcss.svelte";
 
-  // export let name: string;
+	const test = () => {
+		return true;
+	};
+
+	let login = '';
+	let mdp = '';
 </script>
 
 
 <Tailwindcss />
 
-<Accueil />
 
-<!-- <main>
-  <div class="logo">
-    <img
-      src="https://www.adobe.com/express/create/logo/media_1ba2722b76062fb428e1071c5cd59a5d9bc7fb94f.jpeg?width=400&format=jpeg&optimize=medium"
-      alt="Logo Arktio"
-    />
-  </div>
+<!-- Page -->
+<main>
 
-  <div class="boutons">
-    <button id="player_name">nom du joueur</button>
-    <button id="game_name">nom de la partie</button>
-    <button id="pion_choice">choix du pion</button>
-    <button id="validate">valider</button>
-  </div>
+<div class="logo">logo ici</div>
 
-  <footer>this is the footer</footer>
+	<div class="page">
+		<div class="connection">
+			<p>Nom d'utilisateur</p>
+			<input bind:value={login}>
 
-  <style lang="scss">
-    $turquoise: #00a19a;
-    $blanc: #ffffff;
+			<p>Mot de passe</p>
+			<input bind:value={mdp}>
+		</div>
 
-    main {
-      @apply py-32;
-      text-align: center;
-      padding: 0;
-      margin-top: 0;
-      margin-bottom: 0;
-      height: 100vh;
-    }
+		<button id="entrer">Valider</button>
+		<button id="invite">Jouer en tant qu'invité</button>
+		<button id="retour">Retour</button>
+	</div>
 
-    body {
-      background-color: $turquoise;
-    }
+	<footer>Contacte</footer>
+</main>
 
-    div {
-      font-family: Raleway;
-      text-decoration-color: $blanc;
-    }
 
-    img {
-      max-width: 200px;
-      max-height: 200px;
-    }
-    // TODO Le logo est soumis à une zone de protection qui
-    // s’applique autour de son encadré. Le « O » minuscule sert
-    // de référence pour mesurer cette zone.
+<!-- CSS -->
+<style lang="scss">
+	$turquoise: #00a19a;
+	$blanc: #ffffff;
+	$framboise:#ba105a;
+	$caramel:#ffd49a;
+	$turquoise_clair:#98d1cd;
+	$gris:#90908f;
+	$gris_fonce:#2c2c2c;
+	$font_arktio: Raleway;
 
-    .logo {
-      color: $blanc;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin: 5vh;
-    }
+	main {
+		text-align: center;
+		padding: 1em ;
+		margin: 0 auto;
+		background-color: $turquoise;
+		height: 100%;
+		width: 100%;
+		font-family: $font_arktio;
+	}
 
-    .boutons {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-evenly;
-      color: $blanc;
-    }
+	.logo {
+		color: $blanc;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		margin: 5vh;
+	}
 
-    button {
-      color: $turquoise;
-      display: inherit;
-      align-items: center;
-      flex-direction: column;
-      justify-content: space-around;
-      background-color: $blanc;
-      font-weight: 400;
-      margin: 1%;
-      inline-size: 60vw;
-    }
+	.page {
+		display: flex;
+		flex-flow: column;
+		align-items: center;
+		justify-content: space-around;
+		block-size: 50vh;
+	}
 
-    footer {
-      text-align: center;
-      font-family: Raleway;
-      color: $blanc;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      bottom: 0;
-      width: 100%;
-    }
+	.connection {
+		background-color: $blanc;
+		text-align: center;
+		font-family: $font_arktio;
+		color: $turquoise;
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+		width: 60%;
+		padding: 1em;
+	}
 
-    // @media (min-width: 640px) {
-    //   main {
-    //     max-width: none;
-    //   }
-    // }
-  </style>
-</main> -->
+	input {
+		color: $turquoise;
+		display: inherit;
+		align-items: center;
+		justify-content: space-around;
+		text-align: center;
+		background-color: $blanc;
+		font-weight: 400;
+		inline-size: 60vw;
+		width: 60%;
+		padding: 1em;
+	}
+
+	button {
+		color: $turquoise;
+		display: inherit;
+		align-items: center;
+		justify-content: space-around;
+		text-align: center;
+		background-color: $blanc;
+		font-weight: 400;
+		inline-size: 60vw;
+		width: 60%;
+		padding: 1em;
+	}
+
+	footer {
+		text-align: center;
+		font-family: $font_arktio;
+		color: $blanc;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		width: 100%;
+		bottom: 0;
+		position:absolute;
+		padding: 1em;
+	}
+
+	@media (min-width: 640px) {
+		main {
+			max-width: none;
+		}
+	}
+</style>
