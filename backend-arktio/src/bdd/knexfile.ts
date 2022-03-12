@@ -1,6 +1,5 @@
 import { Knex } from "knex";
 import dotenv from "dotenv";
-import { seed } from "./seeds/insert_user";
 
 /*
 	BUG : il faut un .env dans ./src pour lancer les migrations/seeds
