@@ -1,9 +1,19 @@
-import type { Knex } from "knex";
+import { Knex } from "knex";
 import dotenv from "dotenv";
 
-// Lecture des variables d'environnement dans un .env
-dotenv.config();
+/*
+	BUG : il faut un .env dans ./src pour lancer les migrations/seeds
+*/
 
+// Lecture des variables d'environnement dans un .env
+dotenv.config({ 
+	path: '.env', 
+	encoding: 'latin1', 
+	debug: true, 
+	override: false 
+});
+
+// Configuration de la connexion à la BDD
 const config: { [key: string]: Knex.Config } = {
 
 	development: {
@@ -17,9 +27,6 @@ const config: { [key: string]: Knex.Config } = {
 		},
 		debug: true,
 		migrations: {
-<<<<<<< Updated upstream:backend-arktio/src/knexfile.ts
-		  tableName: 'migrations'
-=======
 			tableName: 'migrations'
 		}
 	},
@@ -36,7 +43,6 @@ const config: { [key: string]: Knex.Config } = {
 		debug: true,
 		migrations: {
 			tableName: 'migrations'
->>>>>>> Stashed changes:backend-arktio/src/bdd/knexfile.ts
 		}
 	},
 
@@ -51,7 +57,7 @@ const config: { [key: string]: Knex.Config } = {
 		},
 		debug: false,
 		migrations: {
-		  tableName: 'migrations'
+			tableName: 'migrations'
 		}
 	}
 
