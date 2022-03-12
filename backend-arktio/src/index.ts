@@ -22,11 +22,11 @@ db.connect(process.env.NODE_ENV!)
             console.log("Database Connected!")
         }
         // Appel d'une fonction asynchrone qui fait une requete dans la BDD
-        // console.log(await db.getAllUsers());
+        const toto = await db.getAllUsers();
+        console.log(toto[0].user_name)
         // console.log(await db.getUser(1));
         // console.log(await db.getUser("c@gmail.com", "chopatate"));
-        const toto = await db.putUser("toto", "b@b.com", "aaaa");
-        console.log(toto.toJSON())
+        // console.log(await db.putUser("toto", "c@c.com", "aaaa"));
     });
 
 console.log("Hello World");
