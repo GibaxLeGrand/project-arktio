@@ -1,13 +1,16 @@
 import { Knex } from "knex";
 import dotenv from "dotenv";
 
-/*
-	BUG : il faut un .env dans ./src pour lancer les migrations/seeds
-*/
-
 // Lecture des variables d'environnement dans un .env
+
+let envpath : string | undefined;
+if(process.env.npm_lifecycle_script && process.env.npm_lifecycle_script!.includes("knex")) {
+	envpath = "../../.env"
+}
+
+
 dotenv.config({ 
-	path: '.env', 
+	path: envpath,
 	encoding: 'latin1', 
 	debug: true, 
 	override: false 

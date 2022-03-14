@@ -24,9 +24,9 @@ db.connect(process.env.NODE_ENV!)
         // Appel d'une fonction asynchrone qui fait une requete dans la BDD
         const toto = await db.getAllUsers();
         console.log(toto[0].user_name)
-        // console.log(await db.getUser(1));
-        // console.log(await db.getUser("c@gmail.com", "chopatate"));
-        // console.log(await db.putUser("toto", "c@c.com", "aaaa"));
+        console.log(await db.getUser(1));
+        console.log(await db.getUser("c@gmail.com", "chopatate"));
+        console.log(await db.putUser("toto", "c@c.com", "aaaaaaa"));
     });
 
 console.log("Hello World");
