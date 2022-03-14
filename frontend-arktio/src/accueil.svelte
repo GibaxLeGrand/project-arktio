@@ -6,22 +6,52 @@
   // }
   const cookies = document.cookie;
 
-  var current_pion: string;
-  // current_player.player_name = null;
-  // current_player.pion = null;
+  var current_pion: string = null;
+  var game_name: string = "partie";
 
-  // var players_list: string[];
-  // var game_name: string;
-  // var pion: string;
-
-  // check si le joueur a renseigné son nom et son type de pion
+  // check si le joueur a renseigné son type de pion
   function infos_check() {
     if (current_pion == null) {
-      console.log("true");
+      console.log("pas de pion");
     } else {
-      console.log("false");
+      console.log("pion sélectionné :)");
     }
   }
+
+  // TODO à modifier selon les cookies
+  // function setCookie(cname, cvalue, exdays) {
+  //   const d = new Date();
+  //   d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+  //   let expires = "expires="+d.toUTCString();
+  //   document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  // }
+
+  // function getCookie(cname) {
+  //   let name = cname + "=";
+  //   let ca = document.cookie.split(';');
+  //   for(let i = 0; i <script ca.length; i++) {
+  //     let c = ca[i];
+  //     while (c.charAt(0) == ' ') {
+  //       c = c.substring(1);
+  //     }
+  //     if (c.indexOf(name) == 0) {
+  //       return c.substring(name.length, c.length);
+  //     }
+  //   }
+  //   return "";
+  // }
+
+  // function checkCookie() {
+  //   let user = getCookie("username");
+  //   if (user != "") {
+  //     alert("Welcome again " + user);
+  //   } else {
+  //     user = prompt("Please enter your name:", "");
+  //     if (user != "" && user != null) {
+  //       setCookie("username", user, 365);
+  //     }
+  //   }
+  // }
 </script>
 
 <main>
@@ -33,13 +63,15 @@
   </div>
   <h1>{document.cookie}</h1>
   <div class="boutons">
-    <!-- <input bind:value={current_player.player_name} required /> -->
-    <!-- <input bind:value={.game_name} required /> -->
-    <!-- <select bind:value={current_player.pion}>
+    <div id="game_name">
+      {game_name}
+    </div>
+    <div id="joueur_pions">Liste des joueurs et leur pion</div>
+    <select bind:value={current_pion}>
       <option value="pion 1">pion 1</option>
       <option value="pion 2">pion 2</option>
       <option value="pion 3">pion 3</option>
-    </select> -->
+    </select>
     <button on:click={infos_check} id="valider">valider</button>
   </div>
 
@@ -63,6 +95,24 @@
     div {
       font-family: Raleway;
       text-decoration-color: $blanc;
+    }
+
+    #game_name {
+      display: flex;
+      justify-content: center;
+      width: 40vw;
+      font-size: xx-large;
+      background-color: $blanc;
+      color: $turquoise;
+    }
+
+    #joueur_pions {
+      display: flex;
+      width: 40vw;
+      font-size: xx-large;
+      text-align: center;
+      color: $turquoise;
+      background-color: $blanc;
     }
 
     input,
@@ -110,11 +160,11 @@
       font-family: Raleway;
       color: $turquoise;
       background-color: $blanc;
-      display: flex;
-      flex-direction: column;
       align-items: center;
       font-size: xx-large;
 
+      position: absolute;
+      bottom: 0;
       width: 100%;
     }
 
@@ -122,7 +172,9 @@
       button,
       input,
       select,
-      option {
+      option,
+      #game_name,
+      #joueur_pions {
         width: 60vw;
       }
     }
