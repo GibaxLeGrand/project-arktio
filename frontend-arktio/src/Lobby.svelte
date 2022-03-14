@@ -1,6 +1,8 @@
 <script lang="ts">
     import Tailwindcss from "./Tailwindcss.svelte";
   
+    let name_lobby: string = "XXXX";
+
     let pions =[ 
       {id: 0, text: "Aucun"},
       {id: 1, text: "Boite de conserve"},
@@ -9,10 +11,9 @@
       {id: 4, text: "Grain de café"},
       {id: 5, text: "Bonnet"},
       {id: 6, text: "Papillon"},
-      {id: 0, text: "Arosoir"},
-      {id: 0, text: "Nuage"}
+      {id: 7, text: "Arosoir"},
+      {id: 8, text: "Nuage"}
   ]
-    let pion_selectionne;
   
     class Player_lobby{
       present: boolean;
@@ -23,11 +24,7 @@
         this.present = present;
         this.name = name;
       }
-  
-      set_pion(_pion: {id: number, text: string}){this.pion = _pion;}
     }
-  
-    let name_lobby: string = "XXXX";
   
     // Joueur-euse local
     let player_local: Player_lobby = new Player_lobby(true, "Honeyxilia");
@@ -38,6 +35,23 @@
     let player_2: Player_lobby = new Player_lobby();
     let player_3: Player_lobby = new Player_lobby();
   
+    let players:Player_lobby[] = [player_1, player_2, player_3]
+
+    /**
+     * Fonction pour bloquer les options de pions déjà pris dans le select
+     */
+    function update_pions_occupes(){
+      let choix_pions = document.getElementById('players').children;
+
+
+      for(let i = 0; i++; i < choix_pions.length ){
+        choix_pions[i].removeAttribute("disabled");
+      }
+
+      for(let player in players){
+        choix_pions[player.pion.id+1].setAttribute("disabled", "");
+      }
+    }
   </script>
   
   <Tailwindcss />
@@ -50,7 +64,7 @@
   <div id="players">
           <div class="player">
             <span class="gauche">{player_local.present ? player_local.name : "---------"}</span>
-            <span class="droite">{pion_selectionne ? player_local.pion.text : "---------"}</span>
+            <span class="droite">{player_local.pion ? player_local.pion.text : "---------"}</span>
           </div>
           <div class="player">
             <span class="gauche">{player_1.present ? player_1.name : "---------"}</span>
@@ -66,18 +80,17 @@
           </div>
   </div>
   
-    <select id="select_pion" bind:value ={pion_selectionne} on:change="{() => player_local.pion = pion_selectionne}">
+    <select id="select_pion" bind:value ={player_local.pion}>
       {#each pions as pion}
         <option value={pion}>{pion.text}</option>
       {/each}
     </select>
-    <p>Pion selectionné : {pion_selectionne ? pion_selectionne.text : "Aucun"}</p>
      
   
     {#if is_lobby_owner}
-      <button aria-label="Lancer la partie">Commencer partie</button>
+      <button aria-label="Lancer la partie" class="valider">Commencer partie</button>
     {:else}
-      <button aria-label="Lancer la partie" disabled>En attente du début de partie</button>
+      <button aria-label="Lancer la partie" class="valider" disabled>En attente du début de partie</button>
     {/if}
   
     <footer>this is the footer</footer>
@@ -96,10 +109,6 @@
       max-width: 240px;
       margin: 0 auto;
     }
-  
-    body {
-      background-color: $turquoise;
-    } // TODO pourquoi ça marche pas ça ?
   
     div {
       font-family: Raleway;
@@ -133,16 +142,7 @@
     .gauche{
       float: left;
     }
-  
-    .boutons {
-      display: flex;
-      flex-flow: column;
-      align-items: center;
-      justify-content: space-around;
-      color: $blanc;
-      block-size: 50vh;
-    }
-  
+
     button {
       color: $turquoise;
       display: inherit;
@@ -152,6 +152,10 @@
       background-color: $blanc;
       font-weight: 400;
       inline-size: 60vw;
+    }
+
+    .valider{
+      padding: 3em;
     }
   
     footer {
