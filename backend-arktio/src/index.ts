@@ -1,6 +1,7 @@
-import dotenv from "dotenv";
 import express from 'express';
+import dotenv from "dotenv";
 import * as http from 'http';
+import loginRoute from "./routes/loginRoute";
 import { ChatServer } from './chat';
 import db_connect from "./db_connect"
 import getUsers from "./get_users";
@@ -10,6 +11,11 @@ dotenv.config();
 const app = express();
 const server = http.createServer(app);
 
+
+// Login Routes
+app.use("/login", loginRoute);
+
+// Execute listen so last thing to execute
 new ChatServer(server);
 
 // Connexion à la BDD
