@@ -1,4 +1,4 @@
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import { Chat } from './chat';
 import { Player } from './player';
  
@@ -10,7 +10,7 @@ enum LobbyState {
 
 export class Lobby {
     private uuid: string;
-    private players: Map<Player, any>; 
+    private players: Map<Player, Socket>; 
     private owner: Player | null;
     private state: LobbyState;
     private chat: Chat;
@@ -27,7 +27,7 @@ export class Lobby {
         this.io = io;
     }
 
-    public addPlayer(player: Player, socket: any) : void {
+    public addPlayer(player: Player, socket: Socket) : void {
         if (this.owner === null) this.owner = player;
 
         if (this.players.size < 4) {
@@ -58,7 +58,7 @@ export class Lobby {
         return this.state;
     }
 
-    public getPlayersAndTheirSocket() : Map<Player, any> {
+    public getPlayersAndTheirSocket() : Map<Player, Socket> {
         return this.players;
     }
 

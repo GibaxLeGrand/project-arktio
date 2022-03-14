@@ -1,7 +1,7 @@
 import { Lobby } from './lobby';
 import express from 'express';
 import * as http from 'http';
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import { Player } from './player';
 
 declare global {
@@ -21,7 +21,7 @@ server.listen(port, () => {
     console.log("Running server on port %s", port);
 });
 
-io.on("connection", (socket: any) => {
+io.on("connection", (socket: Socket) => {
     console.log("Connected client on port %s", port);
 
     socket.on("player information", (uuid: string) => {
