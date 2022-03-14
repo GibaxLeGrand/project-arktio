@@ -30,8 +30,9 @@ export class Lobby {
     public addPlayer(player: Player, socket: Socket) : void {
         if (this.owner === null) this.owner = player;
 
-        if (this.players.size < 4) {
+        if (this.getNumberOfPlayers() < 4) {
             this.players.set(player, socket);
+            console.log(this.players.size);
             this.chat.update();
             console.log("player %s added on lobby %s", player.getUUID(), this.uuid);
         } else { 
@@ -66,7 +67,7 @@ export class Lobby {
         return Array.from(this.players.keys());
     }
 
-    public getNumberOfPlayer() : number {
+    public getNumberOfPlayers() : number {
         return this.players.size;
     }
 

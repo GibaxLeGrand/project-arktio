@@ -6,22 +6,23 @@ import { Player } from '../src/player';
 import type { AddressInfo } from 'net';
 
 describe("lobby", () => {
+    let httpServer: http.Server;
     let lobby: Lobby;
     let clientSocket: io.Socket;
 
     // Create the server
     beforeAll((done) => {
-        let httpServer = http.createServer();
+        httpServer = http.createServer();
         let ioServer = new Server(httpServer);
-        lobby = new Lobby("test", ioServer);
+        lobby = new Lobby("Test", ioServer);
 
         httpServer.listen(() => {
+            let i = 1;
             const port = (httpServer.address() as AddressInfo).port;
             clientSocket = io.connect(`http://localhost:${port}`);
             
             ioServer.on("connection", (socket) => {
-                console.log("oui");
-                lobby.addPlayer(new Player('test'), socket);
+                lobby.addPlayer(new Player('Test' + i++), socket);
             });
             
             clientSocket.on("connect", done);
@@ -34,17 +35,73 @@ describe("lobby", () => {
         done();
     });
 
-    test("chat server verification", (done) => {
+    test("chat verification", (done) => {
         clientSocket.on("recv message", ({ player, message } : { player: string, message: string }) => {
-            console.log("oui oui");
             expect(message).toBe('test');
-            expect(player).toBe('test');
+            expect(player).toBe('Test1');
             done();
         });
 
         clientSocket.emit("send message", 'test');
-        console.log("non");
     });
 
+    test("chat verification with multiple player", (done) => {
+        const port = (httpServer.address() as AddressInfo).port;
+        let clientSocket2 = io.connect(`http://localhost:${port}`);
+        let clientSocket3 = io.connect(`http://localhost:${port}`);
+        let received = 0, connected = 0;
+
+        clientSocket.on("recv message", ({ player, message } : { player: string, message: string }) => {
+            expect(message).toBe('test');
+            expect(player).toBe('Test1');
+
+            if (++received === 3) done();
+        });
+
+        clientSocket2.on("recv message", ({ player, message } : { player: string, message: string }) => {
+            expect(message).toBe('test');
+            expect(player).toBe('Test1');
+            
+            clientSocket2.close();
+            if (++received === 3) done();
+        });
+
+        clientSocket3.on("recv message", ({ player, message } : { player: string, message: string }) => {
+            expect(message).toBe('test');
+            expect(player).toBe('Test1');
+            
+            clientSocket3.close();
+            if (++received === 3) done();
+        });
+
+        clientSocket2.on("connect", () => {
+            if (++connected >= 2) {
+                clientSocket.emit("send message", 'test');
+            }
+        });
+
+        clientSocket3.on("connect", () => {
+            if (++connected >= 2) {
+                clientSocket.emit("send message", 'test');
+            } 
+        });
+    });
+
+    test("good owner player when alone", (done) => {
+        expect(lobby.getOwner()?.getUUID()).toBe('Test1');
+        done();
+    });
+
+    test("good owner player when multiple players", (done) => {
+        const port = (httpServer.address() as AddressInfo).port;
+        let clientSocket2 = io.connect(`http://localhost:${port}`);
+        let clientSocket3 = io.connect(`http://localhost:${port}`);
+
+        expect(lobby.getOwner()?.getUUID()).toBe('Test1');
+        
+        clientSocket2.close();
+        clientSocket3.close();
+        done();
+    });
 
 });

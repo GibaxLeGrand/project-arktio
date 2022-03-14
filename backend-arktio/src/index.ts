@@ -30,7 +30,7 @@ io.on("connection", (socket: Socket) => {
         socket.on("lobby choice", (lobbyUUID: string, callback: Function) => {
             if (lobbies.has(lobbyUUID)) {
                 let lobby: Lobby | undefined = lobbies.get(lobbyUUID);
-                if (lobby?.getNumberOfPlayer() && lobby?.getNumberOfPlayer() < 4) { 
+                if (lobby?.getNumberOfPlayers() && lobby?.getNumberOfPlayers() < 4) { 
                     lobby?.addPlayer(player, socket);
                     callback(true);
                 } else {
