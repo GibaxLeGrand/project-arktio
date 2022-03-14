@@ -1,26 +1,22 @@
 <script lang="ts">
   // infos à transmettre pour la création de la partie
-  var infos = {
-    player_name: "Nom du Joueur",
-    game_name: "Nom de la Partie",
-    pion: "Choix du pion",
-  };
+  // interface player_pion {
+  //   player_name: string;
+  //   pion: string;
+  // }
+  const cookies = document.cookie;
 
+  var current_pion: string;
+  // current_player.player_name = null;
+  // current_player.pion = null;
+
+  // var players_list: string[];
+  // var game_name: string;
+  // var pion: string;
+
+  // check si le joueur a renseigné son nom et son type de pion
   function infos_check() {
-    var check: boolean;
-    if (infos.player_name == null || infos.player_name == "Nom du Joueur") {
-      check = false;
-    } else if (
-      infos.game_name == null ||
-      infos.game_name == "Nom de la Partie"
-    ) {
-      check = false;
-    } else if (infos.pion == null || infos.pion == "Choix du pion") {
-      check = false;
-    } else {
-      check = true;
-    }
-    if (check) {
+    if (current_pion == null) {
       console.log("true");
     } else {
       console.log("false");
@@ -31,18 +27,19 @@
 <main>
   <div class="logo">
     <img
-      src="https://www.adobe.com/express/create/logo/media_1ba2722b76062fb428e1071c5cd59a5d9bc7fb94f.jpeg?width=400&format=jpeg&optimize=medium"
+      src="https://scontent-frx5-1.xx.fbcdn.net/v/t1.6435-9/116880518_623427318290913_6257283846465477901_n.png?_nc_cat=111&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=Y5I303qKc5kAX9_hsUF&_nc_ht=scontent-frx5-1.xx&oh=00_AT8B6aWNIMcK5RfCj3BJZV-pJ39qOzvsZFVu6Ob8_Y36lQ&oe=625634A9"
       alt="Logo Arktio"
     />
   </div>
+  <h1>{document.cookie}</h1>
   <div class="boutons">
-    <input bind:value={infos.player_name} required />
-    <input bind:value={infos.game_name} required />
-    <select bind:value={infos.pion}>
+    <!-- <input bind:value={current_player.player_name} required /> -->
+    <!-- <input bind:value={.game_name} required /> -->
+    <!-- <select bind:value={current_player.pion}>
       <option value="pion 1">pion 1</option>
       <option value="pion 2">pion 2</option>
       <option value="pion 3">pion 3</option>
-    </select>
+    </select> -->
     <button on:click={infos_check} id="valider">valider</button>
   </div>
 
@@ -54,11 +51,12 @@
 
     body {
       background-color: $turquoise;
+      padding: 0;
     }
 
     img {
-      width: 100;
-      heigth: 100;
+      max-width: 300px;
+      max-height: 300px;
       margin: 5px;
     }
 
@@ -110,7 +108,8 @@
     footer {
       text-align: center;
       font-family: Raleway;
-      color: $blanc;
+      color: $turquoise;
+      background-color: $blanc;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -118,12 +117,6 @@
 
       width: 100%;
     }
-
-    // @media (min-width: 640px) {
-    //   main {
-    //     max-width: none;
-    //   }
-    // }
 
     @media (max-width: 900px) {
       button,
