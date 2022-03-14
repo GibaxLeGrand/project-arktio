@@ -1,10 +1,7 @@
-import express from 'express';
-import * as http from 'http';
-import { Server, Socket } from 'socket.io';
 import { Lobby } from './lobby';
 import { Player } from './player';
 
-export class ChatServer {
+export class Chat {
     private sockets : Set<any>;
     private lobby : Lobby;
 

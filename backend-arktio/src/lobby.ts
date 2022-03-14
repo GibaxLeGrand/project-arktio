@@ -1,5 +1,5 @@
 import { Server } from 'socket.io';
-import { ChatServer } from './chat';
+import { Chat } from './chat';
 import { Player } from './player';
  
 enum LobbyState {
@@ -13,7 +13,7 @@ export class Lobby {
     private players: Map<Player, any>; 
     private owner: Player | null;
     private state: LobbyState;
-    private chat: ChatServer;
+    private chat: Chat;
 
     private io : Server;
 
@@ -22,7 +22,7 @@ export class Lobby {
         this.players = new Map();
         this.owner = null;
         this.state = LobbyState.Lobby;
-        this.chat = new ChatServer(this);
+        this.chat = new Chat(this);
 
         this.io = io;
     }
@@ -37,6 +37,10 @@ export class Lobby {
         } else { 
             throw new RangeError("Too many players already here");        
         }
+    }
+
+    public destroy() : void {
+        this.chat.destroy();
     }
 
     public removePlayer(player: Player) : void {

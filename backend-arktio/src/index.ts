@@ -1,4 +1,3 @@
-import { ChatServer } from './chat';
 import { Lobby } from './lobby';
 import express from 'express';
 import * as http from 'http';
