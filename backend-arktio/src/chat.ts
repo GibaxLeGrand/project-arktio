@@ -3,7 +3,7 @@ import { Player } from './player';
 import { Socket } from 'socket.io';
 
 export class Chat {
-    private sockets : Set<any>;
+    private sockets : Set<Socket>;
     private lobby : Lobby;
 
     constructor(lobby: Lobby) {
@@ -33,7 +33,7 @@ export class Chat {
     }
 
     public destroy(): void {
-        this.sockets.forEach((socket: any) => {
+        this.sockets.forEach((socket: Socket) => {
             socket.leave(this.lobby.getUUID());
         });
     }

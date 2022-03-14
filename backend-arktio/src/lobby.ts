@@ -13,14 +13,16 @@ export class Lobby {
     private players: Map<Player, Socket>; 
     private owner: Player | null;
     private state: LobbyState;
+    private publik: boolean;
     private chat: Chat;
 
     private io : Server;
 
-    constructor(uuid: string, io: Server) {
+    constructor(uuid: string, io: Server, publik: boolean) {
         this.uuid = uuid;
         this.players = new Map();
         this.owner = null;
+        this.publik = publik;
         this.state = LobbyState.Lobby;
         this.chat = new Chat(this);
 
@@ -80,6 +82,10 @@ export class Lobby {
 
     public getIO() : Server {
         return this.io;
+    }
+
+    public isPublic() : boolean {
+        return this.publik;
     }
 
 };

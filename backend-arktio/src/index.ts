@@ -41,9 +41,9 @@ io.on("connection", (socket: Socket) => {
             }
         });
     
-        socket.on("lobby creation", (cb: ((message: string) => string)) => {
+        socket.on("lobby creation", (publik: boolean, cb: ((message: string) => string)) => {
             let lobbyUUID: string = crypto.randomUUID();
-            let lobby = new Lobby(lobbyUUID, io);
+            let lobby = new Lobby(lobbyUUID, io, publik);
             lobby.addPlayer(player, socket);
 
             lobbies.set(lobbyUUID, lobby);

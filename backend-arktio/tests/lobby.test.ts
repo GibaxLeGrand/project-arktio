@@ -14,7 +14,7 @@ describe("lobby", () => {
     beforeAll((done) => {
         httpServer = http.createServer();
         let ioServer = new Server(httpServer);
-        lobby = new Lobby("Test", ioServer);
+        lobby = new Lobby("Test", ioServer, false);
 
         httpServer.listen(() => {
             let i = 1;
