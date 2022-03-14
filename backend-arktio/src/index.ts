@@ -28,7 +28,7 @@ io.on("connection", (socket: Socket) => {
     socket.on("player information", (uuid: string) => {
         let player : Player = new Player(uuid); // TODO: FIND IN DATABASE
 
-        socket.on("lobby choice", (lobbyUUID: string, callback: Function) => {
+        socket.on("lobby choice", (lobbyUUID: string, callback: ((message: boolean) => boolean)) => {
             if (lobbies.has(lobbyUUID)) {
                 let lobby: Lobby | undefined = lobbies.get(lobbyUUID);
                 if (lobby?.getNumberOfPlayers() && lobby?.getNumberOfPlayers() < 4 
@@ -43,9 +43,9 @@ io.on("connection", (socket: Socket) => {
             }
         });
     
-        socket.on("lobby creation", (publik: boolean, callback: ((message: string) => string)) => {
+        socket.on("lobby creation", (privacy: boolean, callback: ((message: string) => string)) => {
             let lobbyUUID: string = crypto.randomUUID();
-            let lobby = new Lobby(lobbyUUID, io, publik);
+            let lobby = new Lobby(lobbyUUID, io, privacy);
             lobby.addPlayer(player, socket);
 
             lobbies.set(lobbyUUID, lobby);

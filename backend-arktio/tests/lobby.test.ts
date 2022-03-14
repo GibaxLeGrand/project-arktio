@@ -8,12 +8,13 @@ import type { AddressInfo } from 'net';
 describe("lobby", () => {
     let httpServer: http.Server;
     let lobby: Lobby;
+    let ioServer: Server;
     let clientSocket: io.Socket;
 
     // Create the server
     beforeAll((done) => {
         httpServer = http.createServer();
-        let ioServer = new Server(httpServer);
+        ioServer = new Server(httpServer);
         lobby = new Lobby("Test", ioServer, false);
 
         httpServer.listen(() => {

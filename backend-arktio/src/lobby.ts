@@ -13,20 +13,27 @@ export class Lobby {
     private players: Map<Player, Socket>; 
     private owner: Player | null;
     private state: LobbyState;
-    private publik: boolean;
+    private privacy: boolean;
     private chat: Chat;
-
     private io : Server;
 
-    constructor(uuid: string, io: Server, publik: boolean) {
+    constructor(uuid: string, io: Server, privacy: boolean) {
         this.uuid = uuid;
         this.players = new Map();
         this.owner = null;
-        this.publik = publik;
+        this.privacy = privacy;
         this.state = LobbyState.Lobby;
         this.chat = new Chat(this);
 
         this.io = io;
+
+        io.on("switch privacy", () => {
+            this.privacy = !this.privacy;
+        });
+    }
+
+    public launchTheGame() {
+
     }
 
     public addPlayer(player: Player, socket: Socket) : void {
@@ -85,7 +92,7 @@ export class Lobby {
     }
 
     public isPublic() : boolean {
-        return this.publik;
+        return this.privacy;
     }
 
 };
