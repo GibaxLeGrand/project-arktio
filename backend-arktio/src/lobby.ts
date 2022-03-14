@@ -2,7 +2,7 @@ import { Server, Socket } from 'socket.io';
 import { Chat } from './chat';
 import { Player } from './player';
  
-enum LobbyState {
+export enum LobbyState {
     Lobby,
     Game,
     End

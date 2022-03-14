@@ -3,6 +3,7 @@ import express from 'express';
 import * as http from 'http';
 import { Server, Socket } from 'socket.io';
 import { Player } from './player';
+import { LobbyState } from './lobby';
 
 declare global {
     interface Crypto {
@@ -30,7 +31,8 @@ io.on("connection", (socket: Socket) => {
         socket.on("lobby choice", (lobbyUUID: string, callback: Function) => {
             if (lobbies.has(lobbyUUID)) {
                 let lobby: Lobby | undefined = lobbies.get(lobbyUUID);
-                if (lobby?.getNumberOfPlayers() && lobby?.getNumberOfPlayers() < 4) { 
+                if (lobby?.getNumberOfPlayers() && lobby?.getNumberOfPlayers() < 4 
+                        && lobby?.getState() && lobby?.getState() === LobbyState.Lobby) { 
                     lobby?.addPlayer(player, socket);
                     callback(true);
                 } else {
@@ -41,14 +43,14 @@ io.on("connection", (socket: Socket) => {
             }
         });
     
-        socket.on("lobby creation", (publik: boolean, cb: ((message: string) => string)) => {
+        socket.on("lobby creation", (publik: boolean, callback: ((message: string) => string)) => {
             let lobbyUUID: string = crypto.randomUUID();
             let lobby = new Lobby(lobbyUUID, io, publik);
             lobby.addPlayer(player, socket);
 
             lobbies.set(lobbyUUID, lobby);
 
-            cb(lobbyUUID);
+            callback(lobbyUUID);
         });
     });
 });
