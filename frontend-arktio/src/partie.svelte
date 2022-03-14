@@ -18,9 +18,14 @@
 
 
  <!-- Page -->
- <main>
+<main>
 
-	<div class="logo">logo ici</div>
+	<div class="logo">
+		<img
+			src="https://www.adobe.com/express/create/logo/media_1ba2722b76062fb428e1071c5cd59a5d9bc7fb94f.jpeg?width=400&format=jpeg&optimize=medium"
+			alt="Logo Arktio"
+		/>
+	</div>
 
 	<div class="page">
 		<button id="creer" on:click={new_game}>Créer une partie</button>
@@ -47,80 +52,59 @@
 	$gris_fonce:#2c2c2c;
 	$font_arktio: Raleway;
 
+
 	main {
-		text-align: center;
-		padding: 1em ;
-		margin: 0 auto;
 		background-color: $turquoise;
-		height: 100%;
-		width: 100%;
+		min-width: 100vw;
+		min-height: 100vh;
+		display: flex;
+		flex-direction: column;
+
+		align-items: center;
 		font-family: $font_arktio;
 	}
 
-	.logo {
-		color: $blanc;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		margin: 5vh;
-	}
-  
-	.page {
-		display: flex;
-		flex-flow: column;
-		align-items: center;
-		justify-content: space-around;
-		block-size: 50vh;
-	}
-
-	.connection {
-		background-color: $blanc;
-		text-align: center;
-		font-family: $font_arktio;
-		color: $turquoise;
-		display: flex;
-		align-items: center;
-		flex-direction: column;
-		width: 60%;
-		padding: 1em;
+	img {
+		width: 20rem;
+		height: 20rem;
+		margin: 1rem;
 	}
 
 	input {
-		color: $turquoise;
 		display: inherit;
-		align-items: center;
-		justify-content: space-around;
+		color: $turquoise;
 		text-align: center;
 		background-color: $blanc;
-		font-weight: 400;
-		inline-size: 60vw;
-		width: 60%;
 		padding: 1em;
 	}
 
 	button {
 		color: $turquoise;
-		display: inherit;
-		align-items: center;
-		justify-content: space-around;
-		text-align: center;
 		background-color: $blanc;
-		font-weight: 400;
-		inline-size: 60vw;
-		width: 60%;
 		padding: 1em;
 	}
 
 	footer {
-		text-align: center;
-		font-family: $font_arktio;
-		color: $blanc;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		width: 100%;
+		display: inherit;
 		bottom: 0;
 		position:absolute;
+		text-align: center;
+		color: $blanc;
+		padding: 1em;
+	}
+
+	.page {
+		display: flex;
+		flex-flow: column;
+		align-items: center;
+		block-size: 50vh;
+	}
+
+	.connection {
+		display: flex;
+		flex-flow: column;
+		align-items: center;
+		background-color: $blanc;
 		padding: 1em;
 	}
 
