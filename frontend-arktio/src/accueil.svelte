@@ -27,7 +27,7 @@
 <main>
   <div class="logo">
     <img
-      src="https://scontent-frx5-1.xx.fbcdn.net/v/t1.6435-9/116880518_623427318290913_6257283846465477901_n.png?_nc_cat=111&ccb=1-5&_nc_sid=09cbfe&_nc_ohc=Y5I303qKc5kAX9_hsUF&_nc_ht=scontent-frx5-1.xx&oh=00_AT8B6aWNIMcK5RfCj3BJZV-pJ39qOzvsZFVu6Ob8_Y36lQ&oe=625634A9"
+      src="https://cdn.discordapp.com/attachments/942433231599456307/952985982595104878/unknown.png"
       alt="Logo Arktio"
     />
   </div>
