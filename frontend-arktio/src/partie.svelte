@@ -59,14 +59,13 @@
 		min-height: 100vh;
 		display: flex;
 		flex-direction: column;
-
 		align-items: center;
 		font-family: $font_arktio;
 	}
 
 	img {
-		width: 20rem;
-		height: 20rem;
+		width: 15rem;
+		height: 15rem;
 		margin: 1rem;
 	}
 
@@ -75,13 +74,21 @@
 		color: $turquoise;
 		text-align: center;
 		background-color: $blanc;
+		font-size: x-large;
+		height: 7vh;
+      	width: 40vw;
 		padding: 1em;
 	}
 
 	button {
-		color: $turquoise;
+		align-items: center;
+		text-align: center;
 		background-color: $blanc;
-		padding: 1em;
+		font-size: x-large;
+		height: 6vh;
+		width: 40vw;
+		margin: 1em;
+		color: $turquoise;
 	}
 
 	footer {
@@ -114,3 +121,4 @@
 		}
 	}
 </style>
+	
