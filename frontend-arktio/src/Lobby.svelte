@@ -18,6 +18,7 @@
     class Player_lobby{
       present: boolean;
       name: string;
+      uuid: string;
       pion: {id: number, text: string};
   
       constructor(present:boolean = false, name: string = ""){
@@ -28,7 +29,7 @@
   
     // Joueur-euse local
     let player_local: Player_lobby = new Player_lobby(true, "Honeyxilia");
-    let is_lobby_owner: boolean = false;
+    let is_lobby_owner: boolean = true;
   
     // Autres joueur-euses dans le lobby 
     let player_1: Player_lobby = new Player_lobby();
@@ -40,28 +41,27 @@
     /**
      * Fonction pour bloquer les options de pions déjà pris dans le select
      */
-    function update_pions_occupes(){
-      let choix_pions = document.getElementById('players').children;
+    // function update_pions_occupes(){
+    //   let choix_pions = document.getElementById('players').children;
 
 
-      for(let i = 0; i++; i < choix_pions.length ){
-        choix_pions[i].removeAttribute("disabled");
-      }
+    //   for(let i = 0; i++; i < choix_pions.length ){
+    //     choix_pions[i].removeAttribute("disabled");
+    //   }
 
-      for(let player in players){
-        choix_pions[player.pion.id+1].setAttribute("disabled", "");
-      }
-    }
+    //   for(let player in players){
+    //     choix_pions[player.pion.id+1].setAttribute("disabled", "");
+    //   }
+    // }
   </script>
-  
-  <Tailwindcss />
   
   <main>
   <div class="logo">logo ici</div>
+  <button>Quitter partie</button>
   
-  <h id="lobby_name">Lobby {name_lobby}</h>
-  <label for="players">Joueur-euses :</label>  
   <div id="players">
+    <h id="lobby_name">Lobby {name_lobby}</h>
+    <label for="players">Joueur-euses :</label>  
           <div class="player">
             <span class="gauche">{player_local.present ? player_local.name : "---------"}</span>
             <span class="droite">{player_local.pion ? player_local.pion.text : "---------"}</span>
@@ -79,34 +79,38 @@
             <span class="droite">{player_3.present ? player_3.pion.text : "---------"}</span>
           </div>
   </div>
-  
-    <select id="select_pion" bind:value ={player_local.pion}>
+  <div id="choix_pion">
+    <span>Choissisez un pion :</span>
+    <select bind:value ={player_local.pion}>
       {#each pions as pion}
         <option value={pion}>{pion.text}</option>
       {/each}
     </select>
-     
+  </div>
   
     {#if is_lobby_owner}
-      <button aria-label="Lancer la partie" class="valider">Commencer partie</button>
+      <button aria-label="Lancer la partie">Commencer partie</button>
     {:else}
-      <button aria-label="Lancer la partie" class="valider" disabled>En attente du début de partie</button>
+      <button aria-label="Lancer la partie" disabled>En attente du début de partie</button>
     {/if}
   
     <footer>this is the footer</footer>
-  </main>
-  
+
   <style lang="scss">
     $color: #286143; // PS : c'était juste un test ou ça va servir ?
     $turquoise: #00a19a;
     $blanc: #ffffff;
     $caramel: #ffd49a;
   
+    body{
+      background-color: $turquoise;
+    }
+
     main {
       @apply py-32;
       text-align: center;
+      align-items: center;
       padding: 1em;
-      max-width: 240px;
       margin: 0 auto;
     }
   
@@ -125,6 +129,7 @@
     }
   
     #players{
+      background-color: $blanc;
       display: flex;
       flex-direction: column;
     }
@@ -143,6 +148,13 @@
       float: left;
     }
 
+    #choix_pion{
+      background-color: $blanc;
+      padding: 2px;
+      margin: 1em;
+      align-items: center;
+    }
+
     button {
       color: $turquoise;
       display: inherit;
@@ -151,11 +163,9 @@
       text-align: center;
       background-color: $blanc;
       font-weight: 400;
-      inline-size: 60vw;
-    }
-
-    .valider{
-      padding: 3em;
+      font-size: x-large;
+      height: 7vh;
+      width: 40vw;
     }
   
     footer {
@@ -169,14 +179,14 @@
       width: 100%;
     }
   
-    @media (max-width: 640px) {
-      main {
-        max-width: none;
-      }
-  
-      #players {
-        width: 95%;
+    @media (max-width: 900px) {
+      button,
+      input,
+      select,
+      option {
+        width: 60vw;
       }
     }
   </style>
   
+</main>
