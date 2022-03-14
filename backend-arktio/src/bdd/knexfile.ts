@@ -1,9 +1,22 @@
-import type { Knex } from "knex";
+import { Knex } from "knex";
 import dotenv from "dotenv";
 
 // Lecture des variables d'environnement dans un .env
-dotenv.config();
 
+let envpath : string | undefined;
+if(process.env.npm_lifecycle_script && process.env.npm_lifecycle_script!.includes("knex")) {
+	envpath = "../../.env"
+}
+
+
+dotenv.config({ 
+	path: envpath,
+	encoding: 'latin1', 
+	debug: true, 
+	override: false 
+});
+
+// Configuration de la connexion à la BDD
 const config: { [key: string]: Knex.Config } = {
 
 	development: {
@@ -16,7 +29,21 @@ const config: { [key: string]: Knex.Config } = {
 			database : process.env.DATABASE_DEV
 		},
 		migrations: {
-		  tableName: 'migrations'
+			tableName: 'migrations'
+		}
+	},
+
+	testing: {
+		client: 'mysql2',
+		connection: {
+			host : process.env.HOST_TEST,
+			port : parseInt(process.env.PORT_TEST!),
+			user : process.env.USER_TEST,
+			password : process.env.PWD_TEST,
+			database : process.env.DATABASE_TEST
+		},
+		migrations: {
+			tableName: 'migrations'
 		}
 	},
 
@@ -30,7 +57,7 @@ const config: { [key: string]: Knex.Config } = {
 			database : process.env.DATABASE_PROD
 		},
 		migrations: {
-		  tableName: 'migrations'
+			tableName: 'migrations'
 		}
 	}
 
