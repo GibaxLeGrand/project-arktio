@@ -2,20 +2,40 @@
 <script lang="ts">
 	import Tailwindcss from "./Tailwindcss.svelte";
 
-	const test = () => {
-		return true;
-	};
 
-	function test_exist() {
-		let test_login = true;
-		let test_mdp = true;
-		if (test_login) {
-			
+	let email : string | null = null;
+	let mdp : string | null = null;
+
+	async function connect() {
+		if (email == null || mdp == null) {
+			return;
 		}
+
+		fetch("/api/session/login", {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({
+				email: email,
+				password: mdp
+			})
+		}).then(async response => {
+			if (response.status == 200) {
+				await response.json().then(data => {
+					if (data.connected){
+						window.location.href = "/";
+					} else {
+						alert("Identifiants incorrects");
+					}
+				});
+			} else {
+				alert("Erreur de connexion");
+			}
+		});
 	}
 
-	let login = null;
-	let mdp = null;
+
 </script>
 
 
@@ -32,22 +52,18 @@
 	</div>
 	
 	<div class="page">
-		<div class="connection">
-			<p>Nom d'utilisateur</p>
-			<input bind:value={login}>
+		<form class="connection" onsubmit={connect}>
+			<label for="email">Email</label>
+			<input required id="email" name="email" bind:value={email}>
 
-			<p>Mot de passe</p>
-			<input bind:value={mdp}>
+			<label for="password">:</label>
+			<input required id="password" name="password" bind:value={mdp}>
 			
-			<button id="entrer" on:click={test_exist}>Valider</button>
-		</div>
-	
-		<button id="nouveau_compte">Créer un nouveau compte</button>
-		<button id="invite">Jouer en tant qu'invité</button>
-		<button id="retour">Retour</button>
+			<button id="entrer" type="submit">Connexion</button>
+		</form>
 	</div>
 	
-	<footer>Contacte</footer>
+	<footer>Contact</footer>
 
 	
 </main>
