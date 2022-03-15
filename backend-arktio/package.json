@@ -12,11 +12,18 @@
     "build-start": "npm run build && npm run start",
     "clean": "rimraf build coverage",
     "dev": "tsc-watch --onSuccess \"node ./build/index.js\"",
-    "test": "jest"
+    "test": "jest",
+    "migrate": "npx knex migrate:latest --knexfile ./src/bdd/knexfile.ts",
+    "reset": "npx knex migrate:rollback --knexfile ./src/bdd/knexfile.ts",
+    "seed": "npx knex seed:run --knexfile ./src/bdd/knexfile.ts"
   },
   "dependencies": {
+    "@types/cookie-parser": "^1.4.2",
+    "@types/express-session": "^1.17.4",
+    "cookie-parser": "^1.4.6",
     "dotenv": "^16.0.0",
     "express": "^4.17.2",
+    "express-session": "^1.17.2",
     "knex": "^1.0.3",
     "mysql2": "^2.3.3",
     "objection": "^3.0.1",
