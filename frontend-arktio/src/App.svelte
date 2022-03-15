@@ -97,10 +97,11 @@
   }
 
   input {
-    color: $blanc;
+    color: $turquoise;
+    background-color: $blanc;
     display: inherit;
     justify-content: center;
-    text-align: right;
+    text-align: center;
     font-weight: 10;
     inline-size: 30vw;
   }
