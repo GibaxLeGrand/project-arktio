@@ -96,7 +96,11 @@
       <button aria-label="Lancer la partie" disabled>En attente du début de partie</button>
     {/if}
   
-    <footer>this is the footer</footer>
+    <footer>
+      <a href="url">condition générale d'utilisation</a>
+      <a href="non je déconne">Politique de cookie</a>
+      <a href="Qui est tu ?">Qui sommes nous ?</a>
+    </footer>
 
   <style lang="scss">
     $color: #286143; // PS : c'était juste un test ou ça va servir ?

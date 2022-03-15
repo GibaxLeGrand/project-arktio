@@ -7,7 +7,6 @@
 </script>
 
 <Tailwindcss />
-<<<<<<< HEAD:frontend-arktio/src/register.svelte
 <main />
 
 <div class="logo"><img alt="logo" src="logo.png" /></div>
@@ -126,18 +125,6 @@
     font-weight: 400;
     inline-size: 60vw;
   }
-
-  footer {
-    position: fixed;
-    padding: 10px 10px 0px 10px;
-    bottom: 0;
-    text-align: center;
-    font-family: Raleway;
-    color: $blanc;
-    background-color: $turquoise;
-    width: 100%;
-  }
-
   footer>a{
     padding: 5%;
   }
@@ -147,7 +134,3 @@
     }
   }
 </style>
-=======
-
-<Accueil />
->>>>>>> main:frontend-arktio/src/App.svelte
