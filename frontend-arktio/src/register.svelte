@@ -17,11 +17,13 @@
 
   <form>
     <label for="name">Nom du joeueur:</label>
-    <input type="text" id="name" name="name">
-    <label for="mail">Adresse mail:</label>
-    <input type="text" id="mail" name="mail">
+    <input required type="text" id="name" name="name">
+    <label for="email">Adresse mail:</label>
+    <input required type="text" id="email" name="email">
     <label for="password">Mot de passe:</label>
-    <input type="text" id="password" name="password">
+    <input required type="text" id="password" name="password">
+    <label for="confirm_password">Confirmé le mot de passe:</label>
+    <input required type="text" id="confirm_password" name="confirm_password">
   </form>
 
   <button id="validate">valider</button>
