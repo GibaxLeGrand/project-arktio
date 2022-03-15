@@ -1,5 +1,6 @@
 import {Router} from "express";
 import {getUser, putUser, Users} from "../../bdd";
+import {hash_password, validate_password} from "../../scripts/security/password";
 
 const router = Router();
 
@@ -8,10 +9,10 @@ router.post("/login", async (req, res) => {
     const [email, password] = [req.body.email, req.body.password]
 
     // Verify if the user exists
-    const user = await getUser(email, password)
+    const user = await getUser(email)
 
     // If it exists
-    if (user) {
+    if (validate_password(password, user.user_password)) {
         // init session data
         req.session.user = {userId: user.user_id, userName: user.user_name};
         res.json({connected: true});
@@ -39,7 +40,7 @@ router.post("/register", async (req, res) => {
     }
 
     // Try to insert user in database
-    const user = await putUser(username, email, password);
+    const user = await putUser(username, email, hash_password(password));
 
     // User inserted
     if ((user instanceof Users)) {
