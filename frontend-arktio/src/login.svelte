@@ -1,40 +1,10 @@
 <!-- Script -->
 <script lang="ts">
 	import Tailwindcss from "./Tailwindcss.svelte";
-
+	import {connect} from "./scripts/userScripts";
 
 	let email : string | null = null;
 	let mdp : string | null = null;
-
-	async function connect() {
-		if (email == null || mdp == null) {
-			return;
-		}
-
-		fetch("/api/session/login", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json"
-			},
-			body: JSON.stringify({
-				email: email,
-				password: mdp
-			})
-		}).then(async response => {
-			if (response.status == 200) {
-				await response.json().then(data => {
-					if (data.connected){
-						window.location.href = "/";
-					} else {
-						alert("Identifiants incorrects");
-					}
-				});
-			} else {
-				alert("Erreur de connexion");
-			}
-		});
-	}
-
 </script>
 
 
@@ -51,7 +21,7 @@
 	</div>
 	
 	<div class="page">
-		<form class="connection" action="javascript:" on:submit={connect}>
+		<form class="connection" action="javascript:" on:submit={()=>{connect(email, mdp)}}>
 			<label for="email">Email</label>
 			<input required type="email" id="email" name="email" bind:value={email}>
 			<br/>
