@@ -51,12 +51,12 @@
 	</div>
 	
 	<div class="page">
-		<form class="connection" onsubmit={connect}>
+		<form class="connection" action="javascript:" on:submit={connect}>
 			<label for="email">Email</label>
-			<input required id="email" name="email" bind:value={email}>
-
-			<label for="password">:</label>
-			<input required id="password" name="password" bind:value={mdp}>
+			<input required type="email" id="email" name="email" bind:value={email}>
+			<br/>
+			<label for="password">Mot de passe</label>
+			<input required type="password" id="password" name="password" bind:value={mdp}>
 
 			<button id="entrer" type="submit">Connexion</button>
 		</form>
