@@ -176,45 +176,53 @@
   </style>
 </main> -->
 <script lang="ts">
-  // TODO créer fonction de création du bouton selon l'état de l'utilisateur
-  // "connecté" ou pas
+  // let btn_cree: boolean = false;
 
-  var btn_cree: boolean = false;
-
-  // TODO cookies
-
-  function create_button() {
-    // bouton déjà créé
-    if (btn_cree) return;
-
-    // variables
-    let old_btn = document.getElementById("inscription");
-    let new_btn = document.createElement("button");
-    let text = document.createTextNode("Créer / Rejoindre une partie");
-
-    // style
-    new_btn.appendChild(text);
-    new_btn.style.backgroundColor = "white";
-    new_btn.style.display = "flex";
-    new_btn.style.margin = "2.5%";
-    new_btn.style.color = "#00a19a";
-    new_btn.style.width = "50vw";
-    new_btn.style.textAlign = "center";
-    new_btn.style.borderRadius = "10px";
-    new_btn.style.minWidth = "200px";
-    new_btn.style.justifyContent = "space-around";
-    // new_btn.style; // TODO hover ? mouseover sinon
-
-    // insertion
-    var div = document
-      .getElementsByClassName("boutons svelte-m1780r")
-      .item(0).children;
-
-    div.item(0).remove();
-    div.item(0).remove();
-    div.item(0).parentNode.insertBefore(new_btn, div.item(0));
-    btn_cree = true;
+  enum RULES {
+    DEFAULT,
+    CONNECTED,
+    GUEST,
   }
+
+  async function isAuth() {
+    fetch("/api/session/isAuth", {});
+  }
+
+  let state: RULES = RULES.DEFAULT;
+  // let state: RULES = RULES.CONNECTED;
+
+  // function create_button() {
+  //   // bouton déjà créé
+  //   if (btn_cree) return;
+
+  //   // variables
+  //   let old_btn = document.getElementById("inscription");
+  //   let new_btn = document.createElement("button");
+  //   let text = document.createTextNode("Créer / Rejoindre une partie");
+
+  //   // style
+  //   new_btn.appendChild(text);
+  //   new_btn.style.backgroundColor = "white";
+  //   new_btn.style.display = "flex";
+  //   new_btn.style.margin = "2.5%";
+  //   new_btn.style.color = "#00a19a";
+  //   new_btn.style.width = "50vw";
+  //   new_btn.style.textAlign = "center";
+  //   new_btn.style.borderRadius = "10px";
+  //   new_btn.style.minWidth = "200px";
+  //   new_btn.style.justifyContent = "space-around";
+  //   // new_btn.style; // TODO hover ? mouseover sinon
+
+  //   // insertion
+  //   let div = document
+  //     .getElementsByClassName("boutons svelte-m1780r")
+  //     .item(0).children;
+
+  //   div.item(0).remove();
+  //   div.item(0).remove();
+  //   div.item(0).parentNode.insertBefore(new_btn, div.item(0));
+  //   btn_cree = true;
+  // }
 </script>
 
 <main>
@@ -228,10 +236,14 @@
     <p>Arktio</p>
   </div>
   <div class="boutons">
-    <button id="connexion">Connexion</button>
-    <button id="inscription">Inscription</button>
+    {#if state === RULES.DEFAULT}
+      <button id="connexion">Connexion</button>
+      <button id="inscription">Inscription</button>
+    {:else}
+      <button id="create_join_party">Créer / Rejoindre Partie</button>
+    {/if}
     <!-- TODO retirer le on:click -->
-    <button id="regles" on:click={create_button}>Règles</button>
+    <button id="regles">Règles</button>
   </div>
 </main>
 
