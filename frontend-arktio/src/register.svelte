@@ -1,14 +1,13 @@
 <script lang="ts">
   import Tailwindcss from "./Tailwindcss.svelte";
-
+  import Accueil from "./accueil.svelte";
   const test = () => {
     return true;
   };
-
-  export let name: string;
 </script>
 
 <Tailwindcss />
+<<<<<<< HEAD:frontend-arktio/src/register.svelte
 <main />
 
 <div class="logo"><img alt="logo" src="logo.png" /></div>
@@ -148,3 +147,7 @@
     }
   }
 </style>
+=======
+
+<Accueil />
+>>>>>>> main:frontend-arktio/src/App.svelte
