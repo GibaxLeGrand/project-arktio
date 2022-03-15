@@ -3,6 +3,7 @@ build
 .vscode
 .coverage
 yarn.lock
+package-lock
 *.log
 *.env
 *.iml

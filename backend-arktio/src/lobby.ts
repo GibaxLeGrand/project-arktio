@@ -39,7 +39,7 @@ export class Lobby {
     public addPlayer(player: Player, socket: Socket) : void {
         if (this.owner === null) this.owner = player;
 
-        if (this.getNumberOfPlayers() < 4) {
+        if (this.getNumberOfPlayers() < 4 || this.players.has(player)) {
             this.players.set(player, socket);
             this.chat.update();
             console.log("player %s added on lobby %s", player.getUUID(), this.uuid);
@@ -61,6 +61,10 @@ export class Lobby {
                 this.owner = null;
             else
                 this.owner = this.players.entries().next().value[0];
+    }
+
+    public isAccessible() : boolean {
+        return this.state === LobbyState.Lobby && this.getNumberOfPlayers() < 4;
     }
 
     public getState() : LobbyState {
