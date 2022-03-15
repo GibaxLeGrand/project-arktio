@@ -28,7 +28,7 @@
     }
   
     // Joueur-euse local
-    let player_local: Player_lobby = new Player_lobby(true, "Honeyxilia");
+    let player_local: Player_lobby = new Player_lobby(true, "Player 1");
     let is_lobby_owner: boolean = true;
   
     // Autres joueur-euses dans le lobby 
@@ -55,6 +55,8 @@
     // }
   </script>
   
+  <Tailwindcss/>
+
   <main>
   <div class="logo">logo ici</div>
   <button>Quitter partie</button>
@@ -157,7 +159,6 @@
 
     button {
       color: $turquoise;
-      display: inherit;
       align-items: center;
       justify-content: space-around;
       text-align: center;
