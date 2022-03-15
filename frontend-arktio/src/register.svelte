@@ -1,6 +1,6 @@
 <script lang="ts">
   import Tailwindcss from "./Tailwindcss.svelte";
-  import Accueil from "./App.svelte";
+  import Accueil from "./accueil.svelte";
   const test = () => {
     return true;
   };
@@ -12,18 +12,20 @@
 <div class="logo"><img alt="logo" src="logo.png" /></div>
 
 <div class="boutons">
+
   <form>
     <label for="name">Nom du joeueur:</label>
-    <input required type="text" id="name" name="name" />
+    <input required type="text" id="name" name="name">
     <label for="email">Adresse mail:</label>
-    <input required type="text" id="email" name="email" />
+    <input required type="text" id="email" name="email">
     <label for="password">Mot de passe:</label>
-    <input required type="text" id="password" name="password" />
+    <input required type="text" id="password" name="password">
     <label for="confirm_password">Confirmé le mot de passe:</label>
-    <input required type="text" id="confirm_password" name="confirm_password" />
+    <input required type="text" id="confirm_password" name="confirm_password">
   </form>
 
   <button id="validate">valider</button>
+
 </div>
 
 <footer>
@@ -70,16 +72,16 @@
     margin: 5vh;
   }
 
-  img {
-    max-width: 40%;
-    height: auto;
-  }
+  img {  
+  max-width: 40%;  
+  height: auto;  
+  }  
 
   form {
     display: flex;
     flex-flow: column;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-around;    
     color: $blanc;
     block-size: 5vh;
   }
@@ -123,19 +125,7 @@
     font-weight: 400;
     inline-size: 60vw;
   }
-
-  footer {
-    position: fixed;
-    padding: 10px 10px 0px 10px;
-    bottom: 0;
-    text-align: center;
-    font-family: Raleway;
-    color: $blanc;
-    background-color: $turquoise;
-    width: 100%;
-  }
-
-  footer > a {
+  footer>a{
     padding: 5%;
   }
   @media (min-width: 640px) {

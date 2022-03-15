@@ -44,7 +44,11 @@
     <button id="retour">Retour</button>
   </div>
 
-  <footer>Contacte</footer>
+  <footer>
+    <a href="url">condition générale d'utilisation</a>
+    <a href="non je déconne">Politique de cookie</a>
+    <a href="Qui est tu ?">Qui sommes nous ?</a>
+  </footer>
 </main>
 
 <!-- CSS -->
