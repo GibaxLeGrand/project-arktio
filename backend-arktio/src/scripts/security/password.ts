@@ -9,9 +9,5 @@ export function hash_password(password: string) : string {
 export function validate_password(password: string, hashed : string) : boolean {
     const [salt, hash] = hashed.split("$");
     const hashed_password = crypto.createHash("sha256").update(salt+password).digest("hex")
-    if (hashed_password === hash) {
-        return true;
-    } else {
-        return false;
-    }
+    return hashed_password === hash;
 }
