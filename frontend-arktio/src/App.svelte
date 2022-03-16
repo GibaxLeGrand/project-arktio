@@ -29,10 +29,12 @@
 <main>
   <Route path="/">
     <div>
-      <img
-        src="https://cdn.discordapp.com/attachments/942433231599456307/952985982595104878/unknown.png"
-        alt="Logo Arktio représentant un ours"
-      />
+      <a href="/">
+        <img
+          src="https://cdn.discordapp.com/attachments/942433231599456307/952985982595104878/unknown.png"
+          alt="Logo Arktio représentant un ours"
+        />
+      </a>
     </div>
     <div class="boutons">
       {#if state === RULES.GUEST}
@@ -58,7 +60,7 @@
         >
         <!-- // TODO fix chemin pour créer partie -->
       {/if}
-      <button id="regles">Règles</button>
+      <button id="regles" title="afficher les règles">Règles</button>
     </div>
   </Route>
   <Route path="/login">
@@ -109,6 +111,7 @@
     text-align: center;
     border-radius: 10px;
     min-width: 200px;
+    border: solid rgb(150, 150, 150);
   }
 
   button:hover {
@@ -124,7 +127,7 @@
     display: flex;
     align-self: center;
     height: auto;
-    width: auto; // TODO
+    width: auto;
     max-width: $size;
     max-height: $size;
     margin-top: 5%;

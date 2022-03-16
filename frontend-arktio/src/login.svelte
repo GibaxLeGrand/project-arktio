@@ -1,37 +1,48 @@
 <!-- Script -->
 <script lang="ts">
-	import Tailwindcss from "./Tailwindcss.svelte";
-	import {connect} from "./scripts/userScripts";
+  import Tailwindcss from "./Tailwindcss.svelte";
+  import { connect } from "./scripts/userScripts";
 
-	let email : string | null = null;
-	let mdp : string | null = null;
+  let email: string | null = null;
+  let mdp: string | null = null;
 </script>
-
 
 <Tailwindcss />
 
 <!-- Page -->
 <main>
+  <div class="logo">
+    <a href="/">
+      <img
+        src="https://www.adobe.com/express/create/logo/media_1ba2722b76062fb428e1071c5cd59a5d9bc7fb94f.jpeg?width=400&format=jpeg&optimize=medium"
+        alt="Logo Arktio"
+      />
+    </a>
+  </div>
 
-	<div class="logo">
-		<img
-			src="https://www.adobe.com/express/create/logo/media_1ba2722b76062fb428e1071c5cd59a5d9bc7fb94f.jpeg?width=400&format=jpeg&optimize=medium"
-			alt="Logo Arktio"
-		/>
-	</div>
-	
-	<div class="page">
-		<form class="connection" action="javascript:" on:submit={()=>{connect(email, mdp)}}>
-			<label for="email">Email</label>
-			<input required type="email" id="email" name="email" bind:value={email}>
-			<br/>
-			<label for="password">Mot de passe</label>
-			<input required type="password" id="password" name="password" bind:value={mdp}>
+  <div class="page">
+    <form
+      class="connection"
+      action="javascript:"
+      on:submit={() => {
+        connect(email, mdp);
+      }}
+    >
+      <label for="email">Email</label>
+      <input required type="email" id="email" name="email" bind:value={email} />
+      <br />
+      <label for="password">Mot de passe</label>
+      <input
+        required
+        type="password"
+        id="password"
+        name="password"
+        bind:value={mdp}
+      />
 
-			<button id="entrer" type="submit">Connexion</button>
-		</form>
-	</div>
-
+      <button id="entrer" type="submit">Connexion</button>
+    </form>
+  </div>
 
   <footer>
     <a href="url">condition générale d'utilisation</a>

@@ -18,10 +18,12 @@
 <!-- Page -->
 <main>
   <div class="logo">
-    <img
-      src="https://cdn.discordapp.com/attachments/942433231599456307/952985982595104878/unknown.png"
-      alt="Logo Arktio"
-    />
+    <a href="/">
+      <img
+        src="https://cdn.discordapp.com/attachments/942433231599456307/952985982595104878/unknown.png"
+        alt="Logo Arktio"
+      />
+    </a>
   </div>
 
   <div class="page">
