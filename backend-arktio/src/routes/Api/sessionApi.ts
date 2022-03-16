@@ -48,8 +48,9 @@ router.post("/register", async (req, res) => {
         return;
     }
 
+    console.log(user);
     // Can't insert user in database for some reasons
-    res.json({registered: false, error: user.errors[0]})
+    // res.json({registered: false, error: user.errors[0]})
 })
 
 router.get("/isAuth", async (req, res) => {

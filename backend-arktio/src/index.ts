@@ -54,9 +54,13 @@ db.connect(process.env.NODE_ENV!)
         // Appel d'une fonction asynchrone qui fait une requete dans la BDD
         const toto = await db.getAllUsers();
         console.log(toto[0].user_name)
-        console.log(await db.getUser(1));
-        console.log(await db.getUser("c@gmail.com"));
-        console.log(await db.putUser("toto", "c@c.com", hash_password("aaaaaaa")));
+        console.log(await db.getUser(17));
+        console.log(await db.getUserAuthentificate("c@gmail.com"));
+        try {
+            console.log(await db.putUser("toto", "c@c.com", hash_password("aaaaaaa")));
+        } catch {
+            console.log("Erreur d'insertion : L'utilisateur existe déja !");
+        }
     });
 
 app.use((err: any, req: any, res: any, next: any) => {
