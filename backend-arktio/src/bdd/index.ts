@@ -1,5 +1,7 @@
 // Fichier permettant d'importer plus facilement les modules
 
+// Helpers
+export * from "./helpers/error_handler";
 // Classes
 export * from "./models/Users";
 // Fonctions

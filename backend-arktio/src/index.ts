@@ -59,4 +59,8 @@ db.connect(process.env.NODE_ENV!)
         console.log(await db.putUser("toto", "c@c.com", hash_password("aaaaaaa")));
     });
 
+app.use((err: any, req: any, res: any, next: any) => {
+    db.errorHandler(err, res);
+});
+
 console.log("Hello World");
