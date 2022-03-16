@@ -34,9 +34,6 @@
         alt="Logo Arktio représentant un ours"
       />
     </div>
-    <div id="titre">
-      <p>Arktio</p>
-    </div>
     <div class="boutons">
       {#if state === RULES.GUEST}
         <button
@@ -82,47 +79,33 @@
   $turquoise: #00a19a;
   $blanc: #ffffff;
 
+  $size: 256px;
+
   main {
     background-color: $turquoise;
     height: 100%;
     width: 100%;
     padding: 0;
-  }
-
-  // TODO target le bon body .. ( bords blancs)
-  body {
-    background-color: $turquoise;
     display: flex;
+    flex-direction: column;
+    justify-content: space-around;
   }
 
   div {
     display: flex;
     align-items: center;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: space-between;
     font-size: xx-large;
     background-color: $turquoise;
-    height: 30vh;
-  }
-
-  // #titre {
-  //   height: 20vh;
-  // }
-
-  p {
-    background-color: $blanc;
-    color: $turquoise;
-    text-align: center;
-    border-radius: 5px;
-    width: 40%;
-    min-width: 150px;
+    padding: 2%;
   }
 
   button {
-    margin: 2.5%;
+    margin: 2%;
     background-color: $blanc;
     color: $turquoise;
-    width: 50vw;
+    width: 50%;
     text-align: center;
     border-radius: 10px;
     min-width: 200px;
@@ -140,14 +123,20 @@
   img {
     display: flex;
     align-self: center;
-    max-width: 300px;
-    max-height: 300px;
-    padding: 5px;
+    height: auto;
+    width: auto; // TODO
+    max-width: $size;
+    max-height: $size;
+    margin-top: 5%;
   }
 
   #rejoindre_creer_partie {
     visibility: hidden;
   }
 
-  // TODO @media height max height
+  @media (max-height: 800px) {
+    .boutons {
+      height: 50%;
+    }
+  }
 </style>
