@@ -7,6 +7,7 @@ import sessions from "express-session";
 import cookieParser from "cookie-parser";
 import { ChatServer } from './chat';
 import * as db from './bdd';
+import {hash_password} from "./scripts/security/password";
 
 dotenv.config();
 
@@ -54,8 +55,8 @@ db.connect(process.env.NODE_ENV!)
         const toto = await db.getAllUsers();
         console.log(toto[0].user_name)
         console.log(await db.getUser(1));
-        console.log(await db.getUser("c@gmail.com", "chopatate"));
-        console.log(await db.putUser("toto", "c@c.com", "aaaaaaa"));
+        console.log(await db.getUser("c@gmail.com"));
+        console.log(await db.putUser("toto", "c@c.com", hash_password("aaaaaaa")));
     });
 
 console.log("Hello World");
