@@ -96,11 +96,11 @@ export class LobbyManager {
                     if (lobby.isAccessible()) 
                         lobby.addPlayer(player, socket);
             
-                    callback({valid: lobby.isAccessible(), lobby: lobby});
+                    callback({ valid: lobby.isAccessible(), lobby: lobby });
                 });
             });
         });
     }
-
 }
 
+new LobbyManager();

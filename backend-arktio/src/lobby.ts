@@ -24,25 +24,32 @@ export class Lobby {
         this.privacy = privacy;
         this.state = LobbyState.Lobby;
         this.chat = new Chat(this);
-
         this.io = io;
-
-        io.on("switch privacy", () => {
-            this.privacy = !this.privacy;
-        });
     }
 
     public launchTheGame() {
-
+        
     }
 
     public addPlayer(player: Player, socket: Socket) : void {
-        if (this.owner === null) this.owner = player;
-
         if (this.getNumberOfPlayers() < 4 || this.players.has(player)) {
+            socket.removeAllListeners("update");
             this.players.set(player, socket);
             this.chat.update();
-            console.log("player %s added on lobby %s", player.getUUID(), this.uuid);
+            console.log("Player %s added on lobby %s", player.getUUID(), this.uuid);
+
+            socket.on("update", (callback : (lobby: Lobby) => void) => {
+                callback(this);
+            });
+
+            if (this.owner === null) {
+                this.owner = player;
+                
+                let osocket = this.players.get(player)!;
+                osocket.on("privacy switch", () => {
+                    this.privacy = !this.privacy;
+                });
+            }
         } else { 
             throw new RangeError("Too many players already here");        
         }
@@ -53,14 +60,24 @@ export class Lobby {
     }
 
     public removePlayer(player: Player) : void {
+        let socket = this.players.get(player)!;
+        socket.removeAllListeners("update");
+        socket.removeAllListeners("privacy switch");
+
         this.players.delete(player);
         this.chat.update();
 
         if (this.owner === player) 
             if (this.players.size === 0) 
                 this.owner = null;
-            else
+            else {
                 this.owner = this.players.entries().next().value[0];
+                
+                let osocket = this.players.get(this.owner!)!;
+                osocket.on("privacy switch", () => {
+                    this.privacy = !this.privacy;
+                });
+            }
     }
 
     public isAccessible() : boolean {
