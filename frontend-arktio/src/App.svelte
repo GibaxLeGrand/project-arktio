@@ -1,107 +1,153 @@
 <script lang="ts">
-  import Tailwindcss from "./Tailwindcss.svelte";
-  import Accueil from "./accueil.svelte";
-  const test = () => {
-    return true;
-  };
+  import { Route, router } from "tinro";
+  import Login from "./login.svelte";
+  import Lobby from "./Lobby.svelte";
+  import Partie from "./partie.svelte";
+  import Register from "./register.svelte";
 
-  // export let name: string;
+  router.mode.hash();
+
+  enum RULES {
+    CONNECTED,
+    GUEST,
+  }
+
+  let state: RULES = RULES.GUEST;
+
+  async function isAuth() {
+    const data = await fetch("/api/session/isAuth", { method: "GET" });
+    if ((await data.json()).authenticated) {
+      state = RULES.CONNECTED;
+    } else {
+      state = RULES.GUEST;
+    }
+  }
+
+  isAuth();
 </script>
 
-<Tailwindcss />
+<main>
+  <Route path="/">
+    <div>
+      <img
+        src="https://cdn.discordapp.com/attachments/942433231599456307/952985982595104878/unknown.png"
+        alt="Logo Arktio représentant un ours"
+      />
+    </div>
+    <div id="titre">
+      <p>Arktio</p>
+    </div>
+    <div class="boutons">
+      {#if state === RULES.GUEST}
+        <button
+          id="connexion"
+          on:click={() => {
+            router.goto("/login");
+          }}>Connexion</button
+        >
+        <button
+          id="inscription"
+          on:click={() => {
+            router.goto("/register");
+          }}>Inscription</button
+        >
+      {/if}
+      {#if [RULES.CONNECTED, RULES.GUEST].includes(state)}
+        <button
+          id="create_join_party"
+          on:click={() => {
+            router.goto("/partie");
+          }}>Créer / Rejoindre Partie</button
+        >
+        <!-- // TODO fix chemin pour créer partie -->
+      {/if}
+      <button id="regles">Règles</button>
+    </div>
+  </Route>
+  <Route path="/login">
+    <Login />
+  </Route>
+  <Route path="/lobby">
+    <Lobby /> // TODO peut être comme partie avec /:id
+  </Route>
+  <Route path="/register">
+    <Register />
+  </Route>
+  <Route path="/partie/">
+    <Partie />
+  </Route>
+</main>
 
-<Accueil />
+<style lang="scss">
+  $turquoise: #00a19a;
+  $blanc: #ffffff;
 
-<!-- <main>
-  <div class="logo">
-    <img
-      src="https://www.adobe.com/express/create/logo/media_1ba2722b76062fb428e1071c5cd59a5d9bc7fb94f.jpeg?width=400&format=jpeg&optimize=medium"
-      alt="Logo Arktio"
-    />
-  </div>
+  main {
+    background-color: $turquoise;
+    height: 100%;
+    width: 100%;
+    padding: 0;
+  }
 
-  <div class="boutons">
-    <button id="player_name">nom du joueur</button>
-    <button id="game_name">nom de la partie</button>
-    <button id="pion_choice">choix du pion</button>
-    <button id="validate">valider</button>
-  </div>
+  // TODO target le bon body .. ( bords blancs)
+  body {
+    background-color: $turquoise;
+    display: flex;
+  }
 
-  <footer>this is the footer</footer>
+  div {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: space-evenly;
+    font-size: xx-large;
+    background-color: $turquoise;
+    height: 30vh;
+  }
 
-  <style lang="scss">
-    $turquoise: #00a19a;
-    $blanc: #ffffff;
+  // #titre {
+  //   height: 20vh;
+  // }
 
-    main {
-      @apply py-32;
-      text-align: center;
-      padding: 0;
-      margin-top: 0;
-      margin-bottom: 0;
-      height: 100vh;
-    }
+  p {
+    background-color: $blanc;
+    color: $turquoise;
+    text-align: center;
+    border-radius: 5px;
+    width: 40%;
+    min-width: 150px;
+  }
 
-    body {
-      background-color: $turquoise;
-    }
+  button {
+    margin: 2.5%;
+    background-color: $blanc;
+    color: $turquoise;
+    width: 50vw;
+    text-align: center;
+    border-radius: 10px;
+    min-width: 200px;
+  }
 
-    div {
-      font-family: Raleway;
-      text-decoration-color: $blanc;
-    }
+  button:hover {
+    background-color: rgb(41, 39, 39);
+    color: $blanc;
+  }
 
-    img {
-      max-width: 200px;
-      max-height: 200px;
-    }
-    // TODO Le logo est soumis à une zone de protection qui
-    // s’applique autour de son encadré. Le « O » minuscule sert
-    // de référence pour mesurer cette zone.
+  button:active {
+    background-color: rgb(150, 150, 150);
+  }
 
-    .logo {
-      color: $blanc;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin: 5vh;
-    }
+  img {
+    display: flex;
+    align-self: center;
+    max-width: 300px;
+    max-height: 300px;
+    padding: 5px;
+  }
 
-    .boutons {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: space-evenly;
-      color: $blanc;
-    }
+  #rejoindre_creer_partie {
+    visibility: hidden;
+  }
 
-    button {
-      color: $turquoise;
-      display: inherit;
-      align-items: center;
-      flex-direction: column;
-      justify-content: space-around;
-      background-color: $blanc;
-      font-weight: 400;
-      margin: 1%;
-      inline-size: 60vw;
-    }
-
-    footer {
-      text-align: center;
-      font-family: Raleway;
-      color: $blanc;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      bottom: 0;
-      width: 100%;
-    }
-
-    // @media (min-width: 640px) {
-    //   main {
-    //     max-width: none;
-    //   }
-    // }
-  </style>
-</main> -->
+  // TODO @media height max height
+</style>
