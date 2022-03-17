@@ -13,29 +13,24 @@ dotenv.config();
 
 const app = express();
 
-const rootRouter = express.Router();
-
-rootRouter.use(bodyParser.json());       // to support JSON-encoded bodies
-rootRouter.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+app.use(bodyParser.json());       // to support JSON-encoded bodies
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
     extended: true
 }));
 
-rootRouter.use(sessions({
+app.use(sessions({
     secret: "hypersecretcookiesecret",
     cookie: {maxAge: 1000 * 60 * 60 * 24}
 }))
 
-rootRouter.use(cookieParser());
+app.use(cookieParser());
 
 
 // Link Front
-rootRouter.use("/", express.static("../frontend-arktio/public/"))
+app.use("/", express.static("../frontend-arktio/public/"))
 
 // Api
-rootRouter.use("/api", apiRoute);
-
-// For testing purposes
-app.use("/", rootRouter)
+app.use("/api", apiRoute);
 
 // Create server
 const server = http.createServer(app);
