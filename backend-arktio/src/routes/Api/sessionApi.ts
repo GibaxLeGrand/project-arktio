@@ -12,7 +12,7 @@ router.post("/login", async (req, res) => {
     const user = await getUser(email)
 
     // If it exists
-    if (validate_password(password, user.user_password)) {
+    if (user && validate_password(password, user.user_password)) {
         // init session data
         req.session.user = {userId: user.user_id, userName: user.user_name};
         res.json({connected: true});
