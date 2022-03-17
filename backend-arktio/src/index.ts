@@ -25,13 +25,6 @@ app.use(sessions({
 app.use(cookieParser());
 const server = http.createServer(app);
 
-
-const fs = require('fs');
-
-fs.readdirSync("../frontend-arktio/public").forEach((file: any) => {
-    console.log(file);
-});
-
 // Link Front
 app.use("/", express.static("../frontend-arktio/public/"))
 

@@ -1,10 +1,13 @@
+import {router} from "@estym/estyms-tinro";
+import {routerFetch} from "./fetchOverride";
+
 async function register(name: string, email: string, password: string, confirm_password: string) {
     if (password !== confirm_password) {
         alert("Passwords doesn't match.")
         return;
     }
 
-    const res = await fetch("/api/session/register", {
+    const res = await routerFetch(`/api/session/register`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -33,7 +36,7 @@ async function connect(email, mdp) {
         return;
     }
 
-    const res = await fetch("/api/session/login", {
+    const res = await routerFetch(`/api/session/login`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -48,7 +51,7 @@ async function connect(email, mdp) {
     if (res.status == 200) {
         const data = await res.json()
         if (data.connected) {
-            window.location.href = "/";
+            router.goto("/");
         } else {
             alert("Identifiants incorrects");
         }

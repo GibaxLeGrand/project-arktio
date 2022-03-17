@@ -1,6 +1,7 @@
 <!-- Script -->
 <script lang="ts">
   import Tailwindcss from "./Tailwindcss.svelte";
+  import {router} from "@estym/estyms-tinro";
 
   const test = () => {
     return true;
@@ -18,10 +19,12 @@
 <!-- Page -->
 <main>
   <div class="logo">
-    <img
-      src="https://cdn.discordapp.com/attachments/942433231599456307/952985982595104878/unknown.png"
-      alt="Logo Arktio"
-    />
+    <a href="/">
+      <img
+        src="https://cdn.discordapp.com/attachments/942433231599456307/952985982595104878/unknown.png"
+        alt="Logo Arktio"
+      />
+    </a>
   </div>
 
   <div class="page">
@@ -31,7 +34,7 @@
       <button id="rejoidre">Rejoidre une partie</button>
     </div>
 
-    <button id="retour">Retour</button>
+    <button id="retour" on:click={()=>router.goto("/")}>Retour</button>
   </div>
 
   <footer>
