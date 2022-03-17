@@ -1,6 +1,7 @@
 <!-- Script -->
 <script lang="ts">
   import Tailwindcss from "./Tailwindcss.svelte";
+  import {router} from "@estym/estyms-tinro";
 
   const test = () => {
     return true;
@@ -33,7 +34,7 @@
       <button id="rejoidre">Rejoidre une partie</button>
     </div>
 
-    <button id="retour">Retour</button>
+    <button id="retour" on:click={()=>router.goto("/")}>Retour</button>
   </div>
 
   <footer>

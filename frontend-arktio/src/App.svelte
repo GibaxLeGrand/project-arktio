@@ -1,80 +1,93 @@
 <script lang="ts">
-  import { Route, router } from "tinro";
-  import Login from "./login.svelte";
-  import Lobby from "./Lobby.svelte";
-  import Partie from "./partie.svelte";
-  import Register from "./register.svelte";
+    import {Route, router} from "@estym/estyms-tinro";
+    import Login from "./login.svelte";
+    import Lobby from "./Lobby.svelte";
+    import Partie from "./partie.svelte";
+    import Register from "./register.svelte";
+    import {routerFetch} from "./scripts/fetchOverride";
+    import {base} from "./stores/locationStore";
+    import {get} from "svelte/store";
+    import {env} from "./scripts/envfile";
 
-  router.mode.hash();
+    router.mode.hash();
 
-  enum RULES {
-    CONNECTED,
-    GUEST,
-  }
+    base.set(env.root)
+    router.base(get(base));
 
-  let state: RULES = RULES.GUEST;
-
-  async function isAuth() {
-    const data = await fetch("/api/session/isAuth", { method: "GET" });
-    if ((await data.json()).authenticated) {
-      state = RULES.CONNECTED;
-    } else {
-      state = RULES.GUEST;
+    enum RULES {
+        CONNECTED,
+        GUEST,
     }
-  }
 
-  isAuth();
+    let state: RULES = RULES.GUEST;
+
+    async function isAuth() {
+        const data = await routerFetch("/api/session/isAuth", {method: "GET"});
+        if ((await data.json()).authenticated) {
+            state = RULES.CONNECTED;
+        } else {
+            state = RULES.GUEST;
+        }
+    }
+
+    router.subscribe(() => {
+        isAuth()
+    })
 </script>
 
 <main>
-  <Route path="/">
-    <div>
-      <a href="/">
-        <img
-          src="https://cdn.discordapp.com/attachments/942433231599456307/952985982595104878/unknown.png"
-          alt="Logo Arktio représentant un ours"
-        />
-      </a>
-    </div>
-    <div class="boutons">
-      {#if state === RULES.GUEST}
-        <button
-          id="connexion"
-          on:click={() => {
+    <Route path="/">
+        <div>
+            <a href="/">
+                <img
+                        src="https://cdn.discordapp.com/attachments/942433231599456307/952985982595104878/unknown.png"
+                        alt="Logo Arktio représentant un ours"
+                />
+            </a>
+        </div>
+        <div class="boutons">
+            {#if state === RULES.GUEST}
+                <button
+                        id="connexion"
+                        on:click={() => {
             router.goto("/login");
-          }}>Connexion</button
-        >
-        <button
-          id="inscription"
-          on:click={() => {
+          }}>Connexion
+                </button
+                >
+                <button
+                        id="inscription"
+                        on:click={() => {
             router.goto("/register");
-          }}>Inscription</button
-        >
-      {/if}
-      {#if [RULES.CONNECTED, RULES.GUEST].includes(state)}
-        <button
-          id="create_join_party"
-          on:click={() => {
+          }}>Inscription
+                </button
+                >
+            {/if}
+            {#if [RULES.CONNECTED, RULES.GUEST].includes(state)}
+                <button
+                        id="create_join_party"
+                        on:click={() => {
             router.goto("/partie");
-          }}>Créer / Rejoindre Partie</button
-        >
-        <!-- // TODO fix chemin pour créer partie -->
-      {/if}
-      <button id="regles" title="afficher les règles">Règles</button>
-    </div>
-  </Route>
-  <Route path="/login">
-    <Login />
-  </Route>
-  <Route path="/lobby">
-    <Lobby /> // TODO peut être comme partie avec /:id
-  </Route>
-  <Route path="/register">
-    <Register />
-  </Route>
-  <Route path="/partie/">
-    <Partie />
-  </Route>
+          }}>Créer / Rejoindre Partie
+                </button
+                >
+                <!-- // TODO fix chemin pour créer partie -->
+            {/if}
+            <button id="regles" title="afficher les règles">Règles</button>
+        </div>
+    </Route>
+    <Route path="/login">
+        <Login/>
+    </Route>
+    <Route path="/lobby">
+        <Lobby/>
+        // TODO peut être comme partie avec /:id
+    </Route>
+    <Route path="/register">
+        <Register/>
+    </Route>
+    <Route path="/partie/">
+        <Partie/>
+    </Route>
 </main>
 
 <style lang="scss">
