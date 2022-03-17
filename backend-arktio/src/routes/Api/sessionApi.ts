@@ -23,7 +23,7 @@ router.post("/login", async (req, res) => {
     res.json({connected: false, error: "Invalid credentials."});
 });
 
-router.post("/register", async (req, res) => {
+router.post("/register", async (req, res, next) => {
     const [username, email, password, confirm_password] = [req.body.name, req.body.email, req.body.password, req.body.confirm_password]
 
     // Test if both passwords are the same
@@ -40,17 +40,20 @@ router.post("/register", async (req, res) => {
     }
 
     // Try to insert user in database
-    const user = await putUser(username, email, hash_password(password));
-
-    // User inserted
-    if ((user instanceof Users)) {
-        res.json({registered: true, message: "Account successfully created !"})
-        return;
+    try {
+        const user = await putUser(username, email, hash_password(password));
+        console.log(user);
+        // User inserted
+        if ((user instanceof Users)) {
+            res.json({registered: true, message: "Account successfully created !"})
+            return;
+        }
+            // Can't insert user in database for some reasons
+        res.json({registered: false, error: user})
+            
+    } catch (err) {
+        console.log(next(err));
     }
-
-    console.log(user);
-    // Can't insert user in database for some reasons
-    // res.json({registered: false, error: user.errors[0]})
 })
 
 router.get("/isAuth", async (req, res) => {

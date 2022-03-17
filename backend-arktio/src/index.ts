@@ -58,8 +58,8 @@ db.connect(process.env.NODE_ENV!)
         console.log(await db.getUserAuthentificate("c@gmail.com"));
         try {
             console.log(await db.putUser("toto", "c@c.com", hash_password("aaaaaaa")));
-        } catch {
-            console.log("Erreur d'insertion : L'utilisateur existe déja !");
+        } catch (err: any) {
+            console.log(err);
         }
     });
 

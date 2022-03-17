@@ -8,7 +8,6 @@ if(process.env.npm_lifecycle_script && process.env.npm_lifecycle_script!.include
 	envpath = "../../.env"
 }
 
-
 dotenv.config({ 
 	path: envpath,
 	encoding: 'latin1', 
