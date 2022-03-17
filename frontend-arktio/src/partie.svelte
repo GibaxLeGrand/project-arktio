@@ -1,7 +1,7 @@
 <!-- Script -->
 <script lang="ts">
   import Tailwindcss from "./Tailwindcss.svelte";
-  import {router} from "@estym/estyms-tinro";
+  import {router} from "tinro";
 
   const test = () => {
     return true;

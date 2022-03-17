@@ -1,4 +1,4 @@
-import {router} from "@estym/estyms-tinro";
+import {router} from "tinro";
 import {routerFetch} from "./fetchOverride";
 
 async function register(name: string, email: string, password: string, confirm_password: string) {

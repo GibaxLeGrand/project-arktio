@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {Route, router} from "@estym/estyms-tinro";
+    import {Route, router} from "tinro";
     import Login from "./login.svelte";
     import Lobby from "./Lobby.svelte";
     import Partie from "./partie.svelte";
