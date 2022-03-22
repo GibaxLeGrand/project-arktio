@@ -27,6 +27,11 @@ router.post("/register", async (req, res) => {
     const [username, email, password, confirm_password] = [req.body.name, req.body.email, req.body.password, req.body.confirm_password]
 
     // Test if both passwords are the same
+    if (password.length < 7) {
+        res.json({registered: false, error: "Password must be at least 7 characters long."})
+        return;
+    }
+
     if (password !== confirm_password) {
         res.json({registered: false, error: "Both password doesn't match."})
         return;
