@@ -8,6 +8,7 @@
     import {base} from "./stores/locationStore";
     import {get} from "svelte/store";
     import {env} from "./scripts/envfile";
+    import {disconnect} from "./scripts/userScripts";
 
     router.mode.hash();
 
@@ -73,6 +74,16 @@
                 <!-- // TODO fix chemin pour créer partie -->
             {/if}
             <button id="regles" title="afficher les règles">Règles</button>
+            {#if [RULES.CONNECTED].includes(state)}
+                <button
+                        id="disconnect"
+                        on:click={async () => {
+            disconnect().then(isAuth);
+          }}>Créer / Rejoindre Partie
+                </button
+                >
+                <!-- // TODO fix chemin pour créer partie -->
+            {/if}
         </div>
     </Route>
     <Route path="/login">
