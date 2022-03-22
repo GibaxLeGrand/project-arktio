@@ -79,10 +79,9 @@
                         id="disconnect"
                         on:click={async () => {
             disconnect().then(isAuth);
-          }}>Créer / Rejoindre Partie
+          }}>Déconnexion
                 </button
                 >
-                <!-- // TODO fix chemin pour créer partie -->
             {/if}
         </div>
     </Route>
