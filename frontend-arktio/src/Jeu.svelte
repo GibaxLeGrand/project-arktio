@@ -100,7 +100,7 @@
     }
 
     retirer_argent(somme: number) {
-      if (this.argent > somme) {
+      if (this.argent < somme) {
         this.statut = Statut.absent;
         this.argent = 0;
         return;
