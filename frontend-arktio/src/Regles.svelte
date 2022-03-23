@@ -1,18 +1,17 @@
 <script lang="ts">
-  //   import { register } from "./scripts/userScripts";
   import { router } from "tinro";
-  import { onMount } from "svelte";
-  let PdfViewer;
+  //   import { onMount } from "svelte";
+  //   let PdfViewer;
 
-  onMount(async () => {
-    const module = await import("svelte-pdf");
-    PdfViewer = module.default;
-  });
+  //   onMount(async () => {
+  //     const module = await import("svelte-pdf");
+  //     PdfViewer = module.default;
+  //   });
 </script>
 
 <main>
-  <svelte:component this={PdfViewer} url="regles.pdf" />
-  <!-- <button on:click={() => router.goto("/")}> Retourner à l'accueil </button> -->
+  <!-- <svelte:component this={PdfViewer} url="regles.pdf" /> -->
+  <button on:click={() => router.goto("/")}> Retourner à l'accueil </button>
   <!-- <PdfViewer showButtons="true" url="/regles.pdf" s /> -->
 </main>
 
@@ -27,11 +26,11 @@
     font-family: $font_arktio;
   }
 
-  button {
-    display: flex;
-    color: $blanc;
-    position: fixed;
-    width: 20%;
-    height: 10%;
-  }
+  //   button {
+  //     display: flex;
+  //     color: $blanc;
+  //     position: fixed;
+  //     width: 20%;
+  //     height: 10%;
+  //   }
 </style>
