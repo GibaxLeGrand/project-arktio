@@ -15,7 +15,11 @@
 
   class Plateau {
     readonly cases: Case[];
+    nombre_joueurs: number;
 
+    // randomize_plateau(){}
+
+    // TODO expliquer ou éclaircir mdr
     constructor(id_event: number[]) {
       for (let i = 0; i < NB_CASES; i++) {
         this.cases.concat(new Case(i, id_event[i]));
@@ -26,8 +30,6 @@
   class Case {
     id: number;
     event: number;
-    // x: number;
-    // y: number;
 
     constructor(id: number, event: number) {
       this.id = id;
@@ -68,13 +70,13 @@
       return idx_objet;
     }
 
-    /*
-        reparer_objet(idx_objet: number, idx_outil: number = -1){
-            this.etat[idx_objet] = Etat.intact;
+    casser_objet(idx_objet: number) {
+      this.supprimer_objet(idx_objet);
+    }
 
-            if(idx_outil != -1) this.supprimer_objet(idx_outil);
-        }
-        */
+    reparer_objet(idx_objet: number, idx_outil: number) {
+      this.etat[idx_objet] = Etat.intact;
+    }
   }
 
   class Joueur {
@@ -89,6 +91,8 @@
     constructor(uid: number, pion: number) {
       this.uid = uid;
       this.pion = pion;
+      this.inventaire = new Inventaire();
+      this.case_actuelle = plateau.cases[0];
     }
 
     getUid(): number {
@@ -116,6 +120,7 @@
       this.pt_terre -= pts;
     }
 
+    // actualise la case selon le lancé de dé
     nouvelle_case(dice_number: number) {
       this.case_actuelle =
         plateau.cases[(this.case_actuelle.id + dice_number) % 30];
