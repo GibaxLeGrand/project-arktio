@@ -1,6 +1,18 @@
 // Fichier permettant d'importer plus facilement les modules
 
 // Helpers
+export {
+	ValidationError,
+	NotFoundError,
+	DBError,
+	ConstraintViolationError,
+	UniqueViolationError,
+	NotNullViolationError,
+	ForeignKeyViolationError,
+	CheckViolationError,
+	DataError
+} from "objection";
+
 export * from "./helpers/error_handler";
 // Classes
 export * from "./models/Users";

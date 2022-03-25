@@ -49,13 +49,14 @@ db.connect(process.env.NODE_ENV!)
         console.log(toto[0].user_name)
         console.log(await db.getUser(17));
         console.log(await db.getUserAuthentificate("c@gmail.com"));
-        try {
-            console.log(await db.putUser("toto", "c@c.com", hash_password("aaaaaaa")));
-        } catch (err: any) {
-            console.log(err);
-        }
+        console.log(await db.putUser("toto", "c@c.com", hash_password("aaaaaaa")));
     });
 
+// Il y a une liste d'erreurs que la BDD peut renvoyer (voir index.ts)
+// Les erreurs peuvent être différenciées avec un instanceof <TypeErreur>
+//
+// Pour une liste d'erreurs possibles,
+// voir ce lien : https://vincit.github.io/objection.js/recipes/error-handling.html
 app.use((err: any, req: any, res: any, next: any) => {
     db.errorHandler(err, res);
 });

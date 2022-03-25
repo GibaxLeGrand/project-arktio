@@ -27,6 +27,7 @@ const config: { [key: string]: Knex.Config } = {
 			password : process.env.PWD_DEV,
 			database : process.env.DATABASE_DEV
 		},
+		debug: true,
 		migrations: {
 			tableName: 'migrations'
 		}
@@ -41,6 +42,7 @@ const config: { [key: string]: Knex.Config } = {
 			password : process.env.PWD_TEST,
 			database : process.env.DATABASE_TEST
 		},
+		debug: true,
 		migrations: {
 			tableName: 'migrations'
 		}
@@ -55,6 +57,7 @@ const config: { [key: string]: Knex.Config } = {
 			password : process.env.PWD_PROD,
 			database : process.env.DATABASE_PROD
 		},
+		debug: false,
 		migrations: {
 			tableName: 'migrations'
 		}

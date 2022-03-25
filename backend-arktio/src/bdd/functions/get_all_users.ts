@@ -5,7 +5,6 @@ export async function getAllUsers(): Promise<Users[]> {
     // !! Les requetes à la BDD sont toujours asynchrones !!
     const users: Users[] = await Users.query()
         .select("*")
-        .throwIfNotFound();
 
     return users;
 }

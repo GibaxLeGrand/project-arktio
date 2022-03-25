@@ -2,7 +2,6 @@ import {
 	ValidationError,
 	NotFoundError,
 	DBError,
-	ConstraintViolationError,
 	UniqueViolationError,
 	NotNullViolationError,
 	ForeignKeyViolationError,
