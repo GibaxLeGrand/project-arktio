@@ -6,6 +6,7 @@ export async function getUser(id: number): Promise<Users> {
     const user: Users[] = await Users.query()
         .select("user_id", "user_name")
         .where("user_id", "=", id)
+        .throwIfNotFound();
 
     return user[0];
 }

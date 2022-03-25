@@ -6,6 +6,7 @@ export async function getUserAuthentificate(email: string): Promise<Users> {
     const user: Users[] = await Users.query()
         .select("*")
         .where("user_email", "=", email)
+        .throwIfNotFound();
 
     return user[0];
 }

@@ -4,7 +4,7 @@ import { Users } from "../models/Users";
 export async function getAllUsers(): Promise<Users[]> {
     // !! Les requetes à la BDD sont toujours asynchrones !!
     const users: Users[] = await Users.query()
-        .select("*")
+        .select("*");
 
     return users;
 }

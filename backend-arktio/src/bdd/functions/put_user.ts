@@ -9,5 +9,6 @@ export async function putUser(pseudo: string, email: string, password: string): 
             user_email: email,
             user_password: password
         });
+        
     return user;
 }
