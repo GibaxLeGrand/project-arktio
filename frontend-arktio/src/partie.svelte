@@ -1,7 +1,7 @@
 <!-- Script -->
 <script lang="ts">
   import Tailwindcss from "./Tailwindcss.svelte";
-  import {router} from "@estym/estyms-tinro";
+  import {router} from "tinro";
 
   const test = () => {
     return true;
@@ -38,9 +38,9 @@
   </div>
 
   <footer>
-    <a href="url">condition générale d'utilisation</a>
-    <a href="non je déconne">Politique de cookie</a>
-    <a href="Qui est tu ?">Qui sommes nous ?</a>
+    <a href="/url">condition générale d'utilisation</a>
+    <a href="/non je déconne">Politique de cookie</a>
+    <a href="/Qui est tu ?">Qui sommes nous ?</a>
   </footer>
 </main>
 

@@ -5,31 +5,35 @@ import apiRoute from "./routes/apiRoute";
 import bodyParser from "body-parser";
 import sessions from "express-session";
 import cookieParser from "cookie-parser";
-import { ChatServer } from './chat';
+import {ChatServer} from './chat';
 import * as db from './bdd';
 import {hash_password} from "./scripts/security/password";
 
 dotenv.config();
 
 const app = express();
-app.use( bodyParser.json() );       // to support JSON-encoded bodies
+
+app.use(bodyParser.json());       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
     extended: true
 }));
 
 app.use(sessions({
     secret: "hypersecretcookiesecret",
-    cookie: {maxAge: 1000*60*60*24}
+    cookie: {maxAge: 1000 * 60 * 60 * 24}
 }))
 
 app.use(cookieParser());
-const server = http.createServer(app);
+
 
 // Link Front
 app.use("/", express.static("../frontend-arktio/public/"))
 
 // Api
 app.use("/api", apiRoute);
+
+// Create server
+const server = http.createServer(app);
 
 // Execute listen so last thing to execute
 new ChatServer(server);

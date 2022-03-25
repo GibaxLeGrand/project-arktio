@@ -12,7 +12,7 @@ router.post("/login", async (req, res) => {
     const user = await getUser(email)
 
     // If it exists
-    if (validate_password(password, user.user_password)) {
+    if (user && validate_password(password, user.user_password)) {
         // init session data
         req.session.user = {userId: user.user_id, userName: user.user_name};
         res.json({connected: true});
@@ -27,6 +27,11 @@ router.post("/register", async (req, res, next) => {
     const [username, email, password, confirm_password] = [req.body.name, req.body.email, req.body.password, req.body.confirm_password]
 
     // Test if both passwords are the same
+    if (password.length < 7) {
+        res.json({registered: false, error: "Password must be at least 7 characters long."})
+        return;
+    }
+
     if (password !== confirm_password) {
         res.json({registered: false, error: "Both password doesn't match."})
         return;

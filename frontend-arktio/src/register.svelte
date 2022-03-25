@@ -1,6 +1,7 @@
 <script lang="ts">
   import Tailwindcss from "./Tailwindcss.svelte";
   import { register } from "./scripts/userScripts";
+  import { Route } from "tinro";
 
   let email = null;
   let password = null;
@@ -48,9 +49,9 @@
   </div>
 
   <footer>
-    <a href="url">condition générale d'utilisation</a>
-    <a href="non je déconne">Politique de cookie</a>
-    <a href="Qui est tu ?">Qui sommes nous ?</a>
+    <a href="/url">condition générale d'utilisation</a>
+    <a href="/non je déconne">Politique de cookie</a>
+    <a href="/Qui est tu ?">Qui sommes nous ?</a>
   </footer>
 </main>
 
@@ -66,9 +67,9 @@
     margin: 0 auto;
   }
 
-  body {
-    background-color: $turquoise;
-  }
+  // body {
+  //   background-color: $turquoise;
+  // }
 
   // TODO pourquoi ça marche pas ça ?
 
@@ -78,13 +79,13 @@
     background-color: $turquoise;
   }
 
-  h1 {
-    color: $turquoise;
-    text-decoration-color: $blanc;
-    text-transform: uppercase;
-    font-size: 4em;
-    font-weight: 100;
-  }
+  // h1 {
+  //   color: $turquoise;
+  //   text-decoration-color: $blanc;
+  //   text-transform: uppercase;
+  //   font-size: 4em;
+  //   font-weight: 100;
+  // }
 
   .logo {
     color: $blanc;

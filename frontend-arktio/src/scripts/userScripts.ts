@@ -1,4 +1,4 @@
-import {router} from "@estym/estyms-tinro";
+import {router} from "tinro";
 import {routerFetch} from "./fetchOverride";
 
 async function register(name: string, email: string, password: string, confirm_password: string) {
@@ -25,6 +25,24 @@ async function register(name: string, email: string, password: string, confirm_p
         if (data.registered) {
             alert(data.message)
             await connect(email, password)
+        } else {
+            alert(data.error);
+        }
+    }
+}
+
+async function disconnect() {
+    const res = await routerFetch(`/api/session/disconnect`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+
+    if (res.status == 200) {
+        const data = await res.json();
+        if (data.disconnected) {
+            router.goto("/")
         } else {
             alert(data.error);
         }
@@ -61,4 +79,4 @@ async function connect(email, mdp) {
 }
 
 
-export {register, connect}
+export {register, connect, disconnect}
