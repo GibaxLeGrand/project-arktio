@@ -27,7 +27,7 @@
     </a>
   </div>
 
-  <div class="page">
+  <div class="boutons">
     <button id="creer" on:click={new_game}>Créer une partie</button>
     <div class="connection">
       <input bind:value={id_partie} />
