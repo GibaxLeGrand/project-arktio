@@ -83,6 +83,12 @@ db.connect(process.env.NODE_ENV!)
             else if (error instanceof db.UniqueViolationError)
                 console.log("Erreur : contrainte unique violée");
         }
+
+        try {
+            console.log(await db.setUsername(64, "test123456"));
+        } catch (error: any) {
+            console.log("Erreur de merde");
+        }
     });
 
 app.use((err: any, req: any, res: any, next: any) => {

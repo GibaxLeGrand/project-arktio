@@ -23,3 +23,5 @@ export * from "./functions/get_all_users";
 export * from "./functions/get_user";
 export * from "./functions/get_user_authentificate";
 export * from "./functions/put_user";
+export * from "./functions/set_password";
+export * from "./functions/set_username";
