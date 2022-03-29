@@ -1,162 +1,160 @@
 <script lang="ts">
-    import Tailwindcss from "./Tailwindcss.svelte";
-    import {register} from "./scripts/userScripts";
-    import {Route} from "tinro";
+	import Tailwindcss from "./Tailwindcss.svelte";
+	import {register} from "./scripts/userScripts";
+	import {router} from "tinro";
 
-    let email = null;
-    let password = null;
-    let name = null;
-    let confirm_password = null;
+	let email = null;
+	let password = null;
+	let name = null;
+	let confirm_password = null;
 </script>
 
-<Tailwindcss/>
+
 <main>
-        <div class="logo">
-            <img alt="logo" src="logo.png"/>
-        </div>
+	<div class="logo">
+		<img alt="logo" src="logo.png"/>
+	</div>
 
-        <div class="boutons">
-            <form
-                    action="javascript:"
-                    on:submit={() => register(name, email, password, confirm_password)}
-            >
-                <label for="name">Nom du joueur:</label>
-                <input required type="text" id="name" name="name" bind:value={name}/>
+	<div class="boutons">
+		<form
+			action="javascript:"
+			on:submit={() => register(name, email, password, confirm_password)}
+		>
+			<label for="name">Nom du joueur:</label>
+			<input required type="text" id="name" name="name" bind:value={name}/>
 
-                <label for="email">Adresse mail:</label>
-                <input required type="email" id="email" name="email" bind:value={email}/>
+			<label for="email">Adresse mail:</label>
+			<input required type="email" id="email" name="email" bind:value={email}/>
 
-                <label for="password">Mot de passe:</label>
-                <input
-                        required
-                        type="password"
-                        id="password"
-                        name="password"
-                        bind:value={password}
-                />
+			<label for="password">Mot de passe:</label>
+			<input
+				required
+				type="password"
+				id="password"
+				name="password"
+				bind:value={password}
+			/>
 
-                <label for="confirm_password">Confirmer le mot de passe:</label>
-                <input
-                        required
-                        type="password"
-                        id="confirm_password"
-                        name="confirm_password"
-                        bind:value={confirm_password}
-                />
+			<label for="confirm_password">Confirmer le mot de passe:</label>
+			<input
+				required
+				type="password"
+				id="confirm_password"
+				name="confirm_password"
+				bind:value={confirm_password}
+			/>
 
-                <button id="validate" type="submit">S'inscrire</button>
-            </form>
-        </div>
+			<button id="validate" type="submit">S'inscrire</button>
+			<button id="retour" on:click={()=>router.goto("/")}>Retour</button>
+				
+		</form>
+	</div>
 
-        <footer>
-            <a href="/url">condition générale d'utilisation</a>
-            <a href="/non je déconne">Politique de cookie</a>
-            <a href="/Qui est tu ?">Qui sommes nous ?</a>
-        </footer>
+	<footer>
+		<a href="/url">condition générale d'utilisation</a>
+		<a href="/non je déconne">Politique de cookie</a>
+		<a href="/Qui est tu ?">Qui sommes nous ?</a>
+	</footer>
 
 </main>
 
+<!-- CSS -->
 <style lang="scss">
-  $turquoise: #00a19a;
-  $blanc: #ffffff;
+	$turquoise: #00a19a;
+	$blanc: #ffffff;
+	$framboise: #ba105a;
+	$caramel: #ffd49a;
+	$turquoise_clair: #98d1cd;
+	$gris: #90908f;
+	$gris_fonce: #2c2c2c;
+	$font_arktio: Raleway;
 
-  main {
-    @apply py-32;
-    text-align: center;
-    padding: 1em;
-    max-width: 240px;
-    margin: 0 auto;
-  }
 
-  body {
-    background-color: $turquoise;
-  }
+main {
+	margin: 0;
+	padding: 0;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	height: 100%;
+}
 
-  // TODO pourquoi ça marche pas ça ?
 
-  div {
-    font-family: Raleway;
-    text-decoration-color: $blanc;
-    background-color: $turquoise;
-  }
+div {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	font-family: $font_arktio;
+}
 
-  h1 {
-    color: $turquoise;
-    text-decoration-color: $blanc;
-    text-transform: uppercase;
-    font-size: 4em;
-    font-weight: 100;
-  }
+img {
+	width: 15rem;
+	height: 15rem;
+	margin: 1rem;
+}
 
-  .logo {
-    color: $blanc;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 5vh;
-  }
+form {
+	display: flex;
+	flex-flow: column;
+	align-items: center;
+	width: 50vw;
+}
 
-  img {
-    max-width: 40%;
-    height: auto;
-  }
+label {
+	color: $blanc;
+	font-size: x-large;
+}
 
-  form {
-    display: flex;
-    flex-flow: column;
-    align-items: center;
-    justify-content: space-around;
-    color: $blanc;
-    block-size: 5vh;
-  }
+input {
+	display: inherit;
+	color: $turquoise;
+	text-align: center;
+	background-color: $blanc;
+	font-size: x-large;
+	height: 5vh;
+	width: 60%;
+	padding: 1em;
+	margin: 2%;
+    border-radius: 10em;
+    border: solid $gris;
+}
 
-  label {
-    color: $blanc;
-    display: inherit;
-    justify-content: center;
-    text-align: center;
-    background-color: $turquoise;
-    font-weight: 100;
-    inline-size: 60vw;
-  }
 
-  input {
-    color: $turquoise;
-    background-color: $blanc;
-    display: inherit;
-    justify-content: center;
-    text-align: center;
-    font-weight: 10;
-    inline-size: 30vw;
-  }
+button{
+	align-items: center;
+	text-align: center;
+	background-color: $blanc;
+	font-size: 100%;
+	height: 6vh;
+	color: $turquoise;
+    margin: 2%;
+    background-color: #ffffff;
+    width: 50%;
+    border-radius: 10em;
+    border: solid $gris;
+}
 
-  .boutons {
-    display: flex;
-    flex-flow: column;
-    align-items: center;
-    justify-content: space-around;
-    color: $blanc;
-    block-size: 50vh;
-  }
+a {
+	margin-inline: 1em;
+	font-family: $font_arktio;
+	color: $blanc;
+}
 
-  button {
-    color: $turquoise;
-    display: inherit;
-    align-items: center;
-    justify-content: space-around;
-    text-align: center;
-    background-color: $blanc;
-    font-weight: 400;
-    inline-size: 60vw;
-  }
+footer {
+	display: flex;
+	bottom: 0;
+	justify-content: center;
+	width: 100%;
+	padding: 1em;
+	margin: 0 auto;
+	background-color: $turquoise_clair;
+}
 
-  footer > a {
-    padding: 5%;
-  }
+@media (max-width: 640px) {
 
-  @media (min-width: 640px) {
-    main {
-      max-width: none;
-    }
-  }
+	div, form {
+		width: 100%;
+	}
+
+}
 </style>

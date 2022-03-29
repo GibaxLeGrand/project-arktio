@@ -2,6 +2,8 @@
 <script lang="ts">
 	import Tailwindcss from "./Tailwindcss.svelte";
 	import { connect } from "./scripts/userScripts";
+	import {router} from "tinro";
+
 
 	let email: string | null = null;
 	let mdp: string | null = null;
@@ -35,11 +37,12 @@
 			/>
 
 			<button id="entrer" type="submit">Connexion</button>
+			<button id="retour" on:click={()=>router.goto("/")}>Retour</button>
 		</form>
 	</div>
 
 	<footer>
-		<a href="url">condition générale d'utilisation</a>
+		<a href="url">Condition générale d'utilisation</a>
 		<a href="non je déconne">Politique de cookie</a>
 		<a href="Qui est tu ?">Qui sommes nous ?</a>
 	</footer>
@@ -87,6 +90,10 @@ form {
 	width: 50vw;
 }
 
+label {
+	color: $blanc;
+	font-size: x-large;
+}
 
 input {
 	display: inherit;
@@ -117,13 +124,17 @@ button{
     border: solid $gris;
 }
 
+a {
+	margin-inline: 1em;
+	font-family: $font_arktio;
+	color: $blanc;
+}
 
 footer {
+	display: flex;
 	bottom: 0;
-	position: absolute;
-	text-align: center;
+	justify-content: center;
 	width: 100%;
-	font-family: $font_arktio;
 	padding: 1em;
 	margin: 0 auto;
 	background-color: $turquoise_clair;
