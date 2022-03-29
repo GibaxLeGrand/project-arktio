@@ -1,7 +1,6 @@
 <script lang="ts">
   import Tailwindcss from "./Tailwindcss.svelte";
   import { register } from "./scripts/userScripts";
-  import { Route } from "tinro";
 
   let email = null;
   let password = null;
