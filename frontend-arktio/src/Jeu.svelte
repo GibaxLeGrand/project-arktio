@@ -29,7 +29,7 @@
 
   class Case {
     id: number;
-    event: number;
+    event: number; // id de la fonction handler
 
     constructor(id: number, event: number) {
       this.id = id;
