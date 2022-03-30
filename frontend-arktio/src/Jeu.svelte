@@ -1,7 +1,11 @@
 <script lang="ts">
+  import {Canvas} from "svelte-canvas";
   import Tailwindcss from "Tailwindcss.svelte";
 
   const NB_CASES = 30;
+
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
 
   enum Etat {
     intact, // cassable
@@ -127,6 +131,9 @@
 
 <main>
   <Tailwindcss />
+  <Canvas id="canvas" width={window.innerWidth} height={window.innerHeight}>
+    <!-- Inserer layers --->
+  </Canvas>
 </main>
 
 <style lang="scss">
