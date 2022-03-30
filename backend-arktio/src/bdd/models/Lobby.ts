@@ -3,7 +3,7 @@ import { Users } from "./Users";
 
 export class Lobby extends Model{
     // Attibuts à définir pour pouvoir utiliser les valeurs.
-    lobby_id!: number;
+    lobby_uuid!: string;
     lobby_name!: string;
     lobby_password!: string;
 
@@ -25,11 +25,11 @@ export class Lobby extends Model{
     static get jsonSchema() {
         return {
             type: "object",
-            required : ["lobby_id", "lobby_name"],
+            required : ["lobby_id", "lobby_name", "lobby_password"],
             properties: {
-                lobby_id: { type: 'number' },
+                lobby_id: { type: 'string' },
                 lobby_name: { type: 'string', minLength: 3, maxLength: 255 },
-                lobby_password: { type: 'string', minLength: 1, maxLength: 255 },
+                lobby_password: { type: 'string', minLength: 0, maxLength: 255 },
             }
         }
     }

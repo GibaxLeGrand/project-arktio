@@ -3,7 +3,7 @@ import { Lobby } from "./Lobby";
 
 export class Users extends Model {
     // Attibuts à définir pour pouvoir utiliser les valeurs.
-    user_id!: number;
+    user_uuid!: string;
     user_name!: string;
     user_email!: string;
     user_password!: string;
@@ -28,7 +28,7 @@ export class Users extends Model {
             type: "object",
             required: ["user_name", "user_email", "user_password"],
             properties: {
-                user_id: { type: 'number' },
+                user_id: { type: 'string' },
                 user_name: { type: 'string', minLength: 3, maxLength: 256 },
                 user_email: { type: 'string', minLength: 1, maxLength: 256 },
                 user_password: { type: 'string', minLength: 7, maxLength: 256 },
