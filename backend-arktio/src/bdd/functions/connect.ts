@@ -15,8 +15,6 @@ export async function connect(mode: string): Promise<any> {
         
         return status[0];
     } catch (error) {
-        console.log(error);
-
         return [{ Status: "ERROR" }];
     }
 }

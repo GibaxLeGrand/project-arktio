@@ -4,4 +4,6 @@
 .DS_Store
 .vscode
 .idea
-.log
+*.log
+package-lock.json
+yarn.lock

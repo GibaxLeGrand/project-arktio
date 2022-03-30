@@ -1,5 +1,6 @@
 import {Router} from "express";
-import {getUser, putUser, Users} from "../../bdd";
+import {getUser, putUser, Users, ConstraintViolationError, DBError, NotFoundError, getUserAuthentificate} from "../../bdd";
+import {hash_password, validate_password} from "../../scripts/security/password";
 
 const router = Router();
 
@@ -8,24 +9,34 @@ router.post("/login", async (req, res) => {
     const [email, password] = [req.body.email, req.body.password]
 
     // Verify if the user exists
-    const user = await getUser(email, password)
-
-    // If it exists
-    if (user) {
-        // init session data
-        req.session.user = {userId: user.user_id, userName: user.user_name};
-        res.json({connected: true});
-        return;
+    try {
+        const user = await getUserAuthentificate(email);
+        // If it exists
+        if (validate_password(password, user.user_password)) {
+            // init session data
+            req.session.user = {userId: user.user_id, userName: user.user_name};
+            res.json({connected: true});
+            return;
+        }
+    } catch (err) {
+        // If the user doesn't exist
+        if (err instanceof NotFoundError) {
+            res.json({connected: false, error: "Invalid credentials."});
+        } else {
+            res.json({connected: false, error: "Unknown error!"});
+        }
     }
-
-    // If the user doesn't exist
-    res.json({connected: false, error: "Invalid credentials."});
 });
 
-router.post("/register", async (req, res) => {
+router.post("/register", async (req, res, next) => {
     const [username, email, password, confirm_password] = [req.body.name, req.body.email, req.body.password, req.body.confirm_password]
 
     // Test if both passwords are the same
+    if (password.length < 7) {
+        res.json({registered: false, error: "Password must be at least 7 characters long."})
+        return;
+    }
+
     if (password !== confirm_password) {
         res.json({registered: false, error: "Both password doesn't match."})
         return;
@@ -39,16 +50,20 @@ router.post("/register", async (req, res) => {
     }
 
     // Try to insert user in database
-    const user = await putUser(username, email, password);
+    try {
+        const user = await putUser(username, email, hash_password(password));
+        console.log(user);
+        // User inserted
+        res.json({registered: true, message: "Account successfully created!"})   
+    } catch (err) {
 
-    // User inserted
-    if ((user instanceof Users)) {
-        res.json({registered: true, message: "Account successfully created !"})
-        return;
+        if (err instanceof ConstraintViolationError) {
+            // Can't insert user in database for some reasons
+            res.json({registered: false, error: "Account already exist!"})
+        } else if (err instanceof DBError) {
+            res.json({registered: false, error: "Cannot connect to database!"})
+        }
     }
-
-    // Can't insert user in database for some reasons
-    res.json({registered: false, error: user.errors[0]})
 })
 
 router.get("/isAuth", async (req, res) => {
