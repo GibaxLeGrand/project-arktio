@@ -1,6 +1,5 @@
 <!-- Script -->
 <script lang="ts">
-	import Tailwindcss from "./Tailwindcss.svelte";
 	import { connect } from "./scripts/userScripts";
 	import {router} from "tinro";
 

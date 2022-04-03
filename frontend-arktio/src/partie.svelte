@@ -1,6 +1,5 @@
 <!-- Script -->
 <script lang="ts">
-	import Tailwindcss from "./Tailwindcss.svelte";
 	import {router} from "tinro";
 
 	const test = () => {
@@ -22,13 +21,15 @@
 	</div>
 
 	<div class="boutons">
-		<button id="creer" on:click={new_game}>Créer une partie</button>
-		<div class="connection">
+		<form
+			class="connection"
+		>
+			<button id="creer" on:click={new_game}>Créer une partie</button>
 			<input bind:value={id_partie} />
 			<button id="rejoidre">Rejoidre une partie</button>
-		</div>
-
-		<button id="retour" on:click={()=>router.goto("/")}>Retour</button>
+			<button id="retour" on:click={()=>router.goto("/")}>Retour</button>
+		</form>
+		
 	</div>
 
 	<footer>
@@ -72,6 +73,13 @@ img {
 	width: 15rem;
 	height: 15rem;
 	margin: 1rem;
+}
+
+form {
+	display: flex;
+	flex-flow: column;
+	align-items: center;
+	width: 50vw;
 }
 
 input {
@@ -125,9 +133,10 @@ footer {
 
 @media (max-width: 640px) {
 
-	div {
+	div, form {
 		width: 100%;
 	}
 
 }
 </style>
+  

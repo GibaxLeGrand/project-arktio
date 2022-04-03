@@ -1,5 +1,4 @@
 <script lang="ts">
-	import Tailwindcss from "./Tailwindcss.svelte";
 	import {register} from "./scripts/userScripts";
 	import {router} from "tinro";
 
