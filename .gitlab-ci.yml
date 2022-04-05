@@ -1,8 +1,14 @@
 default:
   image: node:17-alpine
 
-before_script:
-  - yarn install
+stage:
+  - setup
+  - test
+
+setup:
+  stage: setup
+  script:
+    - yarn --cwd ./backend-arktio install
 
 test:
   stage: test
