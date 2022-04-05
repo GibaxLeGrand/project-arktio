@@ -1,3 +1,4 @@
+import crypto from "crypto"
 import {Users} from "../models/Users";
 
 // Pour générer un identifiant unique

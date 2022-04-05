@@ -84,6 +84,7 @@ db.connect(process.env.NODE_ENV!)
 
         try {
             console.log(await db.putUser("toto", "c@c.com", hash_password("aaaaaaa")));
+            console.log("Insertion réussie");   
         } catch (error: any) {
             // Quelques exemples pour traiter les erreurs
             if (error instanceof db.ConstraintViolationError)
