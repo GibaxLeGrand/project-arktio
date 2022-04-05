@@ -1,7 +1,7 @@
 default:
   image: node:17-alpine
 
-stage:
+stages:
   - setup
   - test
 
