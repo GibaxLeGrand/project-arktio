@@ -11,9 +11,4 @@ before_script:
 backend-test:
   stage: test
   script: 
-    - yarn --cwd ./backend-arktio run test
-
-frontend-test:
-  stage: test
-  script: 
-    - yarn --cwd ./frontend-arktio run test
+    - yarn --cwd ./backend-arktio run test --ci

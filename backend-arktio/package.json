@@ -12,7 +12,7 @@
     "build-start": "npm run build && npm run start",
     "clean": "rimraf build coverage",
     "dev": "tsc-watch --onSuccess \"node ./build/index.js\"",
-    "test": "jest --ci --reporters=default --detectOpenHandles",
+    "test": "jest --reporters=default --detectOpenHandles",
     "migrate": "npx knex migrate:latest --knexfile ./src/bdd/knexfile.ts",
     "reset": "npx knex migrate:rollback --knexfile ./src/bdd/knexfile.ts",
     "seed": "npx knex seed:run --knexfile ./src/bdd/knexfile.ts"
