@@ -1,7 +1,0 @@
-before_script:
-  - apt-get update -qq
-
-test:
-  stage: test
-  script: 
-    - 'yarn run test'
