@@ -1,8 +1,5 @@
-import { Lobby } from './lobby';
 import express from 'express';
 import * as http from 'http';
-import { Server, Socket } from 'socket.io';
-import { Player } from './player';
 import * as core from 'express-serve-static-core';
 import dotenv from "dotenv";
 import apiRoute from "./routes/apiRoute";
@@ -11,6 +8,7 @@ import sessions from "express-session";
 import cookieParser from "cookie-parser";
 import * as db from './bdd';
 import {hash_password} from "./scripts/security/password";
+import {LobbyManager} from './lobbymanager';
 
 declare global {
     interface Crypto {
@@ -99,56 +97,4 @@ db.connect(process.env.NODE_ENV!)
         }
     });
 
-export class LobbyManager {
-    private io: Server;
-    private lobbies: Map<string, Lobby>;
-
-    constructor() {
-        this.io = new Server(server);
-        this.lobbies = new Map();
-        this.setup();
-    }
-
-    private setup() : void {
-        this.io.on("connection", (socket: Socket) => {
-            console.log("Connected client on port %s", port);
-        
-            socket.on("player information", (uuid: string, callback: ({ player } : { player: Player }) => void) => {
-                let player: Player = new Player(uuid); // TODO: FIND IN DATABASE
-        
-                socket.removeAllListeners("player information");
-        
-                socket.on("join lobby", (lobbyUUID: string, callback: (({ valid, lobby } : { valid: boolean, lobby: Lobby }) => void)) => {
-                    let lobby: Lobby;
-                    
-                    if (this.lobbies.has(lobbyUUID)) {
-                        lobby = this.lobbies.get(lobbyUUID)!;
-                    } else {
-                        lobby = new Lobby(lobbyUUID, this.io, true);
-                        this.lobbies.set(lobbyUUID, lobby)
-                    }
-
-                    if (lobby.isAccessible()) 
-                        lobby.addPlayer(player, socket);
-            
-                    callback({ valid: lobby.isAccessible(), lobby: lobby });
-                });
-
-                callback({ player: player });
-            });
-        });
-    }
-
-    public getLobbies() : Map<string, Lobby> {
-        return this.lobbies;
-    }
-
-    public destroy() : void {
-        this.lobbies.forEach(lobby => {
-            lobby.destroy();
-        })
-    }
-
-}
-
-new LobbyManager();
+new LobbyManager(server, port);

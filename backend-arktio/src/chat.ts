@@ -22,9 +22,7 @@ export class Chat {
             socket.join(this.lobby.getUUID());    
             this.sockets.add(socket);
 
-            socket.on("send message", (message: string) => {
-                console.log("[%s] %s: %s", this.lobby.getUUID(), player, message);
-                
+            socket.on("send message", (message: string) => {                
                 this.lobby.getIO().sockets
                     .in(this.lobby.getUUID())
                     .emit("recv message", { player: player.getUUID(), message: message });
