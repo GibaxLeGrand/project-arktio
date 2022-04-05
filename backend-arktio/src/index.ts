@@ -113,7 +113,7 @@ export class LobbyManager {
         this.io.on("connection", (socket: Socket) => {
             console.log("Connected client on port %s", port);
         
-            socket.on("player information", (uuid: string) => {
+            socket.on("player information", (uuid: string, callback: ({ player } : { player: Player }) => void) => {
                 let player: Player = new Player(uuid); // TODO: FIND IN DATABASE
         
                 socket.removeAllListeners("player information");
@@ -133,9 +133,22 @@ export class LobbyManager {
             
                     callback({ valid: lobby.isAccessible(), lobby: lobby });
                 });
+
+                callback({ player: player });
             });
         });
     }
+
+    public getLobbies() : Map<string, Lobby> {
+        return this.lobbies;
+    }
+
+    public destroy() : void {
+        this.lobbies.forEach(lobby => {
+            lobby.destroy();
+        })
+    }
+
 }
 
 new LobbyManager();
