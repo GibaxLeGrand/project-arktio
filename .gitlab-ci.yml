@@ -17,6 +17,7 @@ backend-test:
 frontend-build:
   stage: build
   script: 
+    - yarn --cwd ./frontend-arktio run clean
     - yarn --cwd ./frontend-arktio run build
   artifacts:
     paths:
@@ -25,6 +26,7 @@ frontend-build:
 backend-build:
   stage: build
   script: 
+    - yarn --cwd ./backend-arktio run clean
     - yarn --cwd ./backend-arktio run build
   artifacts:
     paths:
