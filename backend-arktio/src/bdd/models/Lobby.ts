@@ -7,7 +7,7 @@ export class Lobby extends Model{
     lobby_name!: string;
     lobby_password!: string;
 
-    current_users?: Users[];
+    // current_users?: Users[];
 
     // Propiété obligatoire à ajouter qui permet de retrouver la table
     static override get tableName() {
@@ -15,7 +15,7 @@ export class Lobby extends Model{
     }
     // Spécifie la colone de la clé primaire de la table
     static override get idColumn() {
-        return "lobby_id";
+        return "lobby_uuid";
     }
 
     // D'autres options oeuvent être définis, optionnel mais utile
@@ -40,8 +40,8 @@ export class Lobby extends Model{
             relation: Model.HasManyRelation, // relation 0-n
             modelClass: Users,
             join: {
-                from: 'Lobby.lobby_id',
-                to: 'Users.lobby_id'
+                from: 'Lobby.lobby_uuid',
+                to: 'Users.lobby_uuid'
             }
         }       
     }

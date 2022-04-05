@@ -14,7 +14,7 @@ router.post("/login", async (req, res) => {
         // If it exists
         if (validate_password(password, user.user_password)) {
             // init session data
-            req.session.user = {userId: user.user_id, userName: user.user_name};
+            req.session.user = {userUUID: user.user_uuid, userName: user.user_name};
             res.json({connected: true});
             return;
         }

@@ -8,7 +8,7 @@ export class Users extends Model {
     user_email!: string;
     user_password!: string;
     
-    lobby_id?: Lobby;
+    // lobby_id?: Lobby;
 
     // Propiété obligatoire à ajouter qui permet de retrouver la table
     static override get tableName() {
@@ -42,7 +42,7 @@ export class Users extends Model {
             relation: Model.HasOneRelation, // relation 0-1 (peut pas rejoindre plusieurs lobbys)
             modelClass: Users,
             join: {
-                from: 'Users.lobby_id',
+                from: 'Users.lobby_uuid',
                 to: 'Lobby.current_users'
             }
         }       

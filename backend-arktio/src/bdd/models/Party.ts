@@ -3,7 +3,7 @@ import { Model } from "objection";
 export class Party extends Model {
     // Attibuts à définir pour pouvoir utiliser les valeurs.
     party_id!: number;
-    user_id!: number;
+    user_uuid!: number;
 
     // Propiété obligatoire à ajouter qui permet de retrouver la table
     static override get tableName() {
