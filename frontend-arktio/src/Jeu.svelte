@@ -1,11 +1,11 @@
 <script lang="ts">
-  import {Canvas} from "svelte-canvas";
+  import { Canvas } from "svelte-canvas";
   import Tailwindcss from "Tailwindcss.svelte";
 
   const NB_CASES = 30;
 
-  const canvas = document.getElementById('canvas');
-  const ctx = canvas.getContext('2d');
+  const canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d");
 
   enum Etat {
     intact, // cassable
@@ -19,6 +19,13 @@
 
   class Plateau {
     readonly cases: Case[];
+
+    tableau: {
+      id: number;
+      nom_joueur: string;
+      pt_terre: number;
+      argent: number;
+    };
 
     constructor(id_event: number[]) {
       for (let i = 0; i < NB_CASES; i++) {
