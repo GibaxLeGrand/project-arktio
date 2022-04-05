@@ -1,7 +1,9 @@
 before_script:
   - apt-get update -qq
+  - npm install --global yarn
+  - yarn --version
 
 test:
   stage: test
   script: 
-    - 'yarn --cwd ./backend-arktio run test'
+    - yarn --cwd ./backend-arktio run test
