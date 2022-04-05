@@ -71,7 +71,7 @@ db.connect(process.env.NODE_ENV!)
         }
 
         try {
-            console.log(await db.getUser(17));
+            console.log(await db.getUser("5"));
         } catch (error) {
             console.log(error);
         }
@@ -93,7 +93,7 @@ db.connect(process.env.NODE_ENV!)
         }
 
         try {
-            console.log(await db.setUsername(64, "test123456"));
+            console.log(await db.setUsername("4", "test123456"));
         } catch (error: any) {
             console.log("Erreur de merde");
         }

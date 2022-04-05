@@ -1,5 +1,5 @@
 interface UserSession {
-    userId: number,
+    userUUID: string,
     userName: string
 }
 
