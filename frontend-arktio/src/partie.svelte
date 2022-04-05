@@ -31,12 +31,7 @@
 		</form>
 		
 	</div>
-
-	<footer>
-		<a href="/url">condition générale d'utilisation</a>
-		<a href="/non je déconne">Politique de cookie</a>
-		<a href="/Qui est tu ?">Qui sommes nous ?</a>
-	</footer>
+	
 </main>
 
 
@@ -109,22 +104,6 @@ button{
     width: 50%;
     border-radius: 10em;
     border: solid $gris;
-}
-
-a {
-	margin-inline: 1em;
-	font-family: $font_arktio;
-	color: $blanc;
-}
-
-footer {
-	display: flex;
-	bottom: 0;
-	justify-content: center;
-	width: 100%;
-	padding: 1em;
-	margin: 0 auto;
-	background-color: $turquoise_clair;
 }
 
 .connection {

@@ -116,13 +116,8 @@
 			En attente du début de partie
 		</button>
 	{/if}
-<!--
-	<footer>
-		<a href="url">condition générale d'utilisation</a>
-		<a href="non je déconne">Politique de cookie</a>
-		<a href="Qui est tu ?">Qui sommes nous ?</a>
-	</footer>
--->
+	
+
 </main>
 
 
@@ -196,6 +191,7 @@ button{
 	padding: 1em;
 	margin: 5px;
 	width: 80%;
+	border-radius: 1em;
 }
 
 .droite {
@@ -207,27 +203,17 @@ button{
 }
 
 #choix_pion {
-	background-color: $blanc;
-	padding: 2px;
+	background-color: $caramel;
+	padding: 1em;
 	margin: 1em;
 	align-items: center;
+	border: solid $gris 5px;
+	border-radius: 1em;
 }
 
-
-a {
-	margin-inline: 1em;
-	font-family: $font_arktio;
-	color: $blanc;
-}
-
-footer {
-	display: flex;
-	bottom: 0;
-	justify-content: center;
-	width: 100%;
-	padding: 1em;
-	margin: 0 auto;
-	background-color: $turquoise_clair;
+select {
+	background-color: $blanc;
+	border-radius: 1em;
 }
 
 @media (max-width: 640px) {

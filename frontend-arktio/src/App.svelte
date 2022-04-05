@@ -36,6 +36,14 @@
 	})
 </script>
 
+<svelte:head>
+	<title>Arktio</title>
+	<link rel="stylesheet" href="/style.css">
+	<link rel="icon" type="image/png" href="logo.png" />
+	<html lang="fr" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta charset="UTF-8">
+</svelte:head>
 
 <main>
 	<Route path="/">
@@ -80,8 +88,8 @@
 
 		<footer>
 			<a href="url">Condition générale d'utilisation</a>
-			<a href="non je déconne">Politique de cookie</a>
-			<a href="Qui est tu ?">Qui sommes nous ?</a>
+			<a href="cookie">Politique de cookie</a>
+			<a href="contacte">Qui sommes nous ?</a>
 		</footer>
 
 	</Route>
@@ -89,7 +97,7 @@
 		<!--<Login/>-->
 		<Lobby/>
 	</Route>
-	<Route path="/lobby">
+		<Route path="/lobby">
 		<Lobby/>
 		<!-- TODO peut être comme partie avec /:id -->
 	</Route>
@@ -167,20 +175,14 @@ a {
 
 footer {
 	display: flex;
-	bottom: 0;
 	justify-content: center;
-	width: 100%;
+	position: relative;
+	bottom: 0;
+	width: 100vW;
 	padding: 1em;
 	margin: 0 auto;
 	background-color: $turquoise_clair;
 }
-
-
-/*
-#rejoindre_creer_partie {
-	visibility: hidden;
-}
-*/
 
 @media (max-width: 640px) {
 

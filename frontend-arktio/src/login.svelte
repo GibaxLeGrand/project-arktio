@@ -1,6 +1,6 @@
 <!-- Script -->
 <script lang="ts">
-	import { connect } from "./scripts/userScripts";
+	import {connect} from "./scripts/userScripts";
 	import {router} from "tinro";
 
 
@@ -39,12 +39,7 @@
 			<button id="retour" on:click={()=>router.goto("/")}>Retour</button>
 		</form>
 	</div>
-
-	<footer>
-		<a href="url">Condition générale d'utilisation</a>
-		<a href="non je déconne">Politique de cookie</a>
-		<a href="Qui est tu ?">Qui sommes nous ?</a>
-	</footer>
+	
 </main>
 
 <!-- CSS -->
@@ -121,22 +116,6 @@ button{
     width: 50%;
     border-radius: 10em;
     border: solid $gris;
-}
-
-a {
-	margin-inline: 1em;
-	font-family: $font_arktio;
-	color: $blanc;
-}
-
-footer {
-	display: flex;
-	bottom: 0;
-	justify-content: center;
-	width: 100%;
-	padding: 1em;
-	margin: 0 auto;
-	background-color: $turquoise_clair;
 }
 
 .connection {
