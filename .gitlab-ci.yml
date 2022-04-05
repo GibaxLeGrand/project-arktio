@@ -3,6 +3,7 @@ default:
 
 stages:
   - test
+  - build
 
 before_script:
   - yarn --cwd ./backend-arktio  install
@@ -11,4 +12,20 @@ before_script:
 backend-test:
   stage: test
   script: 
-    - yarn --cwd ./backend-arktio run test --ci
+    - yarn --cwd ./backend-arktio run test
+
+frontend-build:
+  stage: build
+  script: 
+    - yarn --cwd ./frontend-arktio run build
+  artifacts:
+    paths:
+      - frontend-arktio/public/build
+
+backend-build:
+  stage: build
+  script: 
+    - yarn --cwd ./backend-arktio run build
+  artifacts:
+    paths:
+      - backend-arktio/build
