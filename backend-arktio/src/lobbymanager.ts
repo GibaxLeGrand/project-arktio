@@ -52,7 +52,8 @@ export class LobbyManager {
     public destroy() : void {
         this.lobbies.forEach(lobby => {
             lobby.destroy();
-        })
+        });
+        this.io.close();
     }
 
 }

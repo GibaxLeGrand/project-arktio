@@ -33,6 +33,7 @@ describe("lobby", () => {
     afterAll((done) => {
         lobby.destroy();
         clientSocket.close();
+        ioServer.close();
         done();
     });
 
