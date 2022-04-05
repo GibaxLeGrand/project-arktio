@@ -1,5 +1,6 @@
 before_script:
-  - apt-get update -qq
+  - apt update -qq
+  - apt install curl
   - curl -L https://npmjs.org/install.sh | sudo sh
   - npm install --global yarn
   - yarn --version
