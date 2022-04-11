@@ -10,7 +10,7 @@
     page++;
   }
   function button_previous_handler() {
-    if (page < 2) return;
+    if (page == 1) return;
     page--;
   }
 </script>
@@ -115,7 +115,6 @@
 
   section {
     display: flex;
-    // background-color: forestgreen;
     width: 90%;
     height: 90%;
     margin: 5%;
