@@ -164,55 +164,100 @@
   }
 </style> -->
 <script lang="ts">
+  import type { SvelteComponent } from "svelte";
+
   const NB_CASES = 30;
+  // let quit_game_button = document.getElementById("quit_game");
+  let quit_game_button_text = "Quitter";
+  let button_yes = document.getElementById("yes");
+  let button_no = document.getElementById("no");
+  let print_yes_no = false;
+
+  function quit_game_handler() {
+    // change text on the button
+    quit_game_button_text === "Abandonner la partie ?"
+      ? (quit_game_button_text = "Quitter")
+      : (quit_game_button_text = "Abandonner la partie ?");
+    // toggle buttons yes and no
+    print_yes_no == false ? (print_yes_no = true) : (print_yes_no = false);
+  }
+
+  // quit the game without asking if the button is yes
+  function quit() {
+    // TODO
+  }
 </script>
 
 <main>
-  <div class="case">
-    <div id="x1" class="cases_horizontal">X 1</div>
-    <div id="x2" class="cases_horizontal">X 2</div>
-    <div id="x3" class="cases_horizontal">X 3</div>
-    <div id="x4" class="cases_horizontal">X 4</div>
-    <div id="x5" class="cases_horizontal">X 5</div>
-    <div id="x6" class="cases_horizontal">X 6</div>
-    <div id="x7" class="cases_horizontal">X 7</div>
-    <div id="x8" class="cases_vertical">X 8</div>
-    <div id="x9" class="cases_vertical">X 9</div>
-    <div id="x10" class="cases_vertical">X 10</div>
-    <div id="x11" class="cases_vertical">X 11</div>
-    <div id="x12" class="cases_vertical">X 12</div>
-    <div id="x13" class="cases_vertical">X 13</div>
-    <div id="x14" class="cases_horizontal">X 14</div>
-    <div id="x15" class="cases_horizontal">X 15</div>
-    <div id="x16" class="cases_horizontal">X 16</div>
-    <div id="x17" class="cases_horizontal">X 17</div>
-    <div id="x18" class="cases_horizontal">X18</div>
-    <div id="x19" class="cases_vertical">X 19</div>
-    <div id="x20" class="cases_vertical">X 20</div>
-    <div id="x21" class="cases_vertical">X 21</div>
-    <div id="x22" class="cases_vertical">X 22</div>
-    <div id="x23" class="cases_vertical">X 23</div>
-    <div id="x24" class="cases_vertical">X 24</div>
-    <div id="x25" class="cases_vertical">X 25</div>
-    <div id="x26" class="cases_vertical">X 26</div>
-    <div id="x27" class="cases_horizontal">X 27</div>
-    <div id="x28" class="cases_horizontal">X 28</div>
-    <div id="x29" class="cases_horizontal">X 29</div>
-    <div id="x30" class="cases_horizontal">X 30</div>
+  <div class="plateau">
+    <div id="x1" class="cases_haut">X 1</div>
+    <div id="x2" class="cases_haut">X 2</div>
+    <div id="x3" class="cases_haut">X 3</div>
+    <div id="x4" class="cases_haut">X 4</div>
+    <div id="x5" class="cases_haut">X 5</div>
+    <div id="x6" class="cases_haut">X 6</div>
+    <div id="x7" class="cases_haut">X 7</div>
+    <div id="x8" class="cases_droite">X 8</div>
+    <div id="x9" class="cases_droite">X 9</div>
+    <div id="x10" class="cases_droite">X 10</div>
+    <div id="x11" class="cases_droite">X 11</div>
+    <div id="x12" class="cases_droite">X 12</div>
+    <div id="x13" class="cases_droite">X 13</div>
+    <div id="x14" class="cases_droite">X 14</div>
+    <div id="x15" class="cases_droite">X 15</div>
+    <div id="x16" class="cases_bas">X 16</div>
+    <div id="x17" class="cases_bas">X 17</div>
+    <div id="x18" class="cases_bas">X18</div>
+    <div id="x19" class="cases_bas">X 19</div>
+    <div id="x20" class="cases_bas">X 20</div>
+    <div id="x21" class="cases_bas">X 21</div>
+    <div id="x22" class="cases_bas">X 22</div>
+    <div id="x23" class="cases_gauche">X 23</div>
+    <div id="x24" class="cases_gauche">X 24</div>
+    <div id="x25" class="cases_gauche">X 25</div>
+    <div id="x26" class="cases_gauche">X 26</div>
+    <div id="x27" class="cases_gauche">X 27</div>
+    <div id="x28" class="cases_gauche">X 28</div>
+    <div id="x29" class="cases_gauche">X 29</div>
+    <div id="x30" class="cases_gauche">X 30</div>
     <div id="conteneur">
-      "ÉVÉNEMENTS ( tu dois payer ...)"
+      <div id="event">"ÉVÉNEMENTS ( tu dois payer ...)"</div>
       <div id="image">image</div>
-      <button id="option1">options</button>
-      <button id="option2">options</button>
-      <button id="option3">options</button>
-      <button id="option4">options</button>
+      <button id="option1" class="options">options 1</button>
+      <button id="option2" class="options">options 2</button>
+      <button id="option3" class="options">options 3</button>
+      <button id="option4" class="options">options 4</button>
     </div>
+
+    <div id="titre_inventaire">Inventaire</div>
+    <div id="inventaire" />
+    <div id="chat">chat</div>
+    <h1>Classement</h1>
+    <div id="classement">
+      <div id="classement_1">J1</div>
+      <div id="classement_2">J2</div>
+      <div id="classement_3">J3</div>
+      <div id="classement_4">J4</div>
+    </div>
+    <button id="quit_game" on:click={quit_game_handler}
+      >{quit_game_button_text}</button
+    >
+    {#if print_yes_no}
+      <button on:click={quit} bind:this={button_yes} class="bouton_choix"
+        >OUI</button
+      >
+      <button
+        on:click={quit_game_handler}
+        bind:this={button_no}
+        class="bouton_choix">NON</button
+      >
+    {/if}
   </div>
 </main>
 
 <style lang="scss">
   $nb_cases_horizontal: 5;
-  $nb_cases_vertical: 8;
+  $nb_cases_vertical: 10; // les cases dans les coins sont comptées
   $taille_case: 1fr;
 
   $turquoise: #00a19a;
@@ -234,30 +279,10 @@
 
     font-size: xx-large;
     color: #ffffff;
+    font-family: $font_arktio;
   }
 
-  #plateau {
-    grid-template-areas:
-      "case cases_horizontal case"
-      "cases_vertical event cases_vertical"
-      "case cases_horizontal case";
-  }
-
-  #event {
-    grid-area: event;
-
-    width: $nb_cases_horizontal * $taille_case;
-    height: $nb_cases_vertical * $taille_case;
-  }
-
-  .case {
-    // grid-area: case;
-    // grid-template-columns: repeat(5, 10px) repeat(5, 10px);
-    // grid-template-rows: repeat(5, 10px) repeat(5, 10px);
-
-    // width: $taille_case;
-    // height: $taille_case;
-
+  .plateau {
     width: 100%;
     height: 100%;
 
@@ -267,159 +292,274 @@
     display: grid;
     grid-gap: 5px;
     grid-template-rows: repeat(10, $taille_case);
-    grid-template-columns: repeat(7, $taille_case);
+    grid-template-columns: repeat(11, $taille_case);
   }
 
-  .cases_horizontal {
-    // grid-area: cases_horizontal;
-
-    // background-color: blue;
-    width: $nb_cases_horizontal * $taille_case;
-    height: $taille_case;
-
-    border: dashed $gris_fonce;
-    border-width: 5px;
-
-    position: static;
-    justify-content: right;
+  // toutes les cases y compris contener
+  .plateau > div {
+    border: dashed black;
   }
 
-  // // 7 premiers éléments horizontaux
-  // .cases_horizontal:nth-child(-n + 7) {
-  //   background-color: #2c2c2c;
-  // }
-  // // 8 derniers éléments horizontaux ( 30-8 )
-  // .cases:nth-child(n + 22) {
-  //   background-color: deeppink;
-  // }
+  // 1 -> 7
+  .cases_haut {
+    grid-row-start: 1;
+  }
 
-  .cases_vertical {
-    // grid-area: cases_vertical;
+  // 8 -> 15
+  .cases_droite {
+    grid-column-start: 9;
+  }
 
-    width: $taille_case;
-    height: $nb_cases_vertical * $taille_case;
+  // 16 -> 22
+  .cases_bas {
+    grid-row-start: 10;
+  }
 
-    border: dashed $gris_fonce;
-    border-width: 5px;
+  // 23 -> 30
+  .cases_gauche {
+    grid-column-start: 3;
   }
 
   #conteneur {
-    grid-column-start: 2;
-    grid-column-end: 7;
+    grid-column-start: 4;
+    grid-column-end: 9;
     grid-row-start: 2;
     grid-row-end: 10;
 
     border: dashed red;
     color: #2c2c2c;
 
-    // justify-self: center;
-    // align-self: center;
     display: flexbox;
   }
 
-  // TODO mettre les boutons en bas
+  #event {
+    background-color: $framboise;
+    height: 20%;
+  }
+  #image {
+    background-color: #fff;
+    height: 50%;
+  }
+
   button {
     width: fit-content;
     height: fit-content;
     align-self: flex-end;
     display: inline-flex;
     justify-self: space-around;
+    border: solid $gris;
+    background-color: $blanc;
+    border-radius: 10px;
+    color: $gris_fonce;
+  }
+
+  button:hover {
+    background-color: rgb(41, 39, 39);
+    color: $blanc;
+  }
+
+  button:active {
+    background-color: rgb(150, 150, 150);
+  }
+  .options {
+    height: 7%;
+    width: 40%;
+    align-items: center;
+    justify-content: space-around;
+    margin-top: 2%;
+    margin-bottom: 2%;
+    margin-right: 4.5%;
+    margin-left: 4.5%;
+  }
+
+  .bouton_choix {
+    width: 80%;
+    justify-content: center;
+    align-items: center;
+    justify-self: center;
+  }
+
+  #quit_game {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    height: 100%;
+    width: 70%;
+    font-size: 2vw;
+
+    justify-content: center;
+    align-items: center;
+    justify-self: left;
+  }
+
+  h1 {
+    display: flex;
+    grid-column-start: 10;
+    grid-column-end: 12;
+    grid-row-start: 6;
+    font-size: 3vw;
+    justify-content: center;
+    align-items: flex-end;
+    color: $gris_fonce;
+  }
+
+  #titre_inventaire {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row-start: 3;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    font-size: 3vw;
+    color: $gris_fonce;
+    border: none;
+  }
+
+  #classement {
+    grid-column-start: 10;
+    grid-column-end: 12;
+    grid-row-start: 7;
+    grid-row-end: 11;
+    display: flex;
+    border: dashed $caramel;
+    color: $gris_fonce;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: column;
+  }
+
+  #classement_1 {
+    background-color: #fff;
+    width: 80%;
+  }
+  #classement_2 {
+    background-color: rgb(255, 232, 232);
+    width: 80%;
+  }
+  #classement_3 {
+    background-color: rgb(255, 174, 174);
+    width: 80%;
+  }
+  #classement_4 {
+    background-color: rgb(255, 134, 134);
+    width: 80%;
+  }
+
+  #inventaire {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row-start: 4;
+    grid-row-end: 11;
+    border: dashed $caramel;
+
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #chat {
+    grid-column-start: 10;
+    grid-column-end: 12;
+    grid-row-start: 1;
+    grid-row-end: 6;
+
+    width: 100%;
+    align-items: center;
+    justify-content: center;
   }
 
   #image {
     align-self: center;
   }
 
-  #x8 {
+  #x1 {
+    grid-column-start: 3;
+  }
+  #x2 {
+    grid-column-start: 4;
+  }
+  #x3 {
+    grid-column-start: 5;
+  }
+  #x4 {
+    grid-column-start: 6;
+  }
+  #x5 {
     grid-column-start: 7;
+  }
+  #x6 {
+    grid-column-start: 8;
+  }
+  #x7 {
+    grid-column-start: 9;
+  }
+
+  #x8 {
     grid-row-start: 2;
   }
   #x9 {
-    grid-column-start: 7;
     grid-row-start: 3;
   }
   #x10 {
-    grid-column-start: 7;
     grid-row-start: 4;
   }
   #x11 {
-    grid-column-start: 7;
     grid-row-start: 5;
   }
   #x12 {
-    grid-column-start: 7;
     grid-row-start: 6;
   }
   #x13 {
-    grid-column-start: 7;
     grid-row-start: 7;
   }
   #x14 {
-    grid-column-start: 7;
     grid-row-start: 8;
   }
   #x15 {
-    grid-column-start: 7;
     grid-row-start: 9;
   }
   #x16 {
-    grid-column-start: 7;
-    grid-row-start: 10;
+    grid-column-start: 9;
   }
   #x17 {
-    grid-column-start: 6;
-    grid-row-start: 10;
+    grid-column-start: 8;
   }
   #x18 {
-    grid-column-start: 5;
-    grid-row-start: 10;
+    grid-column-start: 7;
   }
   #x19 {
-    grid-column-start: 4;
-    grid-row-start: 10;
+    grid-column-start: 6;
   }
   #x20 {
-    grid-column-start: 3;
-    grid-row-start: 10;
+    grid-column-start: 5;
   }
   #x21 {
-    grid-column-start: 2;
-    grid-row-start: 10;
+    grid-column-start: 4;
   }
   #x22 {
-    grid-column-start: 1;
-    grid-row-start: 10;
+    grid-column-start: 3;
   }
   #x23 {
-    grid-column-start: 1;
     grid-row-start: 9;
   }
   #x24 {
-    grid-column-start: 1;
     grid-row-start: 8;
   }
   #x25 {
-    grid-column-start: 1;
     grid-row-start: 7;
   }
   #x26 {
-    grid-column-start: 1;
     grid-row-start: 6;
   }
   #x27 {
-    grid-column-start: 1;
     grid-row-start: 5;
   }
   #x28 {
-    grid-column-start: 1;
     grid-row-start: 4;
   }
   #x29 {
-    grid-column-start: 1;
     grid-row-start: 3;
   }
   #x30 {
-    grid-column-start: 1;
     grid-row-start: 2;
   }
 </style>
