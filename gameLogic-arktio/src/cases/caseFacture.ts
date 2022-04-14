@@ -2,12 +2,10 @@ import {Case, Choix, Information} from "../caseManager";
 import {State} from "../state";
 
 abstract class Facture implements Information {
-    id: number;
     nom: string;
     value: number;
 
     constructor(id: number, nom: string, value: number) {
-        this.id = id;
         this.nom = nom;
         this.value = value;
     }
@@ -22,19 +20,19 @@ abstract class Facture implements Information {
 
 class Loyer extends Facture {
     constructor() {
-        super(0, "Loyer", 400);
+        super("Loyer", 400);
     }
 }
 
 class Charges extends Facture {
     constructor() {
-        super(1, "Charges", 200);
+        super("Charges", 200);
     }
 }
 
 class FraisDeScolarité extends Facture {
     constructor() {
-        super(2, "Frais de Scolarité", 100);
+        super("Frais de Scolarité", 100);
     } 
 }
 
@@ -62,7 +60,7 @@ export default class CaseFacture implements Case {
         let chance = new Map(this.possibilities);
         if (st.mois !== 1) { // Septembre
             for (let k of chance.keys()) {
-                if (k.id !== new FraisDeScolarité().id) 
+                if (k instanceof FraisDeScolarité) 
                     chance.delete(k);
             }
         }
