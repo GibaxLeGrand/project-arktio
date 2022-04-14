@@ -164,13 +164,11 @@
   }
 </style> -->
 <script lang="ts">
-  import type { SvelteComponent } from "svelte";
-
   const NB_CASES = 30;
   // let quit_game_button = document.getElementById("quit_game");
   let quit_game_button_text = "Quitter";
   let button_yes = document.getElementById("yes");
-  let button_no = document.getElementById("no");
+  // let button_no = document.getElementById("no");
   let print_yes_no = false;
 
   function quit_game_handler() {
