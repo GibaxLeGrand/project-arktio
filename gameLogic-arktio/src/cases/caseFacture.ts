@@ -5,7 +5,7 @@ abstract class Facture implements Information {
     nom: string;
     value: number;
 
-    constructor(id: number, nom: string, value: number) {
+    constructor(nom: string, value: number) {
         this.nom = nom;
         this.value = value;
     }
