@@ -1,8 +1,8 @@
-
+import { Objet } from "./objetManager"
 
 export interface Player {
     id: string;
-    inventaire : Object[];
+    inventaire : Objet[];
     argent : number;
     pointTerre: number;
     pion : number;

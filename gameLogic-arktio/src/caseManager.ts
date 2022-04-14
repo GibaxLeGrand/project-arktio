@@ -14,7 +14,26 @@ import CaseTroc from "./cases/caseTroc";
 import {State} from "./state";
 
 export interface Case {
-    action: (state: State, playerID: string) => State;
+    play: (state: State, playerID: string, choice: number) => State;
+    action: (state: State, playerID: string,) => Choix;
+}
+
+export class Choix {
+    id: string;
+    choix: Information[];
+
+    constructor(id: string, ...choix: Information[]) {
+        this.id = id;
+        this.choix = choix;
+    }
+    
+    public message() : string {
+        return JSON.stringify({ id: this.id, info: this.choix.map(c => c.message()) });
+    }
+}
+
+export interface Information {
+    message: () => any;
 }
 
 export class CaseManager {

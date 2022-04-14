@@ -1,28 +1,47 @@
-import {Case} from "../caseManager";
+import {Case, Choix, Information} from "../caseManager";
 import {State} from "../state";
 
-interface Facture {
-    nom: string,
-    value: number
+class Facture implements Information {
+    nom: string;
+    value: number;
+
+    constructor(nom: string, value: number) {
+        this.nom = nom;
+        this.value = value;
+    }
+
+    message() : any {
+        return {
+            nom: this.nom,
+            value: this.value
+        }
+    }
 }
 
-class Loyer implements Facture {
-    nom: string = "Loyer";
-    value: number = 400;
+class Loyer extends Facture {
+    constructor() {
+        super("Loyer", 400);
+    }
 }
 
-class Charges implements Facture {
-    nom: string = "Charges";
-    value: number = 200;
+class Charges extends Facture {
+    constructor() {
+        super("Charges", 200);
+    }
 }
 
-class FraisDeScolarité implements Facture {
-    nom: string = "Frais de Scolarité";
-    value: number = 100;
+class FraisDeScolarité extends Facture {
+    constructor() {
+        super("Frais de Scolarité", 100);
+    } 
 }
 
 export default class CaseFacture implements Case {
-    action(state: State, playerID: string): State {
+    play(state: State, playerID: string, choice: number): State {
+        return state;
+    }
+
+    action(state: State, playerID: string): Choix {
         // Initialisation
         let chance : Map<Facture, number> = new Map();
         chance.set(new Loyer(), 10);
@@ -38,18 +57,19 @@ export default class CaseFacture implements Case {
         // Choix de la bonne Facture
         let possibilities : [Facture, number][] = Array.from(chance.entries());
         let bsum = 0;
-        let choice : Facture;
+        let choice: Facture = possibilities[0][0];
         for (let i = 0; i < possibilities.length; i++) {
             let element = possibilities[i]; 
             
-            if (random < bsum + element[1])
+            if (random < bsum + element[1]) {
                 choice = element[0];
+                break;
+            }   
 
             bsum += element[1];
         }
 
-        // Faire l'action avec la bonne Facture
-
-        return state;
+        // Donner le choix 
+        return new Choix('facture', choice);
     }
 }
