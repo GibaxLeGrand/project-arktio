@@ -165,12 +165,18 @@
 </style> -->
 <script lang="ts">
   const NB_CASES = 30;
-  // let quit_game_button = document.getElementById("quit_game");
+
   let quit_game_button_text = "Quitter";
-  let button_yes = document.getElementById("yes");
-  // let button_no = document.getElementById("no");
   let print_yes_no = false;
 
+  let Joueur_1 = "Joueur 1"; // nom du joueur en 1ere position
+  let Joueur_2 = "Joueur 2"; // nom du joueur en 2e position
+  let Joueur_3 = "Joueur 3"; // nom du joueur en 3e position
+  let Joueur_4 = "Joueur 4"; // nom du joueur en 4e position
+
+  /**
+   * handle the quit button
+   */
   function quit_game_handler() {
     // change text on the button
     quit_game_button_text === "Abandonner la partie ?"
@@ -180,9 +186,57 @@
     print_yes_no == false ? (print_yes_no = true) : (print_yes_no = false);
   }
 
-  // quit the game without asking if the button is yes
+  /**
+   * quit the game without asking if the button is yes
+   */
   function quit() {
     // TODO
+  }
+
+  /**
+   * ajoute un item dans l'inventaire avec l'image path_to_img
+   * @param path_to_img
+   */
+  function add_item_inventory(path_to_img: string) {
+    // TODO ajouter un titre pour l'accessibilité ?
+    let inventaire = document.getElementById("inventaire");
+    const child = document.createElement("div");
+
+    // FIXME n'affiche pas d'image :(
+    if (path_to_img != null) {
+      child.style.backgroundImage = path_to_img;
+    } else {
+      child.style.backgroundImage = "";
+    }
+    child.style.backgroundColor = "white";
+    child.style.width = "50px";
+    child.style.height = "50px";
+    child.style.display = "flex";
+    child.style.justifySelf = "space-between";
+    child.style.border = "solid grey";
+
+    inventaire.appendChild(child);
+  }
+
+  /**
+   * envoie un message // TODO ajouter les div dans le chat et bien les aligner
+   */
+  function send_message() {
+    let text = document.getElementById("input").innerText;
+    console.log(text); // TODO remove
+
+    let chat_contener = document.getElementById("chat");
+    const child = document.createElement("div");
+
+    child.innerText = text;
+    child.style.backgroundColor = "white";
+    child.style.width = "70px";
+    child.style.height = "20px";
+    child.style.display = "flex";
+    child.style.justifySelf = "space-between";
+    child.style.border = "solid grey";
+
+    chat_contener.appendChild(child);
   }
 </script>
 
@@ -229,26 +283,27 @@
 
     <div id="titre_inventaire">Inventaire</div>
     <div id="inventaire" />
-    <div id="chat">chat</div>
-    <h1>Classement</h1>
+    <div id="chat">
+      <div class="message">hey</div>
+      <!-- <div class="input_area">
+      </div> -->
+    </div>
+    <input type="text" method="POST" />
+    <button type="submit" id="send_message" on:click={send_message}>
+      Envoyer
+    </button>
     <div id="classement">
-      <div id="classement_1">J1</div>
-      <div id="classement_2">J2</div>
-      <div id="classement_3">J3</div>
-      <div id="classement_4">J4</div>
+      <div id="classement_1">{Joueur_1}</div>
+      <div id="classement_2">{Joueur_2}</div>
+      <div id="classement_3">{Joueur_3}</div>
+      <div id="classement_4">{Joueur_4}</div>
     </div>
     <button id="quit_game" on:click={quit_game_handler}
       >{quit_game_button_text}</button
     >
     {#if print_yes_no}
-      <button on:click={quit} bind:this={button_yes} class="bouton_choix"
-        >OUI</button
-      >
-      <button
-        on:click={quit_game_handler}
-        bind:this={button_no}
-        class="bouton_choix">NON</button
-      >
+      <button on:click={quit} class="bouton_choix">OUI</button>
+      <button on:click={quit_game_handler} class="bouton_choix">NON</button>
     {/if}
   </div>
 </main>
@@ -293,7 +348,7 @@
     grid-template-columns: repeat(11, $taille_case);
   }
 
-  // toutes les cases y compris contener
+  // toutes les cases y compris contener + autres div
   .plateau > div {
     border: dashed black;
   }
@@ -389,17 +444,6 @@
     justify-self: left;
   }
 
-  h1 {
-    display: flex;
-    grid-column-start: 10;
-    grid-column-end: 12;
-    grid-row-start: 6;
-    font-size: 3vw;
-    justify-content: center;
-    align-items: flex-end;
-    color: $gris_fonce;
-  }
-
   #titre_inventaire {
     grid-column-start: 1;
     grid-column-end: 3;
@@ -451,7 +495,10 @@
 
     width: 100%;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
+    display: flex;
+    overflow: scroll;
+    flex-wrap: wrap;
   }
 
   #chat {
@@ -461,8 +508,39 @@
     grid-row-end: 6;
 
     width: 100%;
-    align-items: center;
+    display: flex;
+    align-items: flex-end;
+    align-content: center;
+    justify-content: flex-end;
+  }
+
+  .input_area {
+    display: inline-flex;
+  }
+
+  .message {
+    display: flex;
+    justify-content: left;
+  }
+
+  // TODO gérer la taille de ce truc
+  input {
+    width: 50%;
+    font-size: 60%;
+    font-family: $font_arktio;
+    display: flex;
+    grid-column-start: 10;
+    grid-column-end: 13;
+    grid-row-start: 6;
+  }
+  #send_message {
+    width: 80%;
+    font-size: 70%;
     justify-content: center;
+    justify-self: flex-end;
+
+    grid-column-start: 11;
+    grid-row-start: 6;
   }
 
   #image {
