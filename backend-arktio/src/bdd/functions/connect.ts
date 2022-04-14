@@ -4,6 +4,7 @@ import config from "../knexfile"
 
 // Fonction qui permet de se connecter à la BDD.
 export async function connect(mode: string): Promise<any> {
+    console.log("Connecting to database...");
     // On va créer une instance de knex et bind à objection.
     const knex_instance: Knex<any, Record<string, any>[]> = knex(config[mode]);
     Model.knex(knex_instance);
@@ -15,8 +16,6 @@ export async function connect(mode: string): Promise<any> {
         
         return status[0];
     } catch (error) {
-        console.log(error);
-
         return [{ Status: "ERROR" }];
     }
 }

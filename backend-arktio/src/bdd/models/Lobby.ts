@@ -1,24 +1,23 @@
 import { Model } from "objection";
-import { Lobby } from "./Lobby";
+import { Users } from "./Users";
 
-export class Users extends Model {
+export class Lobby extends Model{
     // Attibuts à définir pour pouvoir utiliser les valeurs.
-    user_uuid!: string;
-    user_name!: string;
-    user_email!: string;
-    user_password!: string;
-    
-    // lobby_id?: Lobby;
+    lobby_uuid!: string;
+    lobby_name!: string;
+    lobby_password!: string;
+
+    // current_users?: Users[];
 
     // Propiété obligatoire à ajouter qui permet de retrouver la table
     static override get tableName() {
-        return "Users";
+        return "Lobby";
     }
     // Spécifie la colone de la clé primaire de la table
     static override get idColumn() {
-        return "user_id";
+        return "lobby_uuid";
     }
-    
+
     // D'autres options oeuvent être définis, optionnel mais utile
     // pour essentiellement la validation de la requête demandée.
     
@@ -26,12 +25,11 @@ export class Users extends Model {
     static get jsonSchema() {
         return {
             type: "object",
-            required: ["user_name", "user_email", "user_password"],
+            required : ["lobby_id", "lobby_name", "lobby_password"],
             properties: {
-                user_id: { type: 'string' },
-                user_name: { type: 'string', minLength: 3, maxLength: 256 },
-                user_email: { type: 'string', minLength: 1, maxLength: 256 },
-                user_password: { type: 'string', minLength: 7, maxLength: 256 },
+                lobby_id: { type: 'string' },
+                lobby_name: { type: 'string', minLength: 3, maxLength: 255 },
+                lobby_password: { type: 'string', minLength: 0, maxLength: 255 },
             }
         }
     }
@@ -39,11 +37,11 @@ export class Users extends Model {
     // Attribut permettant de donner les relations entre les tables.
     static relationMappings = {
         current_users: {
-            relation: Model.HasOneRelation, // relation 0-1 (peut pas rejoindre plusieurs lobbys)
+            relation: Model.HasManyRelation, // relation 0-n
             modelClass: Users,
             join: {
-                from: 'Users.lobby_uuid',
-                to: 'Lobby.current_users'
+                from: 'Lobby.lobby_uuid',
+                to: 'Users.lobby_uuid'
             }
         }       
     }

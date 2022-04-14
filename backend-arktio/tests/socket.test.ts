@@ -1,11 +1,11 @@
 import * as http from 'http';
-import { Server } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import * as ioClient from 'socket.io-client';
 import type { AddressInfo } from 'net';
 
 describe("socket io testing", () => {
-    let clientSocket: any;
-    let serverSocket: any;
+    let clientSocket: ioClient.Socket;
+    let serverSocket: Socket;
     let io: Server;    
 
     beforeAll((done) => {
