@@ -1,11 +1,13 @@
 import {Case, Choix, Information} from "../caseManager";
 import {State} from "../state";
 
-class Facture implements Information {
+abstract class Facture implements Information {
+    id: number;
     nom: string;
     value: number;
 
-    constructor(nom: string, value: number) {
+    constructor(id: number, nom: string, value: number) {
+        this.id = id;
         this.nom = nom;
         this.value = value;
     }
@@ -20,35 +22,50 @@ class Facture implements Information {
 
 class Loyer extends Facture {
     constructor() {
-        super("Loyer", 400);
+        super(0, "Loyer", 400);
     }
 }
 
 class Charges extends Facture {
     constructor() {
-        super("Charges", 200);
+        super(1, "Charges", 200);
     }
 }
 
 class FraisDeScolarité extends Facture {
     constructor() {
-        super("Frais de Scolarité", 100);
+        super(2, "Frais de Scolarité", 100);
     } 
 }
 
 export default class CaseFacture implements Case {
+
+    private possibilities: Map<Facture, number> ;
+
+    constructor() { 
+        this.possibilities = new Map()
+        this.possibilities.set(new Loyer(), 10);
+        this.possibilities.set(new Charges(), 20);
+        this.possibilities.set(new FraisDeScolarité(), 30); 
+    }
+
     play(state: State, playerID: string, choice: number): State {
+        let facture: Facture = Array.from(this.possibilities.entries())[choice][0];
+        state.joueurs[playerID].argent -= facture.value;
         return state;
     }
 
     action(state: State, playerID: string): Choix {
+        let st = State.createFrom(state);
+
         // Initialisation
-        let chance : Map<Facture, number> = new Map();
-        chance.set(new Loyer(), 10);
-        chance.set(new Charges(), 20);
-        
-        if (state.mois === 1) // Septembre
-            chance.set(new FraisDeScolarité(), 30);
+        let chance = new Map(this.possibilities);
+        if (st.mois !== 1) { // Septembre
+            for (let k of chance.keys()) {
+                if (k.id !== new FraisDeScolarité().id) 
+                    chance.delete(k);
+            }
+        }
 
         // Création de l'Aléatoire
         let sum : number = Array.from(chance.values()).reduce((s, x) => s + x, 0);

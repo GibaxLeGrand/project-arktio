@@ -12,12 +12,6 @@ class Paie implements Information {
 export default class CasePaie implements Case {
     play(state: State, playerID: string, choice: number) : State {
         state.joueurs[playerID].argent += 1000;
-        state.joueurs[playerID].statut = 0;
-        state.joueurs[playerID].caseActuelle = {
-            position: state.plateau.length,
-            type: state.plateau[state.plateau.length - 1]
-        };
-
         return state;
     }
 
