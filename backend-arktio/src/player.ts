@@ -2,17 +2,19 @@
 export interface PlayerJSON {
     uuid: string;
     name: string;
-    pion: number;
+    token: number;
 }
 
 export class LobbyPlayer {
 
     private uuid: string;
     private name: string;
+    private token: number;
 
     constructor(uuid: string) {
         this.uuid = uuid;
         this.name = "oui";
+        this.token = 0;
     }
 
     public getUUID() : string {
@@ -23,11 +25,19 @@ export class LobbyPlayer {
         return this.name;
     }
 
+    public getToken() : number {
+        return this.token;
+    }
+
+    public setToken(token: number) : void {
+        this.token = token;
+    }
+
     public toJSON() : PlayerJSON {
         return {
             uuid: this.uuid,
             name: this.name,
-            pion: 0
+            token: this.token,
         }
     }
 

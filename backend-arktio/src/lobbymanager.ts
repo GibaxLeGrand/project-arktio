@@ -45,7 +45,7 @@ export class LobbyManager {
 
                     let lobby: Lobby = this.lobbies.get(lobbyUUID)!;
 
-                    if (lobby.isAccessible(player)) {
+                    if (lobby.isAccessible()) {
                         lobby.addPlayer(player, socket);
                         callback({ valid: true, lobby: lobby.toJSON() });
                     } else {
