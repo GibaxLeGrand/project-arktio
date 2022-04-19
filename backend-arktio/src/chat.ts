@@ -14,10 +14,12 @@ export class Chat {
     public update(): void {
         let playersAndTheirSocket = this.lobby.getPlayersAndTheirSocket();
         
-        this.destroy();
+        this.clear();
         this.sockets.clear();
 
         playersAndTheirSocket.forEach((socket: Socket, player: LobbyPlayer) => {
+            if (socket === null) return;
+
             socket.removeAllListeners("send message");
             socket.join(this.lobby.getUUID());    
             this.sockets.add(socket);
@@ -30,10 +32,15 @@ export class Chat {
         });
     }
 
-    public destroy(): void {
+    public clear(): void {
         this.sockets.forEach((socket: Socket) => {
+            socket.removeAllListeners("send message");
             socket.leave(this.lobby.getUUID());
         });
+    }
+
+    public destroy(): void {
+        this.clear();
     }
 
 }

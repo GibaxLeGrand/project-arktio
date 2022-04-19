@@ -4,6 +4,7 @@ import { LobbyPlayer, PlayerJSON } from './player';
 import { State } from 'gamelogic-arktio/src/state';
 import { Objet } from 'gamelogic-arktio/src/objetManager';
 import { Player } from 'gamelogic-arktio/src/player';
+import { CheckViolationError } from 'objection';
 
 
 export enum LobbyState {
@@ -81,7 +82,7 @@ export class Lobby {
 
     public addPlayer(player: LobbyPlayer, socket: Socket) : void {
         if (this.state !== LobbyState.Lobby) {
-            // TODO
+            throw new CheckViolationError("This lobby is already in game");
         } else if (this.getNumberOfPlayers() < 4 || this.players.has(player)) {
             this.players.set(player, socket);
             this.chat.update();
@@ -102,23 +103,28 @@ export class Lobby {
     }
 
     public removePlayer(player: LobbyPlayer) : void {
+        let socket: Socket = this.players.get(player);
+        // TODO
+
         if (this.state !== LobbyState.Lobby) {
-            // TODO
+            this.players.set(player, null);
         } else {
             this.players.delete(player);
-            this.chat.update();
-
-            if (this.owner === player) {
-                if (this.players.size === 0) 
-                    this.owner = null;
-                else
-                    this.owner = this.players.entries().next().value[0];
-            }
         }
+            
+        this.chat.update();
+
+        if (this.owner === player) {
+            if (this.players.size === 0) 
+                this.owner = null;
+            else
+                this.owner = this.players.entries().next().value[0];
+        }
+        
+        this.updateLobby();
     }
 
     public isAccessible(player : LobbyPlayer) : boolean {
-        // TODO
         return this.state === LobbyState.Lobby && this.getNumberOfPlayers() < 4;
     }
 
@@ -136,6 +142,10 @@ export class Lobby {
 
     public getNumberOfPlayers() : number {
         return this.players.size;
+    }
+
+    public isOwner(player: LobbyPlayer) : boolean {
+        return this.owner === player;
     }
 
     public getOwner() : LobbyPlayer | null {
