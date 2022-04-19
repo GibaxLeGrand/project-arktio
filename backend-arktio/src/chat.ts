@@ -1,5 +1,5 @@
 import { Lobby } from './lobby';
-import { Player } from './player';
+import { LobbyPlayer } from './player';
 import { Socket } from 'socket.io';
 
 export class Chat {
@@ -17,7 +17,7 @@ export class Chat {
         this.destroy();
         this.sockets.clear();
 
-        playersAndTheirSocket.forEach((socket: Socket, player: Player) => {
+        playersAndTheirSocket.forEach((socket: Socket, player: LobbyPlayer) => {
             socket.removeAllListeners("send message");
             socket.join(this.lobby.getUUID());    
             this.sockets.add(socket);

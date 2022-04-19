@@ -1,7 +1,10 @@
 import { Server, Socket } from 'socket.io';
 import { Chat } from './chat';
-import { Player, PlayerJSON } from './player';
-import { State } from 'gamelogic-statearktio/';
+import { LobbyPlayer, PlayerJSON } from './player';
+import { State } from 'gamelogic-arktio/src/state';
+import { Objet } from 'gamelogic-arktio/src/objetManager';
+import { Player } from 'gamelogic-arktio/src/player';
+
 
 export enum LobbyState {
     Lobby,
@@ -13,17 +16,15 @@ export interface LobbyJSON {
     uuid: string,
     players: Array<PlayerJSON>,
     owner: PlayerJSON,
-    state: LobbyState,
-    privacy: boolean
+    state: LobbyState
 }
 
 export class Lobby {
     private game: State;
     private uuid: string;
-    private players: Map<Player, Socket>; 
-    private owner: Player | null;
+    private players: Map<LobbyPlayer, Socket>;
+    private owner: LobbyPlayer | null;
     private state: LobbyState;
-    private privacy: boolean;
     private chat: Chat;
     private io : Server;
 
@@ -31,45 +32,66 @@ export class Lobby {
         this.uuid = uuid;
         this.players = new Map();
         this.owner = null;
-        this.privacy = privacy;
         this.state = LobbyState.Lobby;
         this.chat = new Chat(this);
         this.io = io;
     }
 
     public launchTheGame() : void {
-        this.state = State.create();
+        let players : { [key: string] : Player } = {};
+        let buffer : LobbyPlayer[] = Array.from(this.players.keys());
+        for (let i=0; i<buffer.length; i++) {
+            players[i] = {
+                id: buffer[i].getUUID(),
+                inventaire : [],
+                argent : 1000,
+                pointTerre: 0,
+                pion : i,
+                caseActuelle : {position: 0, type: -1},
+                statut : 0,
+            }
+        }
+
+        this.game = State.create(players, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+        
+        // Au cas où et pour + de lisibilité
+        this.game.mois = 0;
+        this.game.tour = 0;
+
+        this.players.forEach((socket, player) => {
+            // TODO
+        });
     }
 
     public toJSON() : LobbyJSON {
         return {
             uuid: this.uuid,
-            players: Array.from(this.players.keys()).map((player: Player) => player.toJSON()),
+            players: Array.from(this.players.keys()).map((player: LobbyPlayer) => player.toJSON()),
             owner: this.owner.toJSON(),
-            state: this.state,
-            privacy: this.privacy,
+            state: this.state
         }
     }
 
-    public addPlayer(player: Player, socket: Socket) : void {
-        if (this.getNumberOfPlayers() < 4 || this.players.has(player)) {
-            socket.removeAllListeners("update");
+    public updateLobby() : void {
+        let sockets : Socket[] = Array.from(this.players.values());
+        for (let i=0; i<sockets.length; i++) {
+            sockets[i].emit("update lobby", this.toJSON());
+        }
+    }
+
+    public addPlayer(player: LobbyPlayer, socket: Socket) : void {
+        if (this.state !== LobbyState.Lobby) {
+            // TODO
+        } else if (this.getNumberOfPlayers() < 4 || this.players.has(player)) {
             this.players.set(player, socket);
             this.chat.update();
             console.log("Player %s added on lobby %s", player.getUUID(), this.uuid);
 
-            socket.on("update", (callback : (lobby: LobbyJSON) => void) => {
-                callback(this.toJSON());
-            });
-
             if (this.owner === null) {
                 this.owner = player;
-                
-                let osocket = this.players.get(player)!;
-                osocket.on("privacy switch", () => {
-                    this.privacy = !this.privacy;
-                });
             }
+
+            this.updateLobby();
         } else { 
             throw new RangeError("Too many players already here");        
         }
@@ -79,30 +101,24 @@ export class Lobby {
         this.chat.destroy();
     }
 
-    public removePlayer(player: Player) : void {
-        let socket = this.players.get(player)!;
-        socket.removeAllListeners("update");
+    public removePlayer(player: LobbyPlayer) : void {
+        if (this.state !== LobbyState.Lobby) {
+            // TODO
+        } else {
+            this.players.delete(player);
+            this.chat.update();
 
-        this.players.delete(player);
-        this.chat.update();
-
-        if (this.owner === player) {
-            socket.removeAllListeners("privacy switch");
-
-            if (this.players.size === 0) 
-                this.owner = null;
-            else {
-                this.owner = this.players.entries().next().value[0];
-                
-                let osocket = this.players.get(this.owner!)!;
-                osocket.on("privacy switch", () => {
-                    this.privacy = !this.privacy;
-                });
+            if (this.owner === player) {
+                if (this.players.size === 0) 
+                    this.owner = null;
+                else
+                    this.owner = this.players.entries().next().value[0];
             }
         }
     }
 
-    public isAccessible() : boolean {
+    public isAccessible(player : LobbyPlayer) : boolean {
+        // TODO
         return this.state === LobbyState.Lobby && this.getNumberOfPlayers() < 4;
     }
 
@@ -110,11 +126,11 @@ export class Lobby {
         return this.state;
     }
 
-    public getPlayersAndTheirSocket() : Map<Player, Socket> {
+    public getPlayersAndTheirSocket() : Map<LobbyPlayer, Socket> {
         return this.players;
     }
 
-    public getPlayers() : Player[] {
+    public getPlayers() : LobbyPlayer[] {
         return Array.from(this.players.keys());
     }
 
@@ -122,7 +138,7 @@ export class Lobby {
         return this.players.size;
     }
 
-    public getOwner() : Player | null {
+    public getOwner() : LobbyPlayer | null {
         return this.owner;
     }
 
@@ -134,8 +150,8 @@ export class Lobby {
         return this.io;
     }
 
-    public isPublic() : boolean {
-        return this.privacy;
+    public getGameState() : State {
+        return this.game;
     }
 
 };

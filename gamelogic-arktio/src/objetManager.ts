@@ -2,6 +2,7 @@ import ObjetOrdinateur from "./objets/objetOrdinateur";
 
 export interface Objet {
     nom: string;
+    point: number; 
 }
 
 export class ObjetManager {
@@ -10,7 +11,6 @@ export class ObjetManager {
     public static getObjet(objetID: number): Objet {
         return this._objets[objetID];
     }
-
 
     public static addObjet(objetID : number, objet: Objet): void {
         console.log("Adding " + objet.constructor.name + " \t as ID " + objetID);

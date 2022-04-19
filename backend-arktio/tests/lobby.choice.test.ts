@@ -1,7 +1,7 @@
 import { Socket } from 'socket.io';
 import * as io from 'socket.io-client';
 import { Lobby, LobbyJSON } from '../src/lobby';
-import { Player, PlayerJSON } from '../src/player';
+import { LobbyPlayer, PlayerJSON } from '../src/player';
 import { LobbyManager } from '../src/lobbymanager';
 import type { AddressInfo } from 'net';
 import * as http from 'http';
