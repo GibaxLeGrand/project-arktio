@@ -1,7 +1,8 @@
 import { Server, Socket } from 'socket.io';
 import { Chat } from './chat';
 import { Player, PlayerJSON } from './player';
- 
+import { State } from 'gamelogic-statearktio/';
+
 export enum LobbyState {
     Lobby,
     Game,
@@ -17,6 +18,7 @@ export interface LobbyJSON {
 }
 
 export class Lobby {
+    private game: State;
     private uuid: string;
     private players: Map<Player, Socket>; 
     private owner: Player | null;
@@ -35,8 +37,8 @@ export class Lobby {
         this.io = io;
     }
 
-    public launchTheGame() {
-        
+    public launchTheGame() : void {
+        this.state = State.create();
     }
 
     public toJSON() : LobbyJSON {
