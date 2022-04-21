@@ -9,6 +9,7 @@
 	import {get} from "svelte/store";
 	import {env} from "./scripts/envfile";
 	import {disconnect} from "./scripts/userScripts";
+	import Tailwindcss from "./Tailwindcss.svelte";
 
 	router.mode.hash();
 
@@ -38,9 +39,8 @@
 
 <svelte:head>
 	<title>Arktio</title>
-	<link rel="stylesheet" href="/style.css">
 	<link rel="icon" type="image/png" href="logo.png" />
-	<html lang="fr" />
+	<html lang="fr"/>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta charset="UTF-8">
 </svelte:head>
@@ -94,8 +94,7 @@
 
 	</Route>
 	<Route path="/login">
-		<!--<Login/>-->
-		<Lobby/>
+		<Login/>
 	</Route>
 		<Route path="/lobby">
 		<Lobby/>
@@ -107,6 +106,7 @@
 	<Route path="/partie/">
 		<Partie/>
 	</Route>
+	<Tailwindcss/>
 </main>
 
 

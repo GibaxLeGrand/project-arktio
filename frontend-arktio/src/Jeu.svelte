@@ -1,5 +1,5 @@
 <script lang="ts">
-    import Tailwindcss from "Tailwindcss.svelte";
+    import Tailwindcss from "./Tailwindcss.svelte";
 
     const NB_CASES = 30;
 

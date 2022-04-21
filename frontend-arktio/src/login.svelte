@@ -6,6 +6,12 @@
 
 	let email: string | null = null;
 	let mdp: string | null = null;
+
+	let test = { exist : false };
+
+	function erreur() {
+		test.exist = !test.exist;
+	}
 </script>
 
 
@@ -35,6 +41,9 @@
 				bind:value={mdp}
 			/>
 
+			{#if !test.exist}
+				<h1>Le mail/mot de passe n'est pas correct.</h1>
+			{/if}
 			<button id="entrer" type="submit">Connexion</button>
 			<button id="retour" on:click={()=>router.goto("/")}>Retour</button>
 		</form>
@@ -89,6 +98,12 @@ label {
 	font-size: x-large;
 }
 
+h1 {
+	color: $framboise;
+	font-size: x-large;
+	text-align: center;
+}
+
 input {
 	display: inherit;
 	color: $turquoise;
@@ -129,5 +144,6 @@ button{
 	}
 
 }
+
 </style>
   
