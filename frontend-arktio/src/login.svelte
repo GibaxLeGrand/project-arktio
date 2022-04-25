@@ -7,10 +7,10 @@
 	let email: string | null = null;
 	let mdp: string | null = null;
 
-	let test = { exist : false };
+	let test = true;
 
 	function erreur() {
-		test.exist = !test.exist;
+		test = !test;
 	}
 </script>
 
@@ -41,7 +41,7 @@
 				bind:value={mdp}
 			/>
 
-			{#if !test.exist}
+			{#if !test}
 				<h1>Le mail/mot de passe n'est pas correct.</h1>
 			{/if}
 			<button id="entrer" type="submit">Connexion</button>

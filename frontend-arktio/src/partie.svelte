@@ -7,9 +7,16 @@
 	};
 
 	let id_partie = "";
+	let id_new_game = "";
 
 	function new_game() {
-		id_partie = "000000";
+		id_new_game = "000000";
+	}
+
+	let game = { full : false };
+
+	function game_full() {
+		game.full = !game.full;
 	}
 </script>
 
@@ -26,6 +33,9 @@
 		>
 			<button id="creer" on:click={new_game}>Créer une partie</button>
 			<input bind:value={id_partie} />
+			{#if !game.full}
+				<h1>La partie est déjà pleine.</h1>
+			{/if}
 			<button id="rejoidre">Rejoidre une partie</button>
 			<button id="retour" on:click={()=>router.goto("/")}>Retour</button>
 		</form>
@@ -91,6 +101,11 @@ input {
     border: solid $gris;
 }
 
+h1 {
+	color: $framboise;
+	font-size: x-large;
+	text-align: center;
+}
 
 button{
 	align-items: center;

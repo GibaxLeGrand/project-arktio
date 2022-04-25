@@ -6,6 +6,17 @@
 	let password = null;
 	let name = null;
 	let confirm_password = null;
+	let mail_exist = false;
+
+	function erreur() {
+		mail_exist = !mail_exist;
+	}
+
+	let same_psw = true;
+	function test_psw() {
+		same_psw = password == confirm_password;
+	}
+
 </script>
 
 
@@ -24,6 +35,10 @@
 
 			<label for="email">Adresse mail:</label>
 			<input required type="email" id="email" name="email" bind:value={email}/>
+			
+			{#if mail_exist}
+				<h1>Ce mail à déjà était utilisé.</h1>
+			{/if}
 
 			<label for="password">Mot de passe:</label>
 			<input
@@ -43,7 +58,11 @@
 				bind:value={confirm_password}
 			/>
 
-			<button id="validate" type="submit">S'inscrire</button>
+			{#if !same_psw}
+				<h1>Les deux mots de passe ne sont pas identique.</h1>
+			{/if}
+
+			<button id="validate" type="submit" on:click={test_psw}>S'inscrire</button>
 			<button id="retour" on:click={()=>router.goto("/")}>Retour</button>
 				
 		</form>
@@ -112,6 +131,11 @@ input {
     border: solid $gris;
 }
 
+h1 {
+	color: $framboise;
+	font-size: x-large;
+	text-align: center;
+}
 
 button{
 	align-items: center;

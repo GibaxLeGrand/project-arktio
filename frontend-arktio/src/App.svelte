@@ -111,7 +111,7 @@
 
 
 
-<!-- CSS -->
+<!-- CSS 
 <style lang="scss">
 	$turquoise: #00a19a;
 	$blanc: #ffffff;
@@ -176,7 +176,7 @@ a {
 footer {
 	display: flex;
 	justify-content: center;
-	position: relative;
+	position: absolute;
 	bottom: 0;
 	width: 100vW;
 	padding: 1em;
@@ -193,3 +193,4 @@ footer {
 }
 </style>
   
+-->

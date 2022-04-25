@@ -51,6 +51,11 @@
 		//     choix_pions[player.pion.id+1].setAttribute("disabled", "");
 		//   }
 	// }
+
+	let msg: string | null = null;
+	function send_msg() {
+		msg = msg;
+	}
 </script>
 
 <main>
@@ -59,47 +64,61 @@
 	</div>
 	<button id="retour" on:click={()=>router.goto("/")}>Quitter partie</button>
 
-	<div id="players">
-		<h id="lobby_name">Lobby {name_lobby}</h>
-		<label for="players">Joueur-euses :</label>
+	<div id="block">
+		<div id="players">
+			<h id="lobby_name">Lobby {name_lobby}</h>
+			<label for="players">Joueur-euses :</label>
 
-		<div class="player">
-			<span class="gauche"
-				>{player_local.present ? player_local.name : "---------"}</span
-			>
-			<span class="droite"
-				>{player_local.pion ? player_local.pion.text : "---------"}</span
-			>
+			<div class="player">
+				<span class="gauche"
+					>{player_local.present ? player_local.name : "---------"}</span
+				>
+				<span class="droite"
+					>{player_local.pion ? player_local.pion.text : "---------"}</span
+				>
+			</div>
+
+			<div class="player">
+				<span class="gauche"
+					>{player_1.present ? player_1.name : "---------"}</span
+				>
+				<span class="droite"
+					>{player_1.present ? player_1.pion.text : "---------"}</span
+				>
+			</div>
+
+			<div class="player">
+				<span class="gauche"
+					>{player_2.present ? player_2.name : "---------"}</span
+				>
+				<span class="droite"
+					>{player_2.present ? player_2.pion.text : "---------"}</span
+				>
+			</div>
+
+			<div class="player">
+				<span class="gauche"
+					>{player_3.present ? player_3.name : "---------"}</span
+				>
+				<span class="droite"
+					>{player_3.present ? player_3.pion.text : "---------"}</span
+				>
+			</div>
 		</div>
 
-		<div class="player">
-			<span class="gauche"
-				>{player_1.present ? player_1.name : "---------"}</span
+		<div id="tchat">
+			<div id="chatbox"></div>
+			<form 
+				class="tchat"
+				action="javascript:"
+				on:submit={send_msg}
 			>
-			<span class="droite"
-				>{player_1.present ? player_1.pion.text : "---------"}</span
-			>
-		</div>
-
-		<div class="player">
-			<span class="gauche"
-				>{player_2.present ? player_2.name : "---------"}</span
-			>
-			<span class="droite"
-				>{player_2.present ? player_2.pion.text : "---------"}</span
-			>
-		</div>
-
-		<div class="player">
-			<span class="gauche"
-				>{player_3.present ? player_3.name : "---------"}</span
-			>
-			<span class="droite"
-				>{player_3.present ? player_3.pion.text : "---------"}</span
-			>
+				<input name="msg" type="text" id="msg" bind:value={msg} />
+				<input name="envoyer" type="submit"  id="envoyer" value="Envoyer" />
+			</form>
 		</div>
 	</div>
-
+	
 	<div id="choix_pion">
 		<span>Choissisez un pion :</span>
 		<select bind:value={player_local.pion}>
@@ -176,6 +195,12 @@ button{
 	font-size: x-large;
 }
 
+#block {
+	display: flex;
+	flex-direction: row;
+	width: 50%;
+}
+
 #players {
 	display: flex;
 	flex-direction: column;
@@ -214,6 +239,33 @@ button{
 select {
 	background-color: $blanc;
 	border-radius: 1em;
+}
+
+#chatbox {
+    text-align:left;
+    margin: 1em auto;
+    padding: 1em;
+    background: $blanc;
+	border-radius: 1em;
+    border: solid $gris;
+	width: 70%;
+	height: 20em;
+	color: $turquoise;
+}
+
+#msg {
+    width: 50%;
+    border-radius: 1em;
+    border: solid $gris;
+	color: $turquoise;
+}
+  
+#envoyer {
+	width: 5em; 
+	border-radius: 1em;
+    border: solid $gris;
+	color: $turquoise;
+	background-color: $blanc;
 }
 
 @media (max-width: 640px) {
