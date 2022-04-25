@@ -21,7 +21,6 @@ export class Chat {
             if (socket === null) return;
 
             socket.removeAllListeners("send message");
-            socket.join(this.lobby.getUUID());    
             this.sockets.add(socket);
 
             socket.on("send message", (message: string) => {                
@@ -35,7 +34,6 @@ export class Chat {
     public clear(): void {
         this.sockets.forEach((socket: Socket) => {
             socket.removeAllListeners("send message");
-            socket.leave(this.lobby.getUUID());
         });
     }
 

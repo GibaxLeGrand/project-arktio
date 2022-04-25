@@ -8,16 +8,21 @@ export class State {
     tour: number = 1;
     mois: number = 1;
     objets_par_mois: {[key:number] : number[]} = {};
+    ordre_joueurs: string[];
+    joueur_actuel: string;
 
-    private constructor(joueurs: {[key:string] : Player}, plateau: number[], tour: number, mois: number, objets_par_mois: {[key:number] : number[]}) {
+    private constructor(joueurs: {[key:string] : Player}, plateau: number[], tour: number, mois: number, 
+        objets_par_mois: {[key:number] : number[]}, ordre_joueurs: string[], joueur_actuel: string) {
         this.joueurs = joueurs;
         this.plateau = plateau;
         this.tour = tour;
         this.mois = mois;
         this.objets_par_mois = objets_par_mois;
+        this.ordre_joueurs = ordre_joueurs;
+        this.joueur_actuel = joueur_actuel;
     }
 
-    static create(joueurs: {[key:string] : Player}, plateau: number[]): State {
+    static create(joueurs: {[key:string] : Player}, plateau: number[], ordre_joueurs: string[]): State {
 
         // Initialisation tableaux des objets
         let howMany: number = ObjetManager.howManyObjets();
@@ -47,10 +52,11 @@ export class State {
             buffer = [];
         }
 
-        return new State(joueurs, plateau, 1, 1, objets_par_mois);
+        return new State(joueurs, plateau, 1, 1, objets_par_mois, ordre_joueurs, ordre_joueurs[0]);
     }
 
     static createFrom(state: State): State {
-        return new State(state.joueurs, state.plateau, state.tour, state.mois, state.objets_par_mois);
+        return new State(state.joueurs, state.plateau, state.tour, state.mois, 
+            state.objets_par_mois, state.ordre_joueurs, state.joueur_actuel);
     }
 }

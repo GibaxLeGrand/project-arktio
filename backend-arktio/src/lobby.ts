@@ -39,9 +39,12 @@ export class Lobby {
     public launchTheGame() : void {
         if (this.state === LobbyState.Lobby) {
             let players : { [key: string] : Player } = {};
+            let ordre = [];
             let buffer : LobbyPlayer[] = Array.from(this.players.keys());
             for (let i=0; i<buffer.length; i++) {
-                players[i] = {
+                ordre.push(buffer[i].getName());
+
+                players[buffer[i].getName()] = {
                     id: buffer[i].getUUID(),
                     inventaire : [],
                     argent : 1000,
@@ -52,16 +55,67 @@ export class Lobby {
                 }
             }
 
-            this.game = State.create(players, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+            this.game = State.create(players, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], ordre);
             
             // Au cas où et pour + de lisibilité
             this.game.mois = 0;
             this.game.tour = 0;
 
             this.players.forEach((socket, player) => {
-                // TODO
+                socket.on("end turn", () => {
+                    if (this.isActualPlayer(player)) {
+                        this.nextTurn();
+                        this.updateGameState();
+                    }
+                });
+
+                socket.on("", () => {
+
+                });
             });
+
+            this.updateGameState();
         }
+    }
+
+    private isActualPlayer(player: LobbyPlayer) : boolean {
+        if (this.state === LobbyState.Game) {
+            let p = Array.from(this.players.entries()).filter(entry => entry[0].getName() === this.game.joueur_actuel);
+
+            if (p.length > 0)
+                return player === p[0][0];
+            else
+                return false; 
+        }
+
+        return false;
+    }
+
+    private nextTurn() : LobbyPlayer {
+        if (this.state === LobbyState.Game) {
+            let player: string = this.game.joueur_actuel;
+            let ordre: string[] = this.game.ordre_joueurs;
+            
+            for (let i=0; i<ordre.length; i++) {
+                if (ordre[i] === player) {
+                    if (i+1 === ordre.length) {
+                        this.game.tour += 1;
+
+                        if (this.game.tour % 30 === 0)
+                            this.game.mois += 1;
+
+                        this.game.joueur_actuel = ordre[0];
+                    } else {
+                        this.game.joueur_actuel = ordre[i+1];
+                    }
+                }
+            }
+
+            return Array.from(this.players.entries())
+                .filter(entry => entry[0].getName() === this.game.joueur_actuel)[0][0];
+        }
+
+        return null;
     }
 
     public toJSON() : LobbyJSON {
@@ -73,18 +127,12 @@ export class Lobby {
         }
     }
 
-    public updateGameState() {
-        let sockets : Socket[] = Array.from(this.players.values());
-        for (let i=0; i<sockets.length; i++) 
-            if (sockets[i] !== null)
-                sockets[i].emit("update gamestate", this.game);
+    public updateGameState() : void {
+        this.io.sockets.in(this.uuid).emit("update gamestate", this.game);
     }
 
     public updateLobby() : void {
-        let sockets : Socket[] = Array.from(this.players.values());
-        for (let i=0; i<sockets.length; i++) 
-            if (sockets[i] !== null)
-                sockets[i].emit("update lobby", this.toJSON());
+        this.io.sockets.in(this.uuid).emit("update lobby", this.toJSON());
     }
 
     public setOwner(player: LobbyPlayer) : void {
@@ -108,7 +156,9 @@ export class Lobby {
             throw new Error("This lobby is already in game");
         } else if (this.getNumberOfPlayers() < 4 || this.players.has(player)) {
             this.players.set(player, socket);
+            socket.join(this.uuid);
             this.chat.update();
+            
             console.log("Player %s added on lobby %s", player.getUUID(), this.uuid);
 
             socket.on("update token", (token: number) => {
@@ -153,6 +203,7 @@ export class Lobby {
             this.players.delete(player);
         
         this.chat.update();
+        socket.leave(this.uuid);
         this.updateLobby();
 
         player.setToken(0);
