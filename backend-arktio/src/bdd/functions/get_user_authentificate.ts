@@ -1,11 +1,11 @@
 import { Users } from "../models/Users";
 
 // Fonction qui retourne un utilisateur dans la BDD par son id ou email et mot de passe.
-export async function getUser(id: number): Promise<Users> {
-    // On recherche l'utilisateur par son id
+export async function getUserAuthentificate(email: string): Promise<Users> {
+    // On recherche l'utilisateur par son email
     const user: Users[] = await Users.query()
-        .select("user_id", "user_name")
-        .where("user_id", "=", id)
+        .select("*")
+        .where("user_email", "=", email)
         .throwIfNotFound();
 
     return user[0];
