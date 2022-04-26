@@ -1,10 +1,4 @@
 <style global>
-/*
-	@tailwind base;
-	@tailwind components;
-	@tailwind utilities;
-*/
-	
 
 main {
 	margin: 0;
@@ -35,11 +29,11 @@ button{
 	font-size: 100%;
 	height: 6vh;
 	color: #00a19a;
-    margin: 2%;
-    background-color: #ffffff;
-    width: 50%;
-    border-radius: 10em;
-    border: solid #90908f;
+	margin: 2%;
+	background-color: #ffffff;
+	width: 50%;
+	border-radius: 10em;
+	border: solid #90908f;
 }
 
 .boutons {

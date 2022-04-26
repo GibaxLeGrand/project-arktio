@@ -9,6 +9,7 @@
 	import {get} from "svelte/store";
 	import {env} from "./scripts/envfile";
 	import {disconnect} from "./scripts/userScripts";
+	import Regles from "./Regles.svelte";
 	import Tailwindcss from "./Tailwindcss.svelte";
 
 	router.mode.hash();
@@ -65,6 +66,7 @@
 					}}>Inscription
 				</button>
 			{/if}
+			
 			{#if [RULES.CONNECTED, RULES.GUEST].includes(state)}
 				<button
 					id="create_join_party"
@@ -72,10 +74,14 @@
 					router.goto("/partie");
 					}}>Créer / Rejoindre Partie
 				</button>
-                <!-- // TODO fix chemin pour créer partie -->
 
 			{/if}
-			<button id="regles" title="afficher les règles">Règles</button>
+			<button
+				id="regles"
+				title="afficher les règles"
+				on:click={() => router.goto("/Regles")}>Règles</button
+			>
+			
 			{#if [RULES.CONNECTED].includes(state)}
 				<button
 					id="disconnect"
@@ -98,7 +104,6 @@
 	</Route>
 		<Route path="/lobby">
 		<Lobby/>
-		<!-- TODO peut être comme partie avec /:id -->
 	</Route>
 	<Route path="/register">
 		<Register/>
@@ -106,6 +111,10 @@
 	<Route path="/partie/">
 		<Partie/>
 	</Route>
+	<Route path="/Regles/">
+		<Regles />
+	</Route>
+
 	<Tailwindcss/>
 </main>
 
