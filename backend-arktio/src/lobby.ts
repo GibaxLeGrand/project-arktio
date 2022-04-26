@@ -64,7 +64,33 @@ export class Lobby {
             this.players.forEach((socket, player) => {
                 socket.on("end turn", () => {
                     if (this.isActualPlayer(player)) {
-                        this.nextTurn();
+                        let players = Array.from(this.players.entries());
+                        let p = player;
+                        let endMonth = true;
+                        for (let i=0; i<players.length; i++) {
+                            p = this.nextTurn();
+                            if (this.game.joueurs[p.getName()].caseActuelle.position < this.game.plateau.length - 1 
+                                && this.players.get(p) != null) {
+                                endMonth = false;
+                                break;
+                            }
+                        }
+
+                        if (endMonth) {
+                            this.game.mois += 1;
+
+                            if (this.game.mois >= 10) {
+                                this.io.sockets.in(this.uuid).emit("end");
+                            } else {
+                                for (let i=0; i<players.length; i++) {
+                                    this.game.joueurs[players[i][0].getName()].caseActuelle = {
+                                        position: 0,
+                                        type: this.game.plateau[0]
+                                    };
+                                }
+                            }
+                        }
+
                         this.updateGameState();
                     }
                 });
@@ -99,15 +125,13 @@ export class Lobby {
             for (let i=0; i<ordre.length; i++) {
                 if (ordre[i] === player) {
                     if (i+1 === ordre.length) {
-                        this.game.tour += 1;
-
-                        if (this.game.tour % 30 === 0)
-                            this.game.mois += 1;
-
+                        this.game.tour += 1
                         this.game.joueur_actuel = ordre[0];
                     } else {
                         this.game.joueur_actuel = ordre[i+1];
                     }
+
+                    break;
                 }
             }
 

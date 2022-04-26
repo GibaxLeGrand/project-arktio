@@ -8,4 +8,5 @@ export interface Player {
     pion : number;
     caseActuelle : {position: number, type: number};
     statut : number;
+    avertissement: number;
 }
