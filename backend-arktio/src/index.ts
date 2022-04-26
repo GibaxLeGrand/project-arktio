@@ -61,41 +61,81 @@ db.connect(process.env.NODE_ENV!)
         //
         // Pour une liste d'erreurs possibles,
         // voir ce lien : https://vincit.github.io/objection.js/recipes/error-handling.html
-        try {
-            const toto = await db.getAllUsers();
-            console.log(toto[0].user_name)
-        } catch (error) {
-            console.log(error);
+       
+        // Des tests
+        /*
+        console.log("---------- All users");
+        console.log(await db.getAllUsers());
+
+        console.log("---------- User 1 and User 2 with password");
+        console.log(await db.getUserAuthentificate("toto@gmail.com"));
+        console.log(await db.getUserAuthentificate("titi@gmail.com"));
+
+        console.log("---------- User 1 and User 2 without password");
+        console.log(await db.getUser("1"));
+        console.log(await db.getUser("2"));
+
+        console.log("---------- New user");
+        const new_user: db.Users = await db.putUser("hello", "world@gmail.com", "azertyazerty");
+        console.log(await db.getAllUsers());
+
+        console.log("---------- Update new user email");
+        console.log(await db.setEmail(new_user.user_uuid, "hello_world@gmail.com"));
+
+        console.log("---------- Update new user password");
+        console.log(await db.setPassword(new_user.user_uuid, "quertyquerty"));
+
+        console.log("---------- Update new user username");
+        console.log(await db.setUsername(new_user.user_uuid, "hello_world"));
+      
+        console.log("---------- Delete new user (cleanup)");
+        await db.Users.query().deleteById(new_user.user_uuid);
+        console.log(await db.getAllUsers());
+
+        console.log("---------- Get all lobbys");
+        console.log(await db.getAllLobbys());
+        
+        console.log("---------- Get a lobby");
+        console.log(await db.getLobby("1"));
+
+        console.log("---------- Create a lobby");
+        const lobby: db.Lobby = await db.putLobby("", "1");
+        console.log(await db.getAllLobbys());
+        console.log(await db.getAllUsers());
+
+        console.log("---------- Get Lobby from Player");
+        const user: db.Users = await db.getUser("1");
+        if (user === undefined) {
+            console.log("User not found");
+        }
+        else {   
+            console.log(await db.getLobby(user.user_current_lobby));
         }
 
-        try {
-            console.log(await db.getUser("5"));
-        } catch (error) {
-            console.log(error);
-        }
+        console.log("---------- Add a player to a lobby");
+        await db.setAddUser(lobby.lobby_uuid, "2");
+        await db.setAddUser(lobby.lobby_uuid, "3");
+        console.log(await db.getLobby(lobby.lobby_uuid));
+        console.log(await db.getAllUsers());
 
-        try {
-            console.log(await db.getUserAuthentificate("c@gmail.com"));
-        } catch (error) {
-            console.log(error);
-        }
+        console.log("---------- Change host of a lobby");
+        await db.setHost(lobby.lobby_uuid, "2");
+        console.log(await db.getLobby(lobby.lobby_uuid));
+        
+        console.log("---------- Remove a player from a lobby");
+        await db.setDeleteUser(lobby.lobby_uuid, "2");
+        console.log(await db.getLobby(lobby.lobby_uuid));
+        console.log(await db.getAllUsers());
 
-        try {
-            console.log(await db.putUser("toto", "c@c.com", hash_password("aaaaaaa")));
-            console.log("Insertion réussie");   
-        } catch (error: any) {
-            // Quelques exemples pour traiter les erreurs
-            if (error instanceof db.ConstraintViolationError)
-                console.log("Erreur : utilisateur existe déja")
-            else if (error instanceof db.UniqueViolationError)
-                console.log("Erreur : contrainte unique violée");
-        }
+        console.log("---------- Change password of a lobby");
+        await db.setLobbyPassword(lobby.lobby_uuid, "azertyazerty");
+        console.log(await db.getLobby(lobby.lobby_uuid));
 
-        try {
-            console.log(await db.setUsername("4", "test123456"));
-        } catch (error: any) {
-            console.log("Erreur de merde");
-        }
+        console.log("---------- Delete a lobby");
+        await db.deleteLobby(lobby.lobby_uuid);
+        console.log(await db.getAllLobbys());
+        console.log(await db.getAllUsers());
+        */
     });
 
 new LobbyManager(server, port);

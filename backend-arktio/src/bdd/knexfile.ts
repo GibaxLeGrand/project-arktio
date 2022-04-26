@@ -27,7 +27,7 @@ const config: { [key: string]: Knex.Config } = {
 			password : process.env.PWD_DEV,
 			database : process.env.DATABASE_DEV
 		},
-		debug: true,
+		debug: false,
 		migrations: {
 			tableName: 'migrations'
 		}

@@ -13,9 +13,9 @@ export {
 	DataError
 } from "objection";
 
-export * from "./helpers/error_handler";
 // Classes
 export * from "./models/Users";
+export * from "./models/Lobby";
 // Fonctions
 export * from "./functions/connect";
 export * from "./functions/disconnect";
@@ -23,5 +23,16 @@ export * from "./functions/get_all_users";
 export * from "./functions/get_user";
 export * from "./functions/get_user_authentificate";
 export * from "./functions/put_user";
+export * from "./functions/set_email";
 export * from "./functions/set_password";
 export * from "./functions/set_username";
+export * from "./functions/set_current_lobby";
+
+export * from "./functions/get_all_lobbys";
+export * from "./functions/get_lobby";
+export * from "./functions/put_lobby";
+export * from "./functions/delete_lobby";
+export * from "./functions/set_host";
+export * from "./functions/set_add_user";
+export * from "./functions/set_remove_user";
+export * from "./functions/set_lobby_password";
