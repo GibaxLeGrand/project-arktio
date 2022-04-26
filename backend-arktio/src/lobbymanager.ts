@@ -1,13 +1,10 @@
 import { Server, Socket } from 'socket.io';
 import { LobbyPlayer } from './player';
 import { Lobby, LobbyJSON } from './lobby';
+import * as crypto from 'crypto';
 import * as http from 'http';
 
-declare global {
-    interface Crypto {
-      randomUUID: () => string;
-    }
-}
+
 
 export class LobbyManager {
     private io: Server;
@@ -37,12 +34,14 @@ export class LobbyManager {
                     
                     lobby.addPlayer(player, socket);
                     callback({ lobby: lobby.toJSON() });
-                })
+                });
 
                 socket.on("join lobby", (lobbyUUID: string, callback: (({ valid, lobby } : { valid: boolean, lobby: LobbyJSON }) => void)) => {                    
-                    if (!this.lobbies.has(lobbyUUID)) 
+                    if (!this.lobbies.has(lobbyUUID)) {
                         callback({ valid: false, lobby: null });
-
+                        return;
+                    }
+ 
                     let lobby: Lobby = this.lobbies.get(lobbyUUID)!;
 
                     if (lobby.isAccessible()) {

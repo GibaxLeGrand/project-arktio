@@ -1,10 +1,10 @@
 import { Server, Socket } from 'socket.io';
 import { Chat } from './chat';
 import { LobbyPlayer, PlayerJSON } from './player';
-import { State } from 'gamelogic-arktio/src/state';
-import { Objet } from 'gamelogic-arktio/src/objetManager';
-import { Player } from 'gamelogic-arktio/src/player';
-import { CaseManager, Case, Choix } from 'gamelogic-arktio/src/caseManager'
+import { State } from "../../gamelogic-arktio/src/state";
+import { Objet } from '../../gamelogic-arktio/src/objetManager';
+import { Player } from '../../gamelogic-arktio/src/player';
+import { CaseManager, Case, Choix } from '../../gamelogic-arktio/src/caseManager'
 
 export enum LobbyState {
     Lobby,
@@ -205,9 +205,7 @@ export class Lobby {
 
     public setOwner(player: LobbyPlayer) : void {
         let oldSocket: Socket = this.players.get(this.owner);
-        if (oldSocket !== null) {
-            oldSocket.removeAllListeners("launch game");
-        }
+        oldSocket?.removeAllListeners("launch game");
 
         this.owner = player;
         let newSocket: Socket = this.players.get(this.owner);
