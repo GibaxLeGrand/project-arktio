@@ -62,6 +62,7 @@ export class Lobby {
             this.game.tour = 0;
 
             this.players.forEach((socket, player) => {
+                let dice = true;
                 socket.on("end turn", () => {
                     if (this.isActualPlayer(player)) {
                         let players = Array.from(this.players.entries());
@@ -92,11 +93,21 @@ export class Lobby {
                         }
 
                         this.updateGameState();
+                        dice = false;
                     }
                 });
 
-                socket.on("", () => {
+                socket.on("dice", (callback: ({ result } : { result: number }) => void) => {
+                    if (this.isActualPlayer(player) && dice) {
+                        callback({result: 1 + Math.floor(Math.random() * (6 - 1))});
+                        dice = false;
+                    } else {
+                        callback({result: -1});
+                    }
+                });
 
+                socket.on("play", () => {
+                    
                 });
             });
 
