@@ -13,7 +13,7 @@
     "clean": "rimraf build coverage",
     "dev": "tsc-watch --onSuccess \"node ./build/index.js\"",
     "test": "jest",
-    "install": "cp -Rf ../gamelogic-arktio/* ../backend-arktio/node_modules/gamelogic-arktio/",
+    "install": "rm -rf node_modules/gamelogic-arktio && cp -Rf ../gamelogic-arktio node_modules/gamelogic-arktio",
     "migrate": "npx knex migrate:latest --knexfile ./src/bdd/knexfile.ts",
     "reset": "npx knex migrate:rollback --knexfile ./src/bdd/knexfile.ts",
     "seed": "npx knex seed:run --knexfile ./src/bdd/knexfile.ts"

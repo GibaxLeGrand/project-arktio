@@ -4,6 +4,7 @@ import { LobbyPlayer, PlayerJSON } from './player';
 import { State } from 'gamelogic-arktio/src/state';
 import { Objet } from 'gamelogic-arktio/src/objetManager';
 import { Player } from 'gamelogic-arktio/src/player';
+import { CaseManager, Case, Choix } from 'gamelogic-arktio/src/caseManager'
 
 export enum LobbyState {
     Lobby,
@@ -42,9 +43,9 @@ export class Lobby {
             let ordre = [];
             let buffer : LobbyPlayer[] = Array.from(this.players.keys());
             for (let i=0; i<buffer.length; i++) {
-                ordre.push(buffer[i].getName());
+                ordre.push(buffer[i].getUUID());
 
-                players[buffer[i].getName()] = {
+                players[buffer[i].getUUID()] = {
                     id: buffer[i].getUUID(),
                     inventaire : [],
                     argent : 1000,
@@ -52,6 +53,7 @@ export class Lobby {
                     pion : i,
                     caseActuelle : {position: 0, type: -1},
                     statut : 0,
+                    avertissement: 0
                 }
             }
 
@@ -70,7 +72,7 @@ export class Lobby {
                         let endMonth = true;
                         for (let i=0; i<players.length; i++) {
                             p = this.nextTurn();
-                            if (this.game.joueurs[p.getName()].caseActuelle.position < this.game.plateau.length - 1 
+                            if (this.game.joueurs[p.getUUID()].caseActuelle.position < this.game.plateau.length - 1 
                                 && this.players.get(p) != null) {
                                 endMonth = false;
                                 break;
@@ -84,7 +86,7 @@ export class Lobby {
                                 this.io.sockets.in(this.uuid).emit("end");
                             } else {
                                 for (let i=0; i<players.length; i++) {
-                                    this.game.joueurs[players[i][0].getName()].caseActuelle = {
+                                    this.game.joueurs[players[i][0].getUUID()].caseActuelle = {
                                         position: 0,
                                         type: this.game.plateau[0]
                                     };
@@ -99,15 +101,41 @@ export class Lobby {
 
                 socket.on("dice", (callback: ({ result } : { result: number }) => void) => {
                     if (this.isActualPlayer(player) && dice) {
-                        callback({result: 1 + Math.floor(Math.random() * (6 - 1))});
+                        let result = 1 + Math.floor(Math.random() * (6 - 1));
+                        
+                        let caseActuelle = this.game.joueurs[this.game.joueur_actuel].caseActuelle;
+                        this.game.joueurs[this.game.joueur_actuel].caseActuelle = {
+                            position: Math.min(caseActuelle.position + result, this.game.plateau.length - 1),
+                            type: this.game.plateau[Math.min(caseActuelle.position + result, this.game.plateau.length - 1)]
+                        }
+
+                        callback({result: result});
                         dice = false;
+
+                        this.updateGameState();
                     } else {
                         callback({result: -1});
                     }
                 });
 
-                socket.on("play", () => {
-                    
+                let choice = false;
+                socket.on("play", (callback: (choixJSON: string) => void) => {
+                    if (this.isActualPlayer(player)) {
+                        let mycase: Case = this.getActualPlayerCase();
+
+                        callback(mycase.action(this.game, this.game.joueur_actuel).message());
+                        choice = true;
+                    }
+                });
+
+                socket.on("choice", (input: number) => {
+                    if (this.isActualPlayer(player) && choice) {
+                        let mycase: Case = this.getActualPlayerCase();
+                        mycase.play(this.game, this.game.joueur_actuel, input);
+                        
+                        choice = false;
+                        this.updateGameState();
+                    }
                 });
             });
 
@@ -117,7 +145,7 @@ export class Lobby {
 
     private isActualPlayer(player: LobbyPlayer) : boolean {
         if (this.state === LobbyState.Game) {
-            let p = Array.from(this.players.entries()).filter(entry => entry[0].getName() === this.game.joueur_actuel);
+            let p = Array.from(this.players.entries()).filter(entry => entry[0].getUUID() === this.game.joueur_actuel);
 
             if (p.length > 0)
                 return player === p[0][0];
@@ -126,6 +154,11 @@ export class Lobby {
         }
 
         return false;
+    }
+
+    private getActualPlayerCase() : Case {
+        return CaseManager.getCase(this.game.plateau[this.game
+            .joueurs[this.game.joueur_actuel].caseActuelle.position]);
     }
 
     private nextTurn() : LobbyPlayer {
@@ -147,7 +180,7 @@ export class Lobby {
             }
 
             return Array.from(this.players.entries())
-                .filter(entry => entry[0].getName() === this.game.joueur_actuel)[0][0];
+                .filter(entry => entry[0].getUUID() === this.game.joueur_actuel)[0][0];
         }
 
         return null;

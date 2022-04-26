@@ -44,8 +44,12 @@ export class CaseManager {
             CaseManager.cases[caseID] = caseObj;
         }
 
-        static getCase(): { [key: number]: Case } {
+        static getCases(): { [key: number]: Case } {
             return CaseManager.cases;
+        }
+
+        static getCase(caseId: number): Case {
+            return CaseManager.cases[caseId];
         }
 
         static initCases() {

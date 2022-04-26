@@ -2,7 +2,7 @@ import * as http from 'http';
 import { Server } from 'socket.io';
 import * as io from 'socket.io-client';
 import { Lobby } from '../src/lobby';
-import { Player } from '../src/player';
+import { LobbyPlayer } from '../src/player';
 import type { AddressInfo } from 'net';
 
 describe("lobby", () => {
@@ -23,7 +23,7 @@ describe("lobby", () => {
             clientSocket = io.connect(`http://localhost:${port}`);
             
             ioServer.on("connection", (socket) => {
-                lobby.addPlayer(new Player('Test' + i++), socket);
+                lobby.addPlayer(new LobbyPlayer('Test' + i++), socket);
             });
             
             clientSocket.on("connect", done);
