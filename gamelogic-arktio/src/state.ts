@@ -2,16 +2,31 @@ import { Case } from "./caseManager";
 import { Player } from "./player";
 import { ObjetManager, Objet } from "./objetManager";
 
+
+export enum Mois {
+    SEPTEMBRE,
+    OCTOBRE,
+    NOVEMBRE,
+    DECEMBRE,
+    JANVIER,
+    FEVRIER,
+    MARS,
+    AVRIL,
+    MAI,
+    JUIN,
+    COUNT
+}
+
 export class State {
     joueurs: {[key:string] : Player} = {};
     plateau: number[] = [];
     tour: number = 1;
-    mois: number = 1;
+    mois: Mois = Mois.SEPTEMBRE;
     objets_par_mois: {[key:number] : number[]} = {};
     ordre_joueurs: string[];
     joueur_actuel: string;
 
-    private constructor(joueurs: {[key:string] : Player}, plateau: number[], tour: number, mois: number, 
+    private constructor(joueurs: {[key:string] : Player}, plateau: number[], tour: number, mois: Mois,
         objets_par_mois: {[key:number] : number[]}, ordre_joueurs: string[], joueur_actuel: string) {
         this.joueurs = joueurs;
         this.plateau = plateau;
@@ -25,7 +40,6 @@ export class State {
     static create(joueurs: {[key:string] : Player}, plateau: number[], ordre_joueurs: string[]): State {
 
         // Initialisation tableaux des objets
-        let howMany: number = ObjetManager.howManyObjets();
         let objets_par_mois: {[key:number] : number[]} = {};
         
         for (let i=0; i<10; i++) 
@@ -33,23 +47,10 @@ export class State {
 
         let buffer: number[] = [];
         let sum = 0;
-        while (sum < 10*3) {
-            for (let i=0; i<howMany || sum < 10*3; i++) {
-                let objet = Math.floor(Math.random() * howMany);
-                
-                if (buffer.indexOf(objet) >= 0)
-                    continue;
-
-                let mois = Math.floor(Math.random() * 10);
-                while (objets_par_mois[mois].indexOf(objet) >= 0 || objets_par_mois[mois].length > sum%10) 
-                    mois = Math.floor(Math.random() * 10);
-                
-                objets_par_mois[mois].push(objet);
-                buffer.push(objet);
-                sum += 1;
+        for (let i = 0; i <Mois.COUNT; i++) {
+            for (let j = 0; j < 3; j++) {
+                objets_par_mois[i].push(i*3+j);
             }
-
-            buffer = [];
         }
 
         return new State(joueurs, plateau, 1, 1, objets_par_mois, ordre_joueurs, ordre_joueurs[0]);

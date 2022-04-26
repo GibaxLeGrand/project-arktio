@@ -44,7 +44,7 @@ export default class CaseFacture implements Case {
         this.possibilities = new Map()
         this.possibilities.set(new Loyer(), 10);
         this.possibilities.set(new Charges(), 20);
-        this.possibilities.set(new FraisDeScolarité(), 30); 
+        this.possibilities.set(new FraisDeScolarité(), 30);
     }
 
     play(state: State, playerID: string, choice: number): State {
@@ -58,7 +58,7 @@ export default class CaseFacture implements Case {
 
         // Initialisation
         let chance = new Map(this.possibilities);
-        if (st.mois !== 1) { // Septembre
+        if (st.mois !== 6) { // Septembre
             for (let k of chance.keys()) {
                 if (k instanceof FraisDeScolarité) 
                     chance.delete(k);
