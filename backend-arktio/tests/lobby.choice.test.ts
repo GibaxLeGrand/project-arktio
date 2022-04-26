@@ -32,11 +32,9 @@ describe("lobby", () => {
         clientSocket.emit("player information", 'playerTest', ({player}: {player: PlayerJSON}) => {
             expect(player.uuid).toBe("playerTest");
 
-            clientSocket.emit("join lobby", 'lobbyTest', ({ valid, lobby } : { valid: boolean, lobby: LobbyJSON }) => {
-                expect(valid).toBe(true);
+            clientSocket.emit("create lobby", ({ lobby } : { lobby: LobbyJSON }) => {
                 expect(lobby.owner.uuid).toBe('playerTest');
                 expect(lobby.players.length).toBe(1);
-                expect(lobby.uuid).toBe('lobbyTest');
                 done();
             });
         });
