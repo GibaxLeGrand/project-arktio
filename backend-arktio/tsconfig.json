@@ -103,7 +103,6 @@
   "references": [
     {
       "path": "../gamelogic-arktio",
-      outFile: "../gamelogic-arktio/dist/arktio.js",
       "prepend": true,
     }
   ]
