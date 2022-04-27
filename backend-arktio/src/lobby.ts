@@ -1,10 +1,10 @@
 import { Server, Socket } from 'socket.io';
 import { Chat } from './chat';
 import { LobbyPlayer, PlayerJSON } from './player';
-import { State } from "../../gamelogic-arktio/src/state";
-import { Objet } from '../../gamelogic-arktio/src/objetManager';
-import { Player } from '../../gamelogic-arktio/src/player';
-import { CaseManager, Case, Choix } from '../../gamelogic-arktio/src/caseManager'
+import { State } from "../../gamelogic-arktio/dist/state";
+import { Objet } from "../../gamelogic-arktio/dist/objetManager";
+import { Player } from '../../gamelogic-arktio/dist/player';
+import { CaseManager, Case, Choix } from '../../gamelogic-arktio/dist/caseManager'
 
 export enum LobbyState {
     Lobby,

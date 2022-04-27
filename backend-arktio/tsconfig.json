@@ -3,7 +3,7 @@
     "tests"
   ],
   "include": [
-    "./src/**/*.ts"
+    "src/**/*.ts"
   ],
   "compilerOptions": {
     "composite": true,
@@ -14,7 +14,6 @@
     "rootDir": "./src",
     /* Specify the root folder within your source files. */
     "outDir": "./build",
-    "paths": {"@gamelogic/*" : ["../gamelogic/*"]},
     /* Specify an output folder for all emitted files. */
     "esModuleInterop": true,
     /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables `allowSyntheticDefaultImports` for type compatibility. */
@@ -30,7 +29,7 @@
   },
   "references": [
     {
-      "path": "../gamelogic-arktio"
+      "path": "../gamelogic-arktio",
     }
-  ],
+  ]
 }

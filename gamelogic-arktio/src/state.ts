@@ -1,6 +1,4 @@
-import { Case } from "./caseManager";
 import { Player } from "./player";
-import { ObjetManager, Objet } from "./objetManager";
 
 
 export enum Mois {

@@ -11,12 +11,15 @@ import CaseObjet from "./cases/caseObjet";
 import CasePaie from "./cases/casePaie";
 import CaseProbleme from "./cases/caseProbleme";
 import CaseTroc from "./cases/caseTroc";
-import {State} from "./state";
+import type {State} from "./state";
+
 
 export interface Case {
     play: (state: State, playerID: string, choice: number) => State;
     action: (state: State, playerID: string,) => Choix;
 }
+
+
 
 export class Choix {
     id: string;
