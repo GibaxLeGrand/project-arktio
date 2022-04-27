@@ -131,7 +131,7 @@ export class Lobby {
                 socket.on("choice", (input: number) => {
                     if (this.isActualPlayer(player) && choice) {
                         let mycase: Case = this.getActualPlayerCase();
-                        mycase.play(this.game, this.game.joueur_actuel, input);
+                        this.game = mycase.play(this.game, this.game.joueur_actuel, input);
                         
                         choice = false;
                         this.updateGameState();
