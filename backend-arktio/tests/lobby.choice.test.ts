@@ -7,7 +7,7 @@ import type { AddressInfo } from 'net';
 import * as http from 'http';
 import * as db from '../src/bdd';
 
-describe("lobby", () => {
+describe("lobby choice", () => {
     let lobbyManager: LobbyManager;
     let clientSocket: io.Socket;
     let usersUUID: string[];
@@ -19,7 +19,7 @@ describe("lobby", () => {
         try {
             await db.getUserAuthentificate("a@test.com")
         } catch( error: any) {
-            let user: db.Users = await db.putUser("testPlayer1", "a@test.com", "test");
+            let user: db.Users = await db.putUser("testPlayer1", "a@test.com", "testpassword");
             usersUUID.push(user.user_uuid);
         }  
         
