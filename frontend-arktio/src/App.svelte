@@ -1,3 +1,4 @@
+<!-- Script -->
 <script lang="ts">
 	import {Route, router} from "tinro";
 	import Login from "./login.svelte";
@@ -38,6 +39,8 @@
 	})
 </script>
 
+
+<!-- Page -->
 <svelte:head>
 	<title>Arktio</title>
 	<link rel="icon" type="image/png" href="logo.png" />
@@ -93,16 +96,15 @@
 		</div>
 
 		<footer>
-			<a href="url">Condition générale d'utilisation</a>
-			<a href="cookie">Politique de cookie</a>
-			<a href="contacte">Qui sommes nous ?</a>
+			<a href="https://m.facebook.com/Arktio/?locale2=fr_FR">Facebook</a>
+			<a href="https://arktio.fr/">Site d'Arktio</a>
 		</footer>
-
 	</Route>
+
 	<Route path="/login">
 		<Login/>
 	</Route>
-		<Route path="/lobby">
+	<Route path="/lobby">
 		<Lobby/>
 	</Route>
 	<Route path="/register">
@@ -112,7 +114,7 @@
 		<Partie/>
 	</Route>
 	<Route path="/Regles/">
-		<Regles />
+		<Regles/>
 	</Route>
 
 	<Tailwindcss/>

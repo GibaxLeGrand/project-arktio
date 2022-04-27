@@ -140,7 +140,7 @@
 </main>
 
 
-<!-- CSS -->
+<!-- CSS 
 <style lang="scss">
 	$turquoise: #00a19a;
 	$blanc: #ffffff;
@@ -188,7 +188,6 @@ button{
 	height: 6vh;
 	color: $turquoise;
     margin: 2%;
-    background-color: #ffffff;
     width: 50%;
     border-radius: 10em;
     border: solid $gris;
@@ -276,4 +275,4 @@ select {
 
 }
 </style>
-  
+-->

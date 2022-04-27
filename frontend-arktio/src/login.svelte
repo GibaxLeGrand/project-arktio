@@ -2,8 +2,6 @@
 <script lang="ts">
 	import {connect} from "./scripts/userScripts";
 	import {router} from "tinro";
-	import Tailwindcss from "./Tailwindcss.svelte";
-
 
 	let email: string | null = null;
 	let mdp: string | null = null;
@@ -49,7 +47,6 @@
 			<button id="retour" on:click={()=>router.goto("/")}>Retour</button>
 		</form>
 	</div>
-	<Tailwindcss/>
 	
 </main>
 

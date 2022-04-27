@@ -1,7 +1,7 @@
 <!-- Script -->
 <script lang="ts">
 	import {router} from "tinro";
-	import Tailwindcss from "./Tailwindcss.svelte";
+
 
 	const test = () => {
 		return true;
@@ -42,7 +42,7 @@
 		</form>
 		
 	</div>
-	<Tailwindcss/>
+
 	
 </main>
 
