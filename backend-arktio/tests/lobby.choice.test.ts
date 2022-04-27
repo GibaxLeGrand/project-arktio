@@ -60,10 +60,10 @@ describe("lobby", () => {
         });
     });
 
-    afterAll((done) => {
+    afterAll(async (done) => {
         clientSocket.close();
         lobbyManager.destroy();
-        db.disconnect();
+        await db.disconnect();
         done();
     });
 
