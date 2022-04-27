@@ -164,10 +164,13 @@
   }
 </style> -->
 <script lang="ts">
+  // import { loop_guard } from "svelte/internal"; // c'est quoi ça ?
+
   const NB_CASES = 30;
 
-  let quit_game_button_text = "Quitter";
-  let print_yes_no = false;
+  let quit_game_button_text: string = "Quitter";
+  let print_yes_no: boolean = false;
+  let message: string;
 
   let Joueur_1 = "Joueur 1"; // nom du joueur en 1ere position
   let Joueur_2 = "Joueur 2"; // nom du joueur en 2e position
@@ -196,47 +199,57 @@
   /**
    * ajoute un item dans l'inventaire avec l'image path_to_img
    * @param path_to_img
+   * @param item_name description brève de l'itème
+   * @throws path_to_img is empty in add_item_inventory()
    */
-  function add_item_inventory(path_to_img: string) {
-    // TODO ajouter un titre pour l'accessibilité ?
+  function add_item_inventory(path_to_img: string, item_name: string) {
+    if (path_to_img == "" || path_to_img == undefined || path_to_img == null) {
+      throw new Error("path_to_img is empty in add_item_inventory()");
+    }
     let inventaire = document.getElementById("inventaire");
     const child = document.createElement("div");
 
-    // FIXME n'affiche pas d'image :(
-    if (path_to_img != null) {
-      child.style.backgroundImage = path_to_img;
+    if (item_name == "" || item_name == undefined || item_name == null) {
+      child.title = "item de l'inventaire";
+      child.ariaLabel = "item de l'inventaire'";
     } else {
-      child.style.backgroundImage = "";
+      child.title = item_name;
+      child.ariaLabel = item_name;
     }
-    child.style.backgroundColor = "white";
-    child.style.width = "50px";
-    child.style.height = "50px";
-    child.style.display = "flex";
-    child.style.justifySelf = "space-between";
-    child.style.border = "solid grey";
+
+    console.log(path_to_img);
+    console.log(child.style.cssText);
+
+    child.style.cssText =
+      "background-image: url(" +
+      path_to_img +
+      ");display:flex;max-width:100px;max-height:100px;width:100px;height:100px;background-size:100px;justify-self: space-between;";
 
     inventaire.appendChild(child);
   }
 
   /**
-   * envoie un message // TODO ajouter les div dans le chat et bien les aligner
+   * envoie un message
    */
   function send_message() {
-    let text = document.getElementById("input").innerText;
-    console.log(text); // TODO remove
-
+    if (message === undefined || message === "") {
+      return;
+    }
     let chat_contener = document.getElementById("chat");
     const child = document.createElement("div");
 
-    child.innerText = text;
-    child.style.backgroundColor = "white";
-    child.style.width = "70px";
-    child.style.height = "20px";
+    child.innerText = message;
+    child.style.backgroundColor = "#ba105a";
+    child.style.width = "fit-content";
+    child.style.height = "fit-content";
     child.style.display = "flex";
-    child.style.justifySelf = "space-between";
+    child.style.flexDirection = "column";
     child.style.border = "solid grey";
-
+    child.style.borderRadius = "10px";
+    child.style.alignSelf = "space-around";
+    child.style.marginTop = "1%";
     chat_contener.appendChild(child);
+    message = "";
   }
 </script>
 
@@ -275,7 +288,14 @@
     <div id="conteneur">
       <div id="event">"ÉVÉNEMENTS ( tu dois payer ...)"</div>
       <div id="image">image</div>
-      <button id="option1" class="options">options 1</button>
+      <!-- // TODO remove add_item_inventory -->
+      <button
+        id="option1"
+        class="options"
+        on:click={() => {
+          add_item_inventory("../logo.png", "informations");
+        }}>options 1</button
+      >
       <button id="option2" class="options">options 2</button>
       <button id="option3" class="options">options 3</button>
       <button id="option4" class="options">options 4</button>
@@ -284,11 +304,18 @@
     <div id="titre_inventaire">Inventaire</div>
     <div id="inventaire" />
     <div id="chat">
-      <div class="message">hey</div>
       <!-- <div class="input_area">
       </div> -->
     </div>
-    <input type="text" method="POST" />
+    <input
+      type="text"
+      method="POST"
+      id="input"
+      bind:value={message}
+      on:keydown={(key) => {
+        if (key.key == "Enter") send_message();
+      }}
+    />
     <button type="submit" id="send_message" on:click={send_message}>
       Envoyer
     </button>
@@ -302,8 +329,10 @@
       >{quit_game_button_text}</button
     >
     {#if print_yes_no}
-      <button on:click={quit} class="bouton_choix">OUI</button>
-      <button on:click={quit_game_handler} class="bouton_choix">NON</button>
+      <button on:click={quit} class="bouton_choix" id="boutonoui">OUI</button>
+      <button on:click={quit_game_handler} class="bouton_choix" id="boutonnon"
+        >NON</button
+      >
     {/if}
   </div>
 </main>
@@ -432,6 +461,15 @@
     justify-self: center;
   }
 
+  #boutonoui {
+    grid-column-start: 2;
+    grid-row-start: 2;
+  }
+  #boutonnon {
+    grid-column-start: 1;
+    grid-row-start: 2;
+  }
+
   #quit_game {
     grid-column-start: 1;
     grid-column-end: 3;
@@ -497,7 +535,7 @@
     align-items: center;
     justify-content: space-between;
     display: flex;
-    overflow: scroll;
+    overflow: auto;
     flex-wrap: wrap;
   }
 
@@ -509,18 +547,11 @@
 
     width: 100%;
     display: flex;
-    align-items: flex-end;
     align-content: center;
-    justify-content: flex-end;
-  }
-
-  .input_area {
-    display: inline-flex;
-  }
-
-  .message {
-    display: flex;
-    justify-content: left;
+    justify-content: flex-start;
+    flex-direction: column;
+    overflow: auto;
+    overflow-x: unset;
   }
 
   // TODO gérer la taille de ce truc
