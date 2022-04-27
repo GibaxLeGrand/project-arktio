@@ -292,14 +292,11 @@
     <div id="conteneur">
       <div id="event">"ÉVÉNEMENTS ( tu dois payer ...)"</div>
       <div id="image">image</div>
-      <!-- // TODO remove add_item_inventory -->
-      <button
-        id="option1"
-        class="options"
-        on:click={() => {
+      <!-- // TODO remove on:click={() => {
           add_item_inventory("../logo.png", "informations");
-        }}>options 1</button
-      >
+        }} -->
+
+      <button id="option1" class="options">options 1</button>
       <button id="option2" class="options">options 2</button>
       <button id="option3" class="options">options 3</button>
       <button id="option4" class="options">options 4</button>
@@ -307,10 +304,7 @@
 
     <div id="titre_inventaire">Inventaire</div>
     <div id="inventaire" />
-    <div id="chat">
-      <!-- <div class="input_area">
-      </div> -->
-    </div>
+    <div id="chat" />
     <input
       type="text"
       method="POST"
@@ -484,6 +478,7 @@
     justify-content: center;
     align-items: center;
     justify-self: left;
+    margin-top: auto;
   }
 
   #titre_inventaire {
@@ -560,19 +555,25 @@
 
   // TODO gérer la taille de ce truc
   input {
-    width: 50%;
+    width: 55%;
+    height: fit-content;
     font-size: 60%;
     font-family: $font_arktio;
     display: flex;
+    justify-content: center;
+    justify-self: flex-start;
+    align-self: center;
     grid-column-start: 10;
     grid-column-end: 13;
     grid-row-start: 6;
   }
+  // bouton
   #send_message {
     width: 80%;
     font-size: 70%;
     justify-content: center;
     justify-self: flex-end;
+    align-self: center;
 
     grid-column-start: 11;
     grid-row-start: 6;
