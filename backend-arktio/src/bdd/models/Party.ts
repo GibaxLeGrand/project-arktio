@@ -21,10 +21,10 @@ export class Party extends Model {
     static get jsonSchema() {
         return {
             type: "object",
-            required: ["party_id", "user_id"],
+            required: ["party_id", "user_uuid"],
             properties: {
                 party_id: { type: 'number' },
-                user_id: { type: 'number' },
+                user_uuid: { type: 'string' },
             }
         }
     }
