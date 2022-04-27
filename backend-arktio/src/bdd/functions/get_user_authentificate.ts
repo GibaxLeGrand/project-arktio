@@ -10,12 +10,3 @@ export async function getUserAuthentificate(email: string): Promise<Users> {
 
     return user[0];
 }
-
-export async function getUserFromUUID(uuid: string): Promise<Users> {
-    const user: Users[] = await Users.query()
-        .select("*")
-        .where("user_uuid", "=", uuid)
-        .throwIfNotFound();
-
-    return user[0];
-}

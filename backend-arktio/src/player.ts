@@ -1,3 +1,4 @@
+import { getUser } from "./bdd";
 import { getUserFromUUID } from "./bdd/functions/get_user_authentificate";
 
 export interface PlayerJSON {
@@ -14,7 +15,7 @@ export class LobbyPlayer {
 
     constructor(uuid: string) {
         let that = this;
-        getUserFromUUID(uuid).then(user => {
+        getUser(uuid).then(user => {
             that.uuid = user.user_uuid;
             that.name = user.user_name;
             that.token = 0; 
