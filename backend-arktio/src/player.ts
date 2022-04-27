@@ -1,5 +1,4 @@
 import { getUser } from "./bdd";
-import { getUserFromUUID } from "./bdd/functions/get_user_authentificate";
 
 export interface PlayerJSON {
     uuid: string;
