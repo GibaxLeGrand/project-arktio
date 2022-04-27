@@ -1,8 +1,9 @@
 import {Objet} from "../objetManager";
+import {Mois} from "../state";
 
 export default class ObjetKitBiere implements Objet {
     nom: string = "Kit biere maison";
-    mois: number = 5;
+    mois: number = Mois.JUIN;
     point: number = -15;
     prix: number = 50;
 }

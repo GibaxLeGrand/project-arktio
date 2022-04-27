@@ -7,7 +7,7 @@ import ObjetImprimante from "./objets/objetImprimante";
 import ObjetAboTram from "./objets/objetAboTram";
 import ObjetDriveVelo from "./objets/objetDriveVelo";
 import ObjetVAE from "./objets/objetVAE";
-import ObjetAnimal from "./objets/ObjetAnimal";
+import ObjetAnimal from "./objets/objetAnimal";
 import ObjetAssoBiodiversite from "./objets/objetAssoBiodiversite";
 import ObjetPoissonRouge from "./objets/objetPoissonRouge";
 import ObjetFournisseurElectricite from "./objets/ObjetFournisseurElectricite";
@@ -15,7 +15,7 @@ import ObjetCampagneCrowdfunding from "./objets/objetCampagneCrowdfunding";
 import ObjetVerteRevolutionnaire from "./objets/objetVerteRevolutionnaire";
 import ObjetMooc from "./objets/objetMooc";
 import ObjetKitBiere from "./objets/objetKitBiere";
-import ObjetAdhesionAsso from "./objets/ObjetAdhesionAsso";
+import ObjetAdhesionAsso from "./objets/objetAdhesionAsso";
 import ObjetOrdinateur from "./objets/objetOrdinateur";
 import ObjetCinema from "./objets/objetCinema";
 import ObjetCasqueAudio from "./objets/objetCasqueAudio";
@@ -28,12 +28,13 @@ import ObjetCouvertBambou from "./objets/objetCouvertBambou";
 import ObjetJean from "./objets/objetJean";
 import ObjetLivreOccasion from "./objets/objetLivreOccasion";
 import ObjetSejourSki from "./objets/objetSejourSki";
+import {Mois} from "./state";
 
 
 export interface Objet {
     nom: string;
     point: number;
-    mois: number;
+    mois: Mois;
     prix: number;
 }
 
