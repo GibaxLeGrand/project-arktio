@@ -217,9 +217,9 @@ export class Lobby {
         }
     }
 
-    public addPlayer(player: LobbyPlayer, socket: Socket) : void {
+    public addPlayer(player: LobbyPlayer, socket: Socket) : boolean {
         if (this.state !== LobbyState.Lobby) {
-            throw new Error("This lobby is already in game");
+            return false;
         } else if (this.getNumberOfPlayers() < 4 || this.players.has(player)) {
             this.players.set(player, socket);
             socket.join(this.uuid);
@@ -235,8 +235,9 @@ export class Lobby {
                 this.setOwner(player);
 
             this.updateLobby();
+            return true;
         } else { 
-            throw new RangeError("Too many players already here");        
+            return false;     
         }
     }
 
