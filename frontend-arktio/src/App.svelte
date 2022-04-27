@@ -249,6 +249,10 @@
     child.style.alignSelf = "space-around";
     child.style.marginTop = "1%";
     chat_contener.appendChild(child);
+    chat_contener.scroll({
+      top: 10000,
+      behavior: "smooth",
+    });
     message = "";
   }
 </script>
