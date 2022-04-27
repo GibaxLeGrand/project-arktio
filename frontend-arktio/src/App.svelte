@@ -164,6 +164,8 @@
   }
 </style> -->
 <script lang="ts">
+  import { base } from "./stores/locationStore";
+
   // import { loop_guard } from "svelte/internal"; // c'est quoi ça ?
 
   const NB_CASES = 30;
@@ -550,6 +552,7 @@
     justify-content: flex-start;
     flex-direction: column;
     overflow: auto;
+    overflow-wrap: anywhere;
     overflow-x: unset;
   }
 
