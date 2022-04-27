@@ -59,7 +59,7 @@
   $blanc: #ffffff;
 
   main {
-    @apply py-32;
+    // @apply py-32;
     text-align: center;
     padding: 1em;
     max-width: 240px;
