@@ -19,7 +19,7 @@ describe("lobby", () => {
         try {
             await db.getUserAuthentificate("a@test.com")
         } catch( error: any) {
-            let user: db.Users = await db.putUser("testPlayer1", "a@test.com", "ouibonjour");
+            let user: db.Users = await db.putUser("testPlayer1", "a@test.com", "test");
             usersUUID.push(user.user_uuid);
         }  
         

@@ -19,5 +19,6 @@ export async function putUser(pseudo: string, email: string, password: string): 
             user_password: password
         });
         
+    console.log(user);
     return user;
 }
