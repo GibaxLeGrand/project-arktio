@@ -12,6 +12,7 @@
 	import {disconnect} from "./scripts/userScripts";
 	import Regles from "./Regles.svelte";
 	import Tailwindcss from "./Tailwindcss.svelte";
+	import Jeu from "./Jeu.svelte";
 
 	router.mode.hash();
 
@@ -115,6 +116,9 @@
 	</Route>
 	<Route path="/Regles/">
 		<Regles/>
+	</Route>
+	<Route path="/jeu/">
+		<Jeu />
 	</Route>
 
 	<Tailwindcss/>
