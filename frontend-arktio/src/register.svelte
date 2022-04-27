@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Tailwindcss from "./Tailwindcss.svelte";
+  // import Tailwindcss from "./Tailwindcss.svelte";
   import { register } from "./scripts/userScripts";
 
   let email = null;
@@ -59,7 +59,7 @@
   $blanc: #ffffff;
 
   main {
-    @apply py-32;
+    // @apply py-32;
     text-align: center;
     padding: 1em;
     max-width: 240px;
