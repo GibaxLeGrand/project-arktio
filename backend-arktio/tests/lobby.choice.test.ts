@@ -13,8 +13,8 @@ describe("lobby", () => {
     let usersUUID: string[];
 
     // Create the server
-    beforeAll((done) => {
-        db.connect(process.env.NODE_ENV!)
+    beforeAll(async (done) => {
+        await db.connect(process.env.NODE_ENV!)
         .then(async (status) => {
             // Vérification de la connexion
             if (status[0]["Status"] != "OK") {
