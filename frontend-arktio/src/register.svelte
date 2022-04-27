@@ -1,6 +1,7 @@
 <script lang="ts">
 	import {register} from "./scripts/userScripts";
 	import {router} from "tinro";
+	import Tailwindcss from "./Tailwindcss.svelte";
 
 	let email = null;
 	let password = null;
@@ -67,10 +68,11 @@
 				
 		</form>
 	</div>
+	<Tailwindcss/>
 	
 </main>
 
-<!-- CSS -->
+<!-- CSS 
 <style lang="scss">
 	$turquoise: #00a19a;
 	$blanc: #ffffff;
@@ -159,3 +161,4 @@ button{
 
 }
 </style>
+-->

@@ -1,6 +1,7 @@
 <!-- Script -->
 <script lang="ts">
 	import {router} from "tinro";
+	import Tailwindcss from "./Tailwindcss.svelte";
 
 	const test = () => {
 		return true;
@@ -41,11 +42,12 @@
 		</form>
 		
 	</div>
+	<Tailwindcss/>
 	
 </main>
 
 
-<!-- CSS -->
+<!-- CSS 
 <style lang="scss">
 	$turquoise: #00a19a;
 	$blanc: #ffffff;
@@ -133,4 +135,4 @@ button{
 
 }
 </style>
-  
+  -->
