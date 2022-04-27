@@ -16,7 +16,7 @@ export class Users extends Model {
     }
     // Spécifie la colone de la clé primaire de la table
     static override get idColumn() {
-        return "user_id";
+        return "user_uuid";
     }
     
     // D'autres options oeuvent être définis, optionnel mais utile
@@ -28,7 +28,7 @@ export class Users extends Model {
             type: "object",
             required: ["user_name", "user_email", "user_password"],
             properties: {
-                user_id: { type: 'string' },
+                user_uuid: { type: 'string' },
                 user_name: { type: 'string', minLength: 3, maxLength: 256 },
                 user_email: { type: 'string', minLength: 1, maxLength: 256 },
                 user_password: { type: 'string', minLength: 7, maxLength: 256 },
