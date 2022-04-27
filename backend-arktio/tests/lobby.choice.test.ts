@@ -14,41 +14,14 @@ describe("lobby", () => {
 
     // Create the server
     beforeAll(async (done) => {
-        await db.connect(process.env.NODE_ENV!)
-        .then(async (status) => {
-            // Vérification de la connexion
-            if (status[0]["Status"] != "OK") {
-                await db.disconnect();
-                return;
-            } else {
-                console.log("Database Connected!")
-            }
-    
-            try {
-                try {
-                    await db.getUserAuthentificate("a@test.com")
-                } catch( error: any) {
-                    let user: db.Users = await db.putUser("testPlayer1", "a@test.com", "ouibonjour");
-                    usersUUID.push(user.user_uuid);
-                }      
-                
-                try {
-                    await db.getUserAuthentificate("b@test.com")
-                } catch( error: any) {
-                    let user: db.Users = await db.putUser("testPlayer2", "b@test.com", "ouibonjour");
-                    usersUUID.push(user.user_uuid);
-                } 
+        await db.connect("testing");
 
-                try {
-                    await db.getUserAuthentificate("c@test.com")
-                } catch( error: any) {
-                    let user: db.Users = await db.putUser("testPlayer3", "c@test.com", "ouibonjour");
-                    usersUUID.push(user.user_uuid);
-                } 
-            } catch (error: any) {
-                console.log("Erreur de merde");
-            }
-        });
+        try {
+            await db.getUserAuthentificate("a@test.com")
+        } catch( error: any) {
+            let user: db.Users = await db.putUser("testPlayer1", "a@test.com", "ouibonjour");
+            usersUUID.push(user.user_uuid);
+        }  
         
         const httpServer = http.createServer();
         
