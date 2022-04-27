@@ -14,7 +14,7 @@ describe("lobby", () => {
 
     // Create the server
     beforeAll(async (done) => {
-        await db.connect("testing");
+        await db.connect("development");
 
         try {
             await db.getUserAuthentificate("a@test.com")
