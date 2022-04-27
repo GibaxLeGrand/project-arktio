@@ -169,7 +169,6 @@ button{
 	color: $turquoise;
     margin: 2%;
     width: 50%;
-<<<<<<< HEAD
     border-radius: 10em;
     border: solid $gris;
 }
@@ -206,32 +205,6 @@ footer {
 	}
 
 }
-=======
-    text-align: center;
-    border-radius: 10px;
-    min-width: 200px;
-    border: solid rgb(150, 150, 150);
-  }
-
-  button:hover {
-    background-color: rgb(41, 39, 39);
-    color: $blanc;
-  }
-
-  button:active {
-    background-color: rgb(150, 150, 150);
-  }
-
-  img {
-    display: flex;
-    align-self: center;
-    height: auto;
-    width: auto;
-    max-width: $size;
-    max-height: $size;
-    margin-top: 5%;
-  }
->>>>>>> main
 </style>
   
 -->

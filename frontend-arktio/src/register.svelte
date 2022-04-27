@@ -3,17 +3,17 @@
 	import {router} from "tinro";
 	
 
-	let email = null;
-	let password = null;
-	let name = null;
-	let confirm_password = null;
-	let mail_exist = false;
+	let email: string | null = null;
+	let password: string | null = null;
+	let name: string | null = null;
+	let confirm_password: string | null = null;
 
+	let mail_exist: boolean = false;
 	function erreur() {
 		mail_exist = !mail_exist;
 	}
 
-	let same_psw = true;
+	let same_psw: boolean = true;
 	function test_psw() {
 		same_psw = password == confirm_password;
 	}
@@ -28,6 +28,7 @@
 
 	<div class="boutons">
 		<form
+			class="connection"
 			action="javascript:"
 			on:submit={() => register(name, email, password, confirm_password)}
 		>

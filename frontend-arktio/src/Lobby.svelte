@@ -59,9 +59,6 @@
 </script>
 
 <main>
-	<div class="logo">
-		<img alt="logo" src="logo.png"/>
-	</div>
 	<button id="retour" on:click={()=>router.goto("/")}>Quitter partie</button>
 
 	<div id="block">
@@ -109,12 +106,12 @@
 		<div id="tchat">
 			<div id="chatbox"></div>
 			<form 
-				class="tchat"
+				id="send"
 				action="javascript:"
 				on:submit={send_msg}
 			>
 				<input name="msg" type="text" id="msg" bind:value={msg} />
-				<input name="envoyer" type="submit"  id="envoyer" value="Envoyer" />
+				<button id="envoyer" type="submit">Connexion</button>
 			</form>
 		</div>
 	</div>

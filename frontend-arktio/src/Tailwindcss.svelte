@@ -42,7 +42,7 @@ form {
 	display: flex;
 	flex-flow: column;
 	align-items: center;
-	width: 50vw;
+	width: 100%;
 }
 
 
@@ -58,23 +58,22 @@ input {
 	text-align: center;
 	background-color: var(--blanc);
 	font-size: x-large;
-	height: 5vh;
+	height: 1em;
 	width: 60%;
 	padding: 1em;
-	margin: 2%;
+	margin-bottom: 1em;
     border-radius: 10em;
     border: solid var(--gris);
 }
 
 
 button{
-	align-items: center;
 	text-align: center;
 	background-color: var(--blanc);
-	font-size: 100%;
+	font-size: x-large;
 	height: 6vh;
 	color: var(--turquoise);
-	margin: 2%;
+	margin: 1em;
 	width: 50%;
 	border-radius: 10em;
 	border: solid var(--gris);
@@ -122,7 +121,7 @@ h1 {
 
 
 footer {
-	display: flex;
+	display: inherit;
 	justify-content: center;
 	position: absolute;
 	bottom: 0;
@@ -138,7 +137,7 @@ footer {
 	display: flex;
 	flex-flow: column;
 	align-items: center;
-	width: 50vw;
+	width: 100%;
 	padding: 1em;
 }
 
@@ -162,27 +161,46 @@ footer {
 }
 
 
-.connection {
-	padding: 1em;
-}
-
-
 /* id */
 #block {
 	display: flex;
 	flex-direction: row;
-	width: 50%;
+	justify-content: center;
+	width: 90%;
+	padding: 1em;
+	background-color: var(--caramel);
+	border: solid var(--gris) 5px;
+	border-radius: 1em;
 }
 
 
 #players {
-	display: flex;
+	display: inherit;
 	flex-direction: column;
-	background-color: var(--caramel);
-	border: solid var(--gris) 5px;
-	border-radius: 1em;
 	width: 50%;
 	padding: 1em;
+}
+
+
+#tchat {
+	display: inherit;
+	flex-direction: column;
+	width: 50%;
+	padding: 1em;
+	height: 50vh;
+}
+
+
+#chatbox {
+    text-align:left;
+    margin: 1em auto;
+    padding: 1em;
+    background: var(--blanc);
+	border-radius: 1em;
+    border: solid var(--gris);
+	width: 80%;
+	height: 100%;
+	color: var(--turquoise);
 }
 
 
@@ -196,16 +214,10 @@ footer {
 }
 
 
-#chatbox {
-    text-align:left;
-    margin: 1em auto;
-    padding: 1em;
-    background: var(--blanc);
-	border-radius: 1em;
-    border: solid var(--gris);
-	width: 70%;
-	height: 20em;
-	color: var(--turquoise);
+#send {
+	display: inherit;
+	flex-direction: row;
+	align-items: center;
 }
 
 
@@ -218,11 +230,10 @@ footer {
 
 
 #envoyer {
-	width: 5em; 
+	width: 50%; 
 	border-radius: 1em;
     border: solid var(--gris);
 	color: var(--turquoise);
-	background-color: var(--blanc);
 }
 
 
