@@ -36,3 +36,6 @@ export * from "./functions/set_host";
 export * from "./functions/set_add_user";
 export * from "./functions/set_remove_user";
 export * from "./functions/set_lobby_password";
+
+export * from "./functions/get_all_history";
+export * from "./functions/get_all_playerhistory";
