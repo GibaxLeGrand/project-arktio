@@ -5,5 +5,6 @@ export async function setHost(uuid: string, host: string): Promise<void> {
     
     await Lobby.query()
         .patch({lobby_host: host})
-        .where("lobby_uuid", "=", uuid);    
+        .where("lobby_uuid", "=", uuid)
+        .throwIfNotFound(); 
 }

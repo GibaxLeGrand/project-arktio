@@ -5,5 +5,6 @@ export async function setLobbyPassword(uuid:string, password: string): Promise<v
     
     await Lobby.query()
         .patch({lobby_password: password})
-        .where("lobby_uuid", "=", uuid);
+        .where("lobby_uuid", "=", uuid)
+        .throwIfNotFound();
 }

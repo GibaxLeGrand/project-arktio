@@ -1,9 +1,17 @@
 import {Lobby} from "../models/Lobby";
 import { Users } from "../models/Users";
+import { getUser } from "./get_user";
 
 // Fonction qui enlève un joueur dans un lobby
 export async function setDeleteUser(uuid: string, user: string): Promise<void> {
     
+    // On vérifie si l'utilsateur existe
+    const delUser: Users = await getUser(user);
+    
+    if (delUser === undefined) {
+        throw new Error("User not found");
+    }
+
     // On fait une query pour récupérer le lobby
     const lobby: Lobby[] = await Lobby.query()
         .select("*")

@@ -1,6 +1,7 @@
 import crypto from "crypto"
 import {Lobby} from "../models/Lobby";
 import {Users} from "../models/Users";
+import { getUser } from "./get_user";
 
 // Pour générer un identifiant unique
 declare global {
@@ -12,6 +13,13 @@ declare global {
 // Fonction qui insère un Lobby dans la BDD
 export async function putLobby(password: string, host: string): Promise<Lobby> {
     
+    // On vérifie si l'utilsateur existe
+    const user: Users = await getUser(host);
+    
+    if (user === undefined) {
+        throw new Error("User not found");
+    }
+
     const lobby = await Lobby.query()
         .insert({
             lobby_uuid: crypto.randomUUID(),

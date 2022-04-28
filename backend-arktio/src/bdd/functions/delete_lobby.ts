@@ -7,9 +7,12 @@ export async function deleteLobby(uuid: string): Promise<void> {
     await Users.query()
         .patch({user_current_lobby: ""})
         .join("Lobby", "Users.user_current_lobby", "Lobby.lobby_uuid")
-        .where("Lobby.lobby_uuid", "=", uuid);
+        .where("Lobby.lobby_uuid", "=", uuid)
+        .throwIfNotFound();
 
     await Lobby.query()
         .delete()
-        .where("lobby_uuid", "=", uuid);
+        .where("lobby_uuid", "=", uuid)
+        .throwIfNotFound();
+
 }

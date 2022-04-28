@@ -63,7 +63,6 @@ db.connect(process.env.NODE_ENV!)
         // voir ce lien : https://vincit.github.io/objection.js/recipes/error-handling.html
        
         // Des tests
-        /*
         console.log("---------- All users");
         console.log(await db.getAllUsers());
 
@@ -135,7 +134,6 @@ db.connect(process.env.NODE_ENV!)
         await db.deleteLobby(lobby.lobby_uuid);
         console.log(await db.getAllLobbys());
         console.log(await db.getAllUsers());
-        */
     });
 
 new LobbyManager(server, port);

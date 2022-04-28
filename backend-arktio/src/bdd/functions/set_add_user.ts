@@ -12,7 +12,8 @@ export async function setAddUser(uuid: string, user: string): Promise<Lobby> {
 
     await Users.query()
         .patch({user_current_lobby: uuid})
-        .where("user_uuid", "=", user);
+        .where("user_uuid", "=", user)
+        .throwIfNotFound();
 
     const lobby: Lobby = await Lobby.query()
         .insert({
