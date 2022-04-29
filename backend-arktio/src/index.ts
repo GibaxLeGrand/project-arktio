@@ -63,6 +63,7 @@ db.connect(process.env.NODE_ENV!)
         // voir ce lien : https://vincit.github.io/objection.js/recipes/error-handling.html
        
         // Des tests
+        /*
         console.log("---------- All users");
         console.log(await db.getAllUsers());
 
@@ -134,6 +135,44 @@ db.connect(process.env.NODE_ENV!)
         await db.deleteLobby(lobby.lobby_uuid);
         console.log(await db.getAllLobbys());
         console.log(await db.getAllUsers());
+
+        console.log("---------- Get all History");
+        console.log(await db.getAllHistory());
+
+        console.log("---------- Create a History");
+        const users_id: string[] = ["1", "2"];
+        const history: db.History = await db.putHistory(users_id);
+        console.log(await db.getAllHistory());
+        console.log(await db.getAllPlayerHistory());
+
+        console.log("---------- Get a History");
+        console.log(await db.getHistory(history.history_id));
+
+        console.log("---------- Set history start");
+        await db.setHistoryStart(history.history_id, new Date());
+        console.log(await db.getHistory(history.history_id));
+
+        console.log("---------- Set history end");
+        await db.setHistoryEnd(history.history_id, new Date());
+        console.log(await db.getHistory(history.history_id));
+
+        console.log("---------- Set Score");
+        await db.setPlayerScore(history.history_id, "1", 300);
+        await db.setPlayerScore(history.history_id, "2", 69);
+        console.log(await db.getPlayerHistory(history.history_id));
+
+        console.log("---------- Get History from Player");
+        console.log(await db.getHistoryFromUser("1"));
+
+        console.log("---------- Get PlayerHistory from Player");
+        console.log(await db.getPlayerHistoryFromUser("1"));
+
+        console.log("---------- Delete a History/PlayerHistory (cleanup)");
+        await db.PlayerHistory.query().delete().where("history_id", history.history_id);
+        await db.History.query().deleteById(history.history_id);
+        console.log(await db.getAllHistory());
+        console.log(await db.getAllPlayerHistory());
+        */
     });
 
 new LobbyManager(server, port);

@@ -23,7 +23,6 @@ export class History extends Model {
     static override get jsonSchema() {
         return {
             type: "object",
-            required: ["history_id"],
             properties: {
                 history_id: { type: 'number' },
             }

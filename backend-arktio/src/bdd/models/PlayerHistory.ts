@@ -26,7 +26,7 @@ export class PlayerHistory extends Model {
     static override get jsonSchema() {
         return {
             type: "object",
-            required: ["playerhistory_id", "playerhistory_score", "user_uuid", "history_id"],
+            required: ["playerhistory_score", "user_uuid", "history_id"],
             properties: {
                 playerhistory_id: { type: 'number' },
                 playerhistory_score: { type: 'number' },
