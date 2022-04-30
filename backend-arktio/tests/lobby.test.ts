@@ -12,6 +12,7 @@ import { createTestUser } from './resources/create_test_user';
 describe("lobby choice", () => {
     let lobbyManager: LobbyManager;
     let clientSocket: io.Socket;
+    let httpServer: http.Server;
     let usersUUID: string[];
 
     beforeAll(async () => {
@@ -22,7 +23,7 @@ describe("lobby choice", () => {
         usersUUID.push(await createTestUser("testPlayer2", "b@test.com"));
         usersUUID.push(await createTestUser("testPlayer3", "c@test.com"));
 
-        const httpServer = http.createServer();
+        httpServer = http.createServer();
         
         await new Promise<void>(connected => {
             httpServer.listen(() => {
@@ -37,6 +38,7 @@ describe("lobby choice", () => {
     afterAll(async () => {
         clientSocket.close();
         lobbyManager.destroy();
+        httpServer.close();
         await db.disconnect();
     });
 

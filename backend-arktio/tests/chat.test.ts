@@ -46,6 +46,7 @@ describe("chat", () => {
     afterAll(async () => {
         clientSocket.close();
         lobbyManager.destroy();
+        httpServer.close();
         await db.disconnect();
     });
 
