@@ -90,12 +90,11 @@ describe("chat", () => {
 
         clientSocket2.on("connect", () => {
             clientSocket2.emit("player information", usersUUID[1], ({ player }: { player: PlayerJSON }) => {
-                console.log("non");
                 clientSocket.emit("join lobby", lobbyUUID, ({ valid, lobby } : { valid: boolean, lobby: LobbyJSON }) => {
                     expect(valid).toBe(true);
-                    console.log("oui 1");
 
                     if (++connected >= 2) {
+                        console.log("oui");
                         clientSocket.emit("send message", 'test');
                     }
                 });
@@ -106,9 +105,9 @@ describe("chat", () => {
             clientSocket3.emit("player information", usersUUID[2], ({ player }: { player: PlayerJSON }) => {
                 clientSocket.emit("join lobby", lobbyUUID, ({ valid, lobby } : { valid: boolean, lobby: LobbyJSON }) => {
                     expect(valid).toBe(true);
-                    console.log("oui 2");
 
                     if (++connected >= 2) {
+                        console.log("oui");
                         clientSocket.emit("send message", 'test');
                     } 
                 });
