@@ -20,11 +20,8 @@ describe("chat", () => {
         await db.connect("development");
 
         usersUUID.push(await createTestUser("testPlayer1", "a@test.com"));
-        console.log(usersUUID[usersUUID.length -1])
         usersUUID.push(await createTestUser("testPlayer2", "b@test.com"));
-        console.log(usersUUID[usersUUID.length -1])
         usersUUID.push(await createTestUser("testPlayer3", "c@test.com"));
-        console.log(usersUUID[usersUUID.length -1])
 
         httpServer = http.createServer();
         
@@ -77,21 +74,31 @@ describe("chat", () => {
             console.log("oui 2");
         });
 
+        clientSocket2.on("recv message", ({ player, message } : { player: string, message: string }) => {
+            console.log("oui 3");
+
+            expect(message).toBe('test');
+            expect(player).toBe(usersUUID[0]);
+            
+            
+            clientSocket2.close();
+            if (++received >= 3) done();
+        });
+
+        clientSocket3.on("recv message", ({ player, message } : { player: string, message: string }) => {
+            console.log("oui 1");
+            
+            expect(message).toBe('test');
+            expect(player).toBe(usersUUID[0]);
+
+            clientSocket3.close();
+            if (++received >= 3) done();
+        });
+
         clientSocket2.on("connect", () => {
             clientSocket2.emit("player information", usersUUID[1], ({ player }: { player: PlayerJSON }) => {
                 clientSocket.emit("join lobby", lobbyUUID, ({ valid, lobby } : { valid: boolean, lobby: LobbyJSON }) => {
                     expect(valid).toBe(true);
-
-                    clientSocket2.on("recv message", ({ player, message } : { player: string, message: string }) => {
-                        console.log("oui 3");
-
-                        expect(message).toBe('test');
-                        expect(player).toBe(usersUUID[0]);
-                        
-                        
-                        clientSocket2.close();
-                        if (++received >= 3) done();
-                    });
 
                     if (++connected >= 2) {
                         clientSocket.emit("send message", 'test');
@@ -104,16 +111,6 @@ describe("chat", () => {
             clientSocket3.emit("player information", usersUUID[2], ({ player }: { player: PlayerJSON }) => {
                 clientSocket.emit("join lobby", lobbyUUID, ({ valid, lobby } : { valid: boolean, lobby: LobbyJSON }) => {
                     expect(valid).toBe(true);
-
-                    clientSocket3.on("recv message", ({ player, message } : { player: string, message: string }) => {
-                        console.log("oui 1");
-                        
-                        expect(message).toBe('test');
-                        expect(player).toBe(usersUUID[0]);
-            
-                        clientSocket3.close();
-                        if (++received >= 3) done();
-                    });
 
                     if (++connected >= 2) {
                         clientSocket.emit("send message", 'test');

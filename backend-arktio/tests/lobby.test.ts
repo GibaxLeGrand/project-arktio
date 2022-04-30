@@ -43,7 +43,6 @@ describe("lobby choice", () => {
     test("lobby creation", (done) => {
         clientSocket.emit("player information", usersUUID[0], ({player}: {player: PlayerJSON}) => {
             expect(player.uuid).toBe(usersUUID[0]);
-            console.log(player.name);
 
             clientSocket.emit("create lobby", ({ lobby } : { lobby: LobbyJSON }) => {
                 expect(lobby.players.length).toBe(1);
