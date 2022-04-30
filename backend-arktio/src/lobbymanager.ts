@@ -23,10 +23,8 @@ export class LobbyManager {
             console.log("Connected client on port %s", this.port);
         
             socket.on("player information", async (uuid: string, callback: ({ player } : { player: LobbyPlayer }) => void) => {
-                console.log("oui ?");
                 let player: LobbyPlayer = await LobbyPlayer.instantiate(uuid);
-        
-                console.log("oui bonjour");
+
                 socket.removeAllListeners("player information");
 
                 socket.on("create lobby", (callback: (({ lobby } : { lobby: LobbyJSON }) => void)) => {

@@ -3,16 +3,47 @@ import { Server } from 'socket.io';
 import * as io from 'socket.io-client';
 import { Lobby } from '../src/lobby';
 import { LobbyPlayer } from '../src/player';
+import { LobbyManager } from '../src/lobbymanager';
 import type { AddressInfo } from 'net';
+import * as db from '../src/bdd';
+import { createTestUser } from './resources/create_test_user';
 
 describe("lobby", () => {
     let httpServer: http.Server;
     let lobby: Lobby;
+    let lobbyManager: LobbyManager;
     let ioServer: Server;
     let clientSocket: io.Socket;
+    let usersUUID: string[];
 
-    // Create the server
+    beforeAll(async () => {
+        usersUUID = [];
+        await db.connect("development");
+
+        usersUUID.push(await createTestUser("testPlayer1", "a@test.com"));
+        usersUUID.push(await createTestUser("testPlayer2", "b@test.com"));
+        usersUUID.push(await createTestUser("testPlayer3", "c@test.com"));
+
+        const httpServer = http.createServer();
+        
+        await new Promise<void>(connected => {
+            httpServer.listen(() => {
+                const port = (httpServer.address() as AddressInfo).port;
+                lobbyManager = new LobbyManager(httpServer, port);
+                clientSocket = io.connect(`http://localhost:${port}`);
+                clientSocket.on("connect", connected);
+            });
+        });
+    });
+
+    afterAll(async () => {
+        clientSocket.close();
+        lobbyManager.destroy();
+        await db.disconnect();
+    });
+
     beforeAll((done) => {
+        /*
         httpServer = http.createServer();
         ioServer = new Server(httpServer);
         lobby = new Lobby("Test", ioServer, false);
@@ -28,6 +59,7 @@ describe("lobby", () => {
             
             clientSocket.on("connect", done);
         });
+        */
     });
 
     afterAll((done) => {

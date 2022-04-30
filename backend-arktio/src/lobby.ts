@@ -1,7 +1,7 @@
 import { Server, Socket } from 'socket.io';
 import { Chat } from './chat';
 import { LobbyPlayer, PlayerJSON } from './player';
-import { State } from "../../gamelogic-arktio/dist/state";
+import { State, Mois } from "../../gamelogic-arktio/dist/state";
 import { Objet } from "../../gamelogic-arktio/dist/objetManager";
 import { Player } from '../../gamelogic-arktio/dist/player';
 import { CaseManager, Case, Choix } from '../../gamelogic-arktio/dist/caseManager'
@@ -60,7 +60,7 @@ export class Lobby {
             this.game = State.create(players, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], ordre);
             
             // Au cas où et pour + de lisibilité
-            this.game.mois = 0;
+            this.game.mois = Mois.SEPTEMBRE;
             this.game.tour = 0;
 
             this.players.forEach((socket, player) => {
