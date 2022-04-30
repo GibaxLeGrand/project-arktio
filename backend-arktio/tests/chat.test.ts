@@ -73,24 +73,15 @@ describe("chat", () => {
             if (++received >= 3) done();
         });
 
-        clientSocket2.on("recv message", ({ player, message } : { player: string, message: string }) => {
-            expect(message).toBe('test');
-            expect(player).toBe(usersUUID[0]);
-            console.log("oui 2");
-            clientSocket2.close();
-            if (++received >= 3) done();
-        });
-
-        clientSocket3.on("recv message", ({ player, message } : { player: string, message: string }) => {
-            expect(message).toBe('test');
-            expect(player).toBe(usersUUID[0]);
-            
-            console.log("oui 3");
-            clientSocket3.close();
-            if (++received >= 3) done();
-        });
-
         clientSocket2.on("connect", () => {
+            clientSocket2.on("recv message", ({ player, message } : { player: string, message: string }) => {
+                expect(message).toBe('test');
+                expect(player).toBe(usersUUID[0]);
+
+                clientSocket2.close();
+                if (++received >= 3) done();
+            });
+
             clientSocket2.emit("player information", usersUUID[1], ({ player }: { player: PlayerJSON }) => {
                 clientSocket.emit("join lobby", lobbyUUID, ({ valid, lobby } : { valid: boolean, lobby: LobbyJSON }) => {
                     expect(valid).toBe(true);
@@ -103,6 +94,15 @@ describe("chat", () => {
         });
 
         clientSocket3.on("connect", () => {
+            clientSocket3.on("recv message", ({ player, message } : { player: string, message: string }) => {
+                expect(message).toBe('test');
+                expect(player).toBe(usersUUID[0]);
+                
+                console.log("oui 3");
+                clientSocket3.close();
+                if (++received >= 3) done();
+            });
+
             clientSocket3.emit("player information", usersUUID[2], ({ player }: { player: PlayerJSON }) => {
                 clientSocket.emit("join lobby", lobbyUUID, ({ valid, lobby } : { valid: boolean, lobby: LobbyJSON }) => {
                     expect(valid).toBe(true);
