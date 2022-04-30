@@ -19,10 +19,13 @@ describe("lobby choice", () => {
         await db.connect("development");
 
         try {
-            await db.getUserAuthentificate("a@test.com")
+            await db.getUserAuthentificate("a@test.com").then(user => {
+                usersUUID.push(user.user_uuid);
+            });
         } catch( error: any) {
-            let user: db.Users = await db.putUser("testPlayer1", "a@test.com", "testpassword");
-            usersUUID.push(user.user_uuid);
+            await db.putUser("testPlayer1", "a@test.com", "testpassword").then(user => {
+                usersUUID.push(user.user_uuid);
+            });
         }  
         
         const httpServer = http.createServer();
