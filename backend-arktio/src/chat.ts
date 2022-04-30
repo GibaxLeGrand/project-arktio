@@ -13,9 +13,6 @@ export class Chat {
 
     public update(): void {
         let playersAndTheirSocket = this.lobby.getPlayersAndTheirSocket();
-        for (let i=0;i<Array.from(playersAndTheirSocket.entries()).length; i++) {
-            console.log(Array.from(playersAndTheirSocket.entries())[i][0].toJSON());
-        }
 
         this.clear();
         this.sockets.clear();
@@ -25,8 +22,7 @@ export class Chat {
 
             this.sockets.add(socket);
 
-            socket.on("send message", (message: string) => {     
-                console.log("ouais");           
+            socket.on("send message", (message: string) => {             
                 this.lobby.getIO().sockets
                     .in(this.lobby.getUUID())
                     .emit("recv message", { player: player.getUUID(), message: message });
