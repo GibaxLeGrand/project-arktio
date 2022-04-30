@@ -37,11 +37,10 @@ describe("lobby choice", () => {
         });
     });
 
-    afterAll(async (done) => {
+    afterAll(async () => {
         clientSocket.close();
         lobbyManager.destroy();
         await db.disconnect();
-        done();
     });
 
     test("lobby creation", (done) => {
