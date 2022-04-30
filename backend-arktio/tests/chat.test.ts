@@ -23,7 +23,7 @@ describe("chat", () => {
         usersUUID.push(await createTestUser("testPlayer2", "b@test.com"));
         usersUUID.push(await createTestUser("testPlayer3", "c@test.com"));
 
-        const httpServer = http.createServer();
+        httpServer = http.createServer();
         
         await new Promise<void>(connected => {
             httpServer.listen(() => {
