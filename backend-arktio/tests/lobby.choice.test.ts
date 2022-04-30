@@ -27,14 +27,12 @@ describe("lobby choice", () => {
         
         const httpServer = http.createServer();
         
-        httpServer.listen(async () => {
-            const port = (httpServer.address() as AddressInfo).port;
-            lobbyManager = new LobbyManager(httpServer, port);
-            clientSocket = io.connect(`http://localhost:${port}`);
-            await new Promise<void>(connected => {
-                clientSocket.on("connect", () => {
-                    connected();
-                });
+        await new Promise<void>(connected => {
+            httpServer.listen(() => {
+                const port = (httpServer.address() as AddressInfo).port;
+                lobbyManager = new LobbyManager(httpServer, port);
+                clientSocket = io.connect(`http://localhost:${port}`);
+                clientSocket.on("connect", connected);
             });
         });
     });
