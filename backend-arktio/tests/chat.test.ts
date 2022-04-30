@@ -20,8 +20,11 @@ describe("chat", () => {
         await db.connect("development");
 
         usersUUID.push(await createTestUser("testPlayer1", "a@test.com"));
+        console.log(usersUUID[usersUUID.length -1])
         usersUUID.push(await createTestUser("testPlayer2", "b@test.com"));
+        console.log(usersUUID[usersUUID.length -1])
         usersUUID.push(await createTestUser("testPlayer3", "c@test.com"));
+        console.log(usersUUID[usersUUID.length -1])
 
         httpServer = http.createServer();
         
