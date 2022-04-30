@@ -219,6 +219,7 @@ export class Lobby {
 
     public addPlayer(player: LobbyPlayer, socket: Socket) : boolean {
         console.log(player.getName());
+        
         if (this.state !== LobbyState.Lobby) {
             return false;
         } else if (this.getNumberOfPlayers() < 4 || this.players.has(player)) {
