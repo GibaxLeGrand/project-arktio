@@ -10,6 +10,7 @@
   import { disconnect } from "./scripts/userScripts";
   import { base } from "./stores/locationStore";
   import Regles from "./Regles.svelte";
+  import Jeu from "./Jeu.svelte";
 
   router.mode.hash();
 
@@ -72,7 +73,6 @@
           }}
           >Créer / Rejoindre Partie
         </button>
-        <!-- // TODO fix chemin pour créer partie -->
       {/if}
       <button
         id="regles"
@@ -105,6 +105,9 @@
   </Route>
   <Route path="/Regles/">
     <Regles />
+  </Route>
+  <Route path="/jeu/">
+    <Jeu />
   </Route>
 </main>
 
