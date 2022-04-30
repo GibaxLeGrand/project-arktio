@@ -6,6 +6,7 @@ import { LobbyManager } from '../src/lobbymanager';
 import type { AddressInfo } from 'net';
 import * as http from 'http';
 import * as db from '../src/bdd';
+import { connect } from '../src/bdd';
 
 describe("lobby choice", () => {
     let lobbyManager: LobbyManager;
@@ -13,7 +14,7 @@ describe("lobby choice", () => {
     let usersUUID: string[];
 
     // Create the server
-    beforeAll(async (done) => {
+    beforeAll(async () => {
         usersUUID = [];
         await db.connect("development");
 
@@ -26,11 +27,15 @@ describe("lobby choice", () => {
         
         const httpServer = http.createServer();
         
-        httpServer.listen(() => {
+        httpServer.listen(async () => {
             const port = (httpServer.address() as AddressInfo).port;
             lobbyManager = new LobbyManager(httpServer, port);
             clientSocket = io.connect(`http://localhost:${port}`);
-            clientSocket.on("connect", done);
+            await new Promise<void>(connected => {
+                clientSocket.on("connect", () => {
+                    connected();
+                });
+            });
         });
     });
 
