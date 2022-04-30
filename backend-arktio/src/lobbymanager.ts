@@ -24,6 +24,7 @@ export class LobbyManager {
         
             socket.on("player information", async (uuid: string, callback: ({ player } : { player: LobbyPlayer }) => void) => {
                 let player: LobbyPlayer = await LobbyPlayer.instantiate(uuid);
+                console.log(player.getName());
 
                 socket.removeAllListeners("player information");
 
