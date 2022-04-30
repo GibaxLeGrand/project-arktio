@@ -32,6 +32,7 @@ export class LobbyManager {
                     let lobby: Lobby = new Lobby(lobbyUUID, this.io, true);
                     this.lobbies.set(lobbyUUID, lobby);
                     
+                    console.log(player.getName());
                     lobby.addPlayer(player, socket);
                     callback({ lobby: lobby.toJSON() });
                 });
