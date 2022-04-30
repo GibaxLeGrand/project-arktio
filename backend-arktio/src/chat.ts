@@ -20,7 +20,6 @@ export class Chat {
         playersAndTheirSocket.forEach((socket: Socket, player: LobbyPlayer) => {
             if (socket === null) return;
 
-            socket.removeAllListeners("send message");
             this.sockets.add(socket);
 
             socket.on("send message", (message: string) => {                
