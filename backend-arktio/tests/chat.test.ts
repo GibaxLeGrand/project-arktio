@@ -69,13 +69,14 @@ describe("chat", () => {
             expect(message).toBe('test');
             expect(player).toBe(usersUUID[0]);
 
+            console.log("oui 1");
             if (++received >= 3) done();
         });
 
         clientSocket2.on("recv message", ({ player, message } : { player: string, message: string }) => {
             expect(message).toBe('test');
             expect(player).toBe(usersUUID[0]);
-            
+            console.log("oui 2");
             clientSocket2.close();
             if (++received >= 3) done();
         });
@@ -84,6 +85,7 @@ describe("chat", () => {
             expect(message).toBe('test');
             expect(player).toBe(usersUUID[0]);
             
+            console.log("oui 3");
             clientSocket3.close();
             if (++received >= 3) done();
         });
@@ -94,7 +96,6 @@ describe("chat", () => {
                     expect(valid).toBe(true);
 
                     if (++connected >= 2) {
-                        console.log("oui");
                         clientSocket.emit("send message", 'test');
                     }
                 });
@@ -107,7 +108,6 @@ describe("chat", () => {
                     expect(valid).toBe(true);
 
                     if (++connected >= 2) {
-                        console.log("oui");
                         clientSocket.emit("send message", 'test');
                     } 
                 });
