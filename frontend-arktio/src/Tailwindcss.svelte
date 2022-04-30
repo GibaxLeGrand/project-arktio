@@ -185,11 +185,14 @@ footer {
 #tchat {
 	display: inherit;
 	flex-direction: column;
-	width: 50%;
 	padding: 1em;
 	height: 50vh;
+	width: 50%;
 }
 
+#msg, #envoyer{
+	width: 100%;
+}
 
 #chatbox {
     text-align:left;
@@ -214,15 +217,7 @@ footer {
 }
 
 
-#send {
-	display: inherit;
-	flex-direction: row;
-	align-items: center;
-}
-
-
 #msg {
-    width: 50%;
     border-radius: 1em;
     border: solid var(--gris);
 	color: var(--turquoise);
@@ -230,10 +225,10 @@ footer {
 
 
 #envoyer {
-	width: 50%; 
 	border-radius: 1em;
     border: solid var(--gris);
 	color: var(--turquoise);
+	margin: 0;
 }
 
 

@@ -172,82 +172,79 @@
   </div>
 </main>
 
+
 <style lang="scss">
-  $nb_cases_horizontal: 5;
-  $nb_cases_vertical: 10; // les cases dans les coins sont comptées
-  $taille_case: 1fr;
+	$nb_cases_horizontal: 5;
+	$nb_cases_vertical: 10; // les cases dans les coins sont comptées
+	$taille_case: 1fr;
 
-  $turquoise: #00a19a;
-  $blanc: #ffffff;
-  $framboise: #ba105a;
-  $caramel: #ffd49a;
-  $turquoise_clair: #98d1cd;
-  $gris: #90908f;
-  $gris_fonce: #2c2c2c;
-  $font_arktio: Raleway;
+	$turquoise: #00a19a;
+	$blanc: #ffffff;
+	$framboise: #ba105a;
+	$caramel: #ffd49a;
+	$turquoise_clair: #98d1cd;
+	$gris: #90908f;
+	$gris_fonce: #2c2c2c;
+	$font_arktio: Raleway;
 
-  main {
-    width: 100%;
-    height: 100%;
-    background-color: $turquoise_clair;
+main {
+	background-color: $turquoise_clair;
+	font-size: xx-large;
+	color: #ffffff;
+}
 
-    justify-content: center;
-    align-items: center;
+.plateau {
+	display: grid;
+	width: 100%;
+	height: 100%;
+	border: solid $framboise;
+	border-width: 5px;
+	display: grid;
+	grid-gap: 5px;
+	grid-template-rows: repeat(10, $taille_case);
+	grid-template-columns: repeat(11, $taille_case);
+}
 
-    font-size: xx-large;
-    color: #ffffff;
-    font-family: $font_arktio;
-  }
+div {
+	display: grid;
+	align-items: normal;
+}
 
-  .plateau {
-    width: 100%;
-    height: 100%;
-
-    border: solid $framboise;
-    border-width: 5px;
-
-    display: grid;
-    grid-gap: 5px;
-    grid-template-rows: repeat(10, $taille_case);
-    grid-template-columns: repeat(11, $taille_case);
-  }
-
-  // toutes les cases y compris contener + autres div
-  .plateau > div {
-    border: dashed black;
-  }
+// toutes les cases y compris contener + autres div
+.plateau > div {
+	border: dashed black;
+}
 
   // 1 -> 7
-  .cases_haut {
-    grid-row-start: 1;
-  }
+.cases_haut {
+	grid-row-start: 1;
+}
 
-  // 8 -> 15
-  .cases_droite {
-    grid-column-start: 9;
-  }
+// 8 -> 15
+.cases_droite {
+	grid-column-start: 9;
+}
 
-  // 16 -> 22
-  .cases_bas {
-    grid-row-start: 10;
-  }
+// 16 -> 22
+.cases_bas {
+	grid-row-start: 10;
+}
 
-  // 23 -> 30
-  .cases_gauche {
-    grid-column-start: 3;
-  }
+// 23 -> 30
+.cases_gauche {
+	grid-column-start: 3;
+}
 
-  #conteneur {
-    grid-column-start: 4;
-    grid-column-end: 9;
-    grid-row-start: 2;
-    grid-row-end: 10;
+#conteneur {
+	display: flexbox;
+	grid-column-start: 4;
+	grid-column-end: 9;
+	grid-row-start: 2;
+	grid-row-end: 10;
 
-    border: dashed red;
-    color: #2c2c2c;
-
-    display: flexbox;
-  }
+	border: dashed red;
+	color: $gris_fonce;
+}
 
   #event {
     background-color: $framboise;

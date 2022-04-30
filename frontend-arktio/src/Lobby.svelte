@@ -105,14 +105,8 @@
 
 		<div id="tchat">
 			<div id="chatbox"></div>
-			<form 
-				id="send"
-				action="javascript:"
-				on:submit={send_msg}
-			>
-				<input name="msg" type="text" id="msg" bind:value={msg} />
-				<button id="envoyer" type="submit">Connexion</button>
-			</form>
+			<input name="msg" type="text" id="msg" bind:value={msg} />
+			<button id="envoyer" type="submit">Envoyer</button>
 		</div>
 	</div>
 	
