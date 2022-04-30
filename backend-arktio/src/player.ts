@@ -12,13 +12,19 @@ export class LobbyPlayer {
     private name: string;
     private token: number;
 
-    constructor(uuid: string) {
-        let that = this;
-        getUser(uuid).then(user => {
-            that.uuid = user.user_uuid;
-            that.name = user.user_name;
-            that.token = 0; 
+    private constructor(uuid: string, name: string) {
+        this.uuid = uuid;
+        this.name = name;
+        this.token = 0;  
+    }
+
+    public static async instantiate(uuid: string) : Promise<LobbyPlayer> {
+        let player : LobbyPlayer;
+        await getUser(uuid).then(user => {
+            player = new LobbyPlayer(user.user_uuid, user.user_name);
         });
+
+        return player;
     }
 
     public getUUID() : string {

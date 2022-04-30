@@ -22,8 +22,8 @@ export class LobbyManager {
         this.io.on("connection", (socket: Socket) => {
             console.log("Connected client on port %s", this.port);
         
-            socket.on("player information", (uuid: string, callback: ({ player } : { player: LobbyPlayer }) => void) => {
-                let player: LobbyPlayer = new LobbyPlayer(uuid); // TODO: FIND IN DATABASE
+            socket.on("player information", async (uuid: string, callback: ({ player } : { player: LobbyPlayer }) => void) => {
+                let player: LobbyPlayer = await LobbyPlayer.instantiate(uuid);
         
                 socket.removeAllListeners("player information");
 
