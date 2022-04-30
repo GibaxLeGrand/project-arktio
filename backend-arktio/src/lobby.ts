@@ -220,7 +220,7 @@ export class Lobby {
     public addPlayer(player: LobbyPlayer, socket: Socket) : boolean {
         if (this.state !== LobbyState.Lobby) {
             return false;
-        } else if (this.getNumberOfPlayers() < 4 || this.players.has(player)) {
+        } else if (this.getNumberOfPlayers() < 4 || !this.players.has(player)) {
             this.players.set(player, socket);
             socket.join(this.uuid);
             this.chat.update();
