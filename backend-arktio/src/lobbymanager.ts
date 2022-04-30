@@ -32,8 +32,7 @@ export class LobbyManager {
                     let lobbyUUID: string = crypto.randomUUID();
                     let lobby: Lobby = new Lobby(lobbyUUID, this.io, true);
                     this.lobbies.set(lobbyUUID, lobby);
-                    
-                    console.log(player.getName());
+                
                     lobby.addPlayer(player, socket);
                     callback({ lobby: lobby.toJSON() });
                 });
@@ -47,6 +46,7 @@ export class LobbyManager {
                     let lobby: Lobby = this.lobbies.get(lobbyUUID)!;
 
                     if (lobby.isAccessible()) {
+                        console.log("allo " + player.getName());
                         let valid = lobby.addPlayer(player, socket);
 
                         if (valid) 
