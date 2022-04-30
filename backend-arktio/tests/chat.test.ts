@@ -80,14 +80,14 @@ describe("chat", () => {
                     expect(valid).toBe(true);
 
                     clientSocket2.on("recv message", ({ player, message } : { player: string, message: string }) => {
+                        console.log("oui 3");
+
                         expect(message).toBe('test');
                         expect(player).toBe(usersUUID[0]);
                         
                         
                         clientSocket2.close();
                         if (++received >= 3) done();
-            
-                        console.log("oui 3");
                     });
 
                     if (++connected >= 2) {
@@ -103,13 +103,13 @@ describe("chat", () => {
                     expect(valid).toBe(true);
 
                     clientSocket3.on("recv message", ({ player, message } : { player: string, message: string }) => {
+                        console.log("oui 1");
+                        
                         expect(message).toBe('test');
                         expect(player).toBe(usersUUID[0]);
             
                         clientSocket3.close();
                         if (++received >= 3) done();
-            
-                        console.log("oui 1");
                     });
 
                     if (++connected >= 2) {
