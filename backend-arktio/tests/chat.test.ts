@@ -69,7 +69,7 @@ describe("chat", () => {
             expect(message).toBe('test');
             expect(player).toBe(usersUUID[0]);
 
-            if (++received === 3) done();
+            if (++received >= 3) done();
         });
 
         clientSocket2.on("recv message", ({ player, message } : { player: string, message: string }) => {
@@ -77,7 +77,7 @@ describe("chat", () => {
             expect(player).toBe(usersUUID[0]);
             
             clientSocket2.close();
-            if (++received === 3) done();
+            if (++received >= 3) done();
         });
 
         clientSocket3.on("recv message", ({ player, message } : { player: string, message: string }) => {
@@ -85,7 +85,7 @@ describe("chat", () => {
             expect(player).toBe(usersUUID[0]);
             
             clientSocket3.close();
-            if (++received === 3) done();
+            if (++received >= 3) done();
         });
 
         clientSocket2.on("connect", () => {
