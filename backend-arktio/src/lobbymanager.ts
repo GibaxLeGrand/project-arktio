@@ -24,7 +24,6 @@ export class LobbyManager {
         
             socket.on("player information", async (uuid: string, callback: ({ player } : { player: LobbyPlayer }) => void) => {
                 let player: LobbyPlayer = await LobbyPlayer.instantiate(uuid);
-                console.log("oui " + player.getName());
 
                 socket.removeAllListeners("player information");
 
@@ -46,7 +45,6 @@ export class LobbyManager {
                     let lobby: Lobby = this.lobbies.get(lobbyUUID)!;
 
                     if (lobby.isAccessible()) {
-                        console.log("allo " + player.getName());
                         let valid = lobby.addPlayer(player, socket);
 
                         if (valid) 

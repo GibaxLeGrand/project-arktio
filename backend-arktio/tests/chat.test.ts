@@ -70,13 +70,9 @@ describe("chat", () => {
             expect(player).toBe(usersUUID[0]);
 
             if (++received >= 3) done();
-
-            console.log("oui 2");
         });
 
         clientSocket2.on("recv message", ({ player, message } : { player: string, message: string }) => {
-            console.log("oui 3");
-
             expect(message).toBe('test');
             expect(player).toBe(usersUUID[0]);
             
@@ -86,8 +82,6 @@ describe("chat", () => {
         });
 
         clientSocket3.on("recv message", ({ player, message } : { player: string, message: string }) => {
-            console.log("oui 1");
-            
             expect(message).toBe('test');
             expect(player).toBe(usersUUID[0]);
 
