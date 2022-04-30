@@ -14,6 +14,7 @@ describe("lobby choice", () => {
 
     // Create the server
     beforeAll(async (done) => {
+        usersUUID = [];
         await db.connect("development");
 
         try {
