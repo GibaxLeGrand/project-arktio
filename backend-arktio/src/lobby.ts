@@ -223,7 +223,7 @@ export class Lobby {
         } else if (this.getNumberOfPlayers() < 4 || this.players.has(player)) {
             this.players.set(player, socket);
             for (let i=0;i<Array.from(this.players.entries()).length; i++) {
-                console.log("bonjour " + Array.from(this.players.entries())[i][0].toJSON());
+                console.log(Array.from(this.players.entries())[i][0].toJSON());
             }
             socket.join(this.uuid);
             this.chat.update();
