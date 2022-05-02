@@ -269,7 +269,7 @@ export class Lobby {
         socket.removeAllListeners("quit");
 
         if (this.owner === player) {
-            if (this.players.size === 0) {
+            if (this.players.size <= 1) {
                 this.setOwner(null);
             } else {
                 let iterator = this.players.entries();
