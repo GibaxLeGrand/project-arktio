@@ -273,11 +273,11 @@ export class Lobby {
                 this.setOwner(null);
             } else {
                 let iterator = this.players.entries();
-                let player = iterator.next();
-                while (player.value[1] === null || player.value[0] === player) 
-                    player = iterator.next();
+                let p = iterator.next();
+                while (p.value[1] === null || p.value[0] === player) 
+                    p = iterator.next();
 
-                this.setOwner(player.value[0]);
+                this.setOwner(p.value[0]);
             }
         }
 
