@@ -241,6 +241,11 @@ export class Lobby {
                 player.setToken(token);
             });
 
+            socket.on("quit", (callback: () => void) => {
+                this.removePlayer(player);
+                callback();
+            })
+
             if (this.owner === null) 
                 this.setOwner(player);
 
@@ -260,6 +265,7 @@ export class Lobby {
 
         let socket: Socket = this.players.get(player);
         socket.removeAllListeners("update token");
+        socket.removeAllListeners("quit");
 
         if (this.owner === player) {
             if (this.players.size === 0) {
