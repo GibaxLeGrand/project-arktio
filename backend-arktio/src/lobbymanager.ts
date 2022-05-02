@@ -6,18 +6,18 @@ import * as http from 'http';
 
 
 export class LobbyManager {
-    private io: Server;
-    private lobbies: Map<string, Lobby>;
-    private port: string | number;
+    private static io: Server;
+    private static lobbies: Map<string, Lobby>;
+    private static port: string | number;
 
-    constructor(server: http.Server, port: string | number) {
-        this.io = new Server(server);
-        this.lobbies = new Map();
-        this.port = port;
-        this.setup();
+    public static init(server: http.Server, port: string | number) {
+        LobbyManager.io = new Server(server);
+        LobbyManager.lobbies = new Map();
+        LobbyManager.port = port;
+        LobbyManager.setup();
     }
 
-    private isInLobby(player: LobbyPlayer) :boolean{
+    public static isInLobby(player: LobbyPlayer) :boolean{
         let array = Array.from(this.lobbies.entries());
     
         for (let i=0; i<array.length; i++) {
@@ -30,7 +30,7 @@ export class LobbyManager {
     }
 
     // Genrate 6 digit lobby id
-    private generateLobbyId(): string {
+    private static generateLobbyId(): string {
         let id = '';
         do {
             for (let i = 0; i < 6; i++) {
@@ -40,7 +40,7 @@ export class LobbyManager {
         return id;
     }
 
-    private setup() : void {
+    private static setup() : void {
         this.io.on("connection", (socket: Socket) => {
             console.log("Connected client on port %s", this.port);
         
@@ -54,7 +54,7 @@ export class LobbyManager {
                         return;
                     }
 
-                    let lobbyUUID: string = this.generateLobbyId()
+                    let lobbyUUID: string = LobbyManager.generateLobbyId()
                     let lobby: Lobby = new Lobby(lobbyUUID, this.io, true);
                     this.lobbies.set(lobbyUUID, lobby);
                 
@@ -102,12 +102,17 @@ export class LobbyManager {
         });
     }
 
-    public getLobbies() : Map<string, Lobby> {
-        return this.lobbies;
+    public static destroyLobby(lobby: Lobby) : void {
+        lobby.destroy();
+        LobbyManager.lobbies.delete(lobby.getUUID());
     }
 
-    public destroy() : void {
-        this.lobbies.forEach(lobby => {
+    public static getLobbies() : Map<string, Lobby> {
+        return LobbyManager.lobbies;
+    }
+
+    public static destroy() : void {
+        LobbyManager.lobbies.forEach(lobby => {
             lobby.destroy();
         })
     }

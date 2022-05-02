@@ -5,6 +5,7 @@ import { State, Mois } from "../../gamelogic-arktio/dist/state";
 import { Objet } from "../../gamelogic-arktio/dist/objetManager";
 import { Player } from '../../gamelogic-arktio/dist/player';
 import { CaseManager, Case, Choix } from '../../gamelogic-arktio/dist/caseManager'
+import { LobbyManager } from './lobbymanager';
 
 export enum LobbyState {
     Lobby,
@@ -272,7 +273,7 @@ export class Lobby {
 
         if (this.owner === player) {
             if (this.players.size <= 1) {
-                this.setOwner(null);
+                LobbyManager.destroyLobby(this);
             } else {
                 let iterator = this.players.entries();
                 let p = iterator.next();
