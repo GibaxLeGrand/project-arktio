@@ -207,6 +207,8 @@ export class Lobby {
         let oldSocket: Socket = this.players.get(this.owner);
         oldSocket?.removeAllListeners("launch game");
 
+        if (player == null) return;
+
         this.owner = player;
         let newSocket: Socket = this.players.get(this.owner);
     
