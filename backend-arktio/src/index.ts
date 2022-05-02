@@ -83,7 +83,7 @@ db.connect(process.env.NODE_ENV!)
         try {
             console.log(await db.putUser("toto", "c@c.com", hash_password("aaaaaaa")));
             console.log("Insertion réussie");   
-        } catch (error: any) {
+        } catch (error) {
             // Quelques exemples pour traiter les erreurs
             if (error instanceof db.ConstraintViolationError)
                 console.log("Erreur : utilisateur existe déja")
@@ -93,7 +93,7 @@ db.connect(process.env.NODE_ENV!)
 
         try {
             console.log(await db.setUsername("4", "test123456"));
-        } catch (error: any) {
+        } catch (error) {
             console.log("Erreur de merde");
         }
     });
