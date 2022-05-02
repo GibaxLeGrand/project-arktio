@@ -1,7 +1,6 @@
 import { Server, Socket, } from 'socket.io';
 import { LobbyPlayer } from './player';
 import { Lobby, LobbyJSON } from './lobby';
-import * as crypto from 'crypto';
 import * as http from 'http';
 
 
@@ -18,6 +17,17 @@ export class LobbyManager {
         this.setup();
     }
 
+    // Genrate 6 digit lobby id
+    private generateLobbyId(): string {
+        let id = '';
+        do {
+            for (let i = 0; i < 6; i++) {
+                id += Math.floor(Math.random() * 10);
+            }
+        } while (this.lobbies.has(id));
+        return id;
+    }
+
     private setup() : void {
         this.io.on("connection", (socket: Socket) => {
             console.log("Connected client on port %s", this.port);
@@ -28,7 +38,7 @@ export class LobbyManager {
                 socket.removeAllListeners("player information");
 
                 socket.on("create lobby", (callback: (({ lobby } : { lobby: LobbyJSON }) => void)) => {
-                    let lobbyUUID: string = crypto.randomUUID();
+                    let lobbyUUID: string = this.generateLobbyId()
                     let lobby: Lobby = new Lobby(lobbyUUID, this.io, true);
                     this.lobbies.set(lobbyUUID, lobby);
                 
