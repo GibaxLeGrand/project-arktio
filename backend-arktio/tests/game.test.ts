@@ -83,10 +83,9 @@ describe("game", () => {
         clientSockets[0].emit("launch game");
         
         clientSockets[0].on("update gamestate", (gamestate: State) => {
-            expect(gamestate.joueur_actuel).toBe()
-        })
-
-        done();
+            expect(gamestate.joueur_actuel).toBe(users[0].uuid);
+            done();
+        });
     });
 
     
