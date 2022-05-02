@@ -7,7 +7,7 @@ export async function createTestUser(name: string, email: string) : Promise<stri
         await db.getUserAuthentificate(email).then(user => {
             uuid = user.user_uuid;
         });
-    } catch( error: any) {
+    } catch( error) {
         await db.putUser(name, email, "testpassword").then(user => {
             uuid = user.user_uuid;
         });
