@@ -13,6 +13,7 @@
   import Jeu from "./Jeu.svelte";
 
   router.mode.hash();
+  export let name: string;
 
   base.set(env.root);
   router.base(get(base));
@@ -93,9 +94,10 @@
   <Route path="/login">
     <Login />
   </Route>
-  <Route path="/lobby">
-    <Lobby />
-    // TODO peut être comme partie avec /:id
+  <Route path="/lobby/:id" let:meta>
+    {#if meta.params.id.length == 6 && !isNaN(meta.params.id)}
+      <Lobby id={meta.params.id}/>
+    {/if}
   </Route>
   <Route path="/register">
     <Register />

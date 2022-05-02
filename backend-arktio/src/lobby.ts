@@ -217,11 +217,21 @@ export class Lobby {
         }
     }
 
+    public contain(player: LobbyPlayer) : boolean {
+        this.players.forEach((socket, p) => {
+           if (player === p)
+            return true;
+        });
+
+        return false;
+    }
+
     public addPlayer(player: LobbyPlayer, socket: Socket) : boolean {
         if (this.state !== LobbyState.Lobby) {
             return false;
         } else if (this.getNumberOfPlayers() < 4 || this.players.has(player)) {
             this.players.set(player, socket);
+
             socket.join(this.uuid);
             this.chat.update();
             
@@ -230,6 +240,11 @@ export class Lobby {
             socket.on("update token", (token: number) => {
                 player.setToken(token);
             });
+
+            socket.on("quit", (callback: () => void) => {
+                this.removePlayer(player);
+                callback();
+            })
 
             if (this.owner === null) 
                 this.setOwner(player);
@@ -250,6 +265,7 @@ export class Lobby {
 
         let socket: Socket = this.players.get(player);
         socket.removeAllListeners("update token");
+        socket.removeAllListeners("quit");
 
         if (this.owner === player) {
             if (this.players.size === 0) {

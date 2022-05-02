@@ -13,17 +13,16 @@ export class Chat {
 
     public update(): void {
         let playersAndTheirSocket = this.lobby.getPlayersAndTheirSocket();
-        
+
         this.clear();
         this.sockets.clear();
 
         playersAndTheirSocket.forEach((socket: Socket, player: LobbyPlayer) => {
             if (socket === null) return;
 
-            socket.removeAllListeners("send message");
             this.sockets.add(socket);
 
-            socket.on("send message", (message: string) => {                
+            socket.on("send message", (message: string) => {             
                 this.lobby.getIO().sockets
                     .in(this.lobby.getUUID())
                     .emit("recv message", { player: player.getUUID(), message: message });
