@@ -32,6 +32,7 @@
      */
     function quit() {
         // TODO
+        router.goto("/");
     }
 
     enum Etat {
