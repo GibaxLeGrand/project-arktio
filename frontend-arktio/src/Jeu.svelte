@@ -1,5 +1,6 @@
 <script lang="ts">
     import {base} from "./stores/locationStore";
+    import {router} from "tinro";
 
     // import { loop_guard } from "svelte/internal"; // c'est quoi ça ?
 
@@ -31,6 +32,7 @@
      */
     function quit() {
         // TODO
+        router.goto("/")
     }
 
     enum Etat {
