@@ -14,7 +14,6 @@
   import * as io from "socket.io-client"
 
   router.mode.hash();
-  export let name: string;
 
   base.set(env.root);
   router.base(get(base));
@@ -33,7 +32,7 @@
       if (get(socketStore) == null) {
         socketStore.set(io.connect());
         const pinfos = await getPlayerInfos();
-        get(socketStore).on("connect", () => get(socketStore).emit("player information", pinfos.userUUID, userStore.set));
+        get(socketStore).on("connect", () => get(socketStore).emit("player information", pinfos.userUUID, (({player})=>userStore.set(player))));
       }
     } else {
       state = RULES.GUEST;

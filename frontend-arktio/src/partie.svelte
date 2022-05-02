@@ -2,7 +2,7 @@
 <script lang="ts">
   import Tailwindcss from "./Tailwindcss.svelte";
   import {router} from "tinro";
-  import {socketStore} from "./stores/storeLibrary";
+  import {lobbyStore, socketStore} from "./stores/storeLibrary";
   import {get} from "svelte/store";
   import type {LobbyJSON} from "./types/types";
 
@@ -28,14 +28,15 @@
   async function new_game() {
     // Create random 6 int id
     get(socketStore).emit("create lobby", ({ lobby } : { lobby: LobbyJSON }) => {
-      id_partie = lobby.uuid;
-      router.goto("/lobby/" + id_partie);
+      lobbyStore.set(lobby);
+      router.goto("/lobby/" + lobby.uuid);
     });
   }
 
   function join_game() {
     get(socketStore).emit("join lobby", id_partie, ({valid, lobby} : {valid:boolean, lobby: LobbyJSON} ) => {
       if (valid) {
+        lobbyStore.set(lobby);
         router.goto("/lobby/" + lobby.uuid);
       } else {
         alert("Invalid id");
