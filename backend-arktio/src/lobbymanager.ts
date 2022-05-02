@@ -1,4 +1,4 @@
-import { Server, Socket } from 'socket.io';
+import { Server, Socket, } from 'socket.io';
 import { LobbyPlayer } from './player';
 import { Lobby, LobbyJSON } from './lobby';
 import * as crypto from 'crypto';
@@ -33,6 +33,8 @@ export class LobbyManager {
                     this.lobbies.set(lobbyUUID, lobby);
                 
                     lobby.addPlayer(player, socket);
+                    socket.removeAllListeners("create lobby");
+                    socket.removeAllListeners("join lobby");
                     callback({ lobby: lobby.toJSON() });
                 });
 
@@ -47,15 +49,26 @@ export class LobbyManager {
                     if (lobby.isAccessible()) {
                         let valid = lobby.addPlayer(player, socket);
 
-                        if (valid) 
+                        if (valid) { 
+                            socket.removeAllListeners("create lobby");
+                            socket.removeAllListeners("join lobby");
                             callback({ valid: true, lobby: lobby.toJSON() });
-                        else
+                        } else {
                             // Ne pas donner des informations qui ne servent à rien
                             callback({ valid: false, lobby: null});
+                        }
                     } else {
                         // Ne pas donner des informations qui ne servent à rien
                         callback({ valid: false, lobby: null });
                     }                   
+                });
+
+                socket.on("disconnect", (reason) => {
+                    this.lobbies.forEach((lobby, uuid) => {
+                        if (lobby.contain(player)) {
+                            lobby.removePlayer(player);
+                        }
+                    });
                 });
 
                 callback({ player: player });

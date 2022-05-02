@@ -217,6 +217,15 @@ export class Lobby {
         }
     }
 
+    public contain(player: LobbyPlayer) : boolean {
+        this.players.forEach((socket, p) => {
+           if (player === p)
+            return true;
+        });
+
+        return false;
+    }
+
     public addPlayer(player: LobbyPlayer, socket: Socket) : boolean {
         if (this.state !== LobbyState.Lobby) {
             return false;
