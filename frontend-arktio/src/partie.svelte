@@ -9,9 +9,34 @@
 
   let id_partie = "";
 
-  function new_game() {
-    id_partie = "000000";
+  function validate_input(input: string) {
+    console.log(id_partie)
+    // test if input is a number
+    if (isNaN(Number(input))) {
+        return false;
+    }
+    // test if number is 6 digits
+    if (input.length != 6) {
+      return false;
+    }
+    return true;
   }
+
+  function new_game() {
+    // Create random 6 int id
+    id_partie = "";
+    for (let i = 0; i < 6; i++) {
+      id_partie += Math.floor(Math.random() * 10);
+    }
+    router.goto(`/lobby/${id_partie}`)
+  }
+
+  function join_game() {
+    if (validate_input(id_partie)) {
+      router.goto(`/lobby/${id_partie}`)
+    }
+  }
+
 </script>
 
 <Tailwindcss />
@@ -28,10 +53,10 @@
   </div>
 
   <div class="page">
-    <button id="creer" on:click={new_game}>Créer une partie</button>
+    <button id="creer" on:click={()=>new_game()}>Créer une partie</button>
     <div class="connection">
-      <input bind:value={id_partie} />
-      <button id="rejoidre">Rejoidre une partie</button>
+      <input bind:value={id_partie} on:input|preventDefault={(event)=>validate_input(event.target["value"])} />
+      <button id="rejoindre" on:click={join_game}>Rejoindre une partie</button>
     </div>
 
     <button id="retour" on:click={()=>router.goto("/")}>Retour</button>
