@@ -1,4 +1,4 @@
-<script lang="ts">
+  <script lang="ts">
   import { get } from "svelte/store";
   import { Route, router } from "tinro";
   import Lobby from "./Lobby.svelte";
