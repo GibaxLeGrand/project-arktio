@@ -17,6 +17,18 @@ export class LobbyManager {
         this.setup();
     }
 
+    private isInLobby(player: LobbyPlayer) :boolean{
+        let array = Array.from(this.lobbies.entries());
+    
+        for (let i=0; i<array.length; i++) {
+            if (array[i][1].contain(player)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     // Genrate 6 digit lobby id
     private generateLobbyId(): string {
         let id = '';
@@ -38,17 +50,23 @@ export class LobbyManager {
                 socket.removeAllListeners("player information");
 
                 socket.on("create lobby", (callback: (({ lobby } : { lobby: LobbyJSON }) => void)) => {
+                    if (this.isInLobby(player)) {
+                        return;
+                    }
+
                     let lobbyUUID: string = this.generateLobbyId()
                     let lobby: Lobby = new Lobby(lobbyUUID, this.io, true);
                     this.lobbies.set(lobbyUUID, lobby);
                 
                     lobby.addPlayer(player, socket);
-                    socket.removeAllListeners("create lobby");
-                    socket.removeAllListeners("join lobby");
                     callback({ lobby: lobby.toJSON() });
                 });
 
-                socket.on("join lobby", (lobbyUUID: string, callback: (({ valid, lobby } : { valid: boolean, lobby: LobbyJSON }) => void)) => {                    
+                socket.on("join lobby", (lobbyUUID: string, callback: (({ valid, lobby } : { valid: boolean, lobby: LobbyJSON }) => void)) => { 
+                    if (this.isInLobby(player)) {
+                        return;
+                    }
+                    
                     if (!this.lobbies.has(lobbyUUID)) {
                         callback({ valid: false, lobby: null });
                         return;
@@ -60,8 +78,6 @@ export class LobbyManager {
                         let valid = lobby.addPlayer(player, socket);
 
                         if (valid) { 
-                            socket.removeAllListeners("create lobby");
-                            socket.removeAllListeners("join lobby");
                             callback({ valid: true, lobby: lobby.toJSON() });
                         } else {
                             // Ne pas donner des informations qui ne servent à rien
