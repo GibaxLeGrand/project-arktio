@@ -12,10 +12,10 @@ import { createTestUser } from './resources/create_test_user';
 
 describe("game", () => {
     let lobbyManager: LobbyManager;
-    let clientSockets: io.Socket[];
+    let clientSockets: io.Socket[] = [];
     let httpServer: http.Server;
-    let usersUUID: string[];
-    let users: PlayerJSON[];
+    let usersUUID: string[] = [];
+    let users: PlayerJSON[] = [];
 
     beforeAll(async () => {
         usersUUID = [];
@@ -77,6 +77,10 @@ describe("game", () => {
         lobbyManager.destroy();
         httpServer.close();
         await db.disconnect();
+
+        users = [];
+        clientSockets = [];
+        usersUUID = [];
     });
 
     test("launch game", (done) => {
