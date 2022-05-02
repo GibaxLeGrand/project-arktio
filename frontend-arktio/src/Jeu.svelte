@@ -248,7 +248,6 @@ div {
 
   #event {
     background-color: $framboise;
-    height: 20%;
   }
   #image {
     background-color: #fff;
@@ -276,7 +275,6 @@ div {
     background-color: rgb(150, 150, 150);
   }
   .options {
-    height: 7%;
     width: 40%;
     align-items: center;
     justify-content: space-around;
@@ -401,9 +399,12 @@ div {
     grid-column-start: 10;
     grid-column-end: 13;
     grid-row-start: 6;
-
-    color: #000000;
+    color: black;
+    padding: initial;
+    margin-bottom: initial;
+    border-radius: 10px;
   }
+
   // bouton
   #send_message {
     width: 80%;
