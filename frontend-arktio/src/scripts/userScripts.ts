@@ -78,5 +78,21 @@ async function connect(email, mdp) {
     }
 }
 
+async function getPlayerInfos(): Promise<{ userUUID: string, userName: string }> {
+    const res = await routerFetch(`/api/session/getUser`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
 
-export {register, connect, disconnect}
+    if (res.status == 200) {
+        const data = await res.json()
+        return data;
+    } else {
+        return null;
+    }
+}
+
+
+export {register, connect, disconnect, getPlayerInfos}

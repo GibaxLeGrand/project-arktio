@@ -1,8 +1,9 @@
 <script lang="ts">
-  import { base } from "./stores/locationStore";
+  import {socketStore} from "./stores/storeLibrary";
   import { router } from "tinro";
   import * as ioClient from "../../backend-arktio/node_modules/socket.io-client";
-  const socket = ioClient.connect();
+  import {get} from "svelte/store";
+  const socket = get(socketStore);
 
   // import { loop_guard } from "svelte/internal"; // c'est quoi ça ?
 
@@ -37,7 +38,7 @@
   }
 
   // listener pour toute réception de message
-  socket.on("recv message", (message) => {
+  socket.on("recv message", ({player, message}) => {
     affiche_message(message);
   });
 
