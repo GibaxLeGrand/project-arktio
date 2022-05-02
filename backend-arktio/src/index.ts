@@ -10,12 +10,6 @@ import * as db from './bdd';
 import {hash_password} from "./scripts/security/password";
 import {LobbyManager} from './lobbymanager';
 
-declare global {
-    interface Crypto {
-      randomUUID: () => string;
-    }
-}
-
 dotenv.config();
 
 const app = express();

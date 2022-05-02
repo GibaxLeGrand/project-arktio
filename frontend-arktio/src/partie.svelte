@@ -2,6 +2,9 @@
 <script lang="ts">
   import Tailwindcss from "./Tailwindcss.svelte";
   import {router} from "tinro";
+  import {socketStore} from "./stores/storeLibrary";
+  import {get} from "svelte/store";
+  import type {LobbyJSON} from "./types/types";
 
   const test = () => {
     return true;
@@ -22,19 +25,22 @@
     return true;
   }
 
-  function new_game() {
+  async function new_game() {
     // Create random 6 int id
-    id_partie = "";
-    for (let i = 0; i < 6; i++) {
-      id_partie += Math.floor(Math.random() * 10);
-    }
-    router.goto(`/lobby/${id_partie}`)
+    get(socketStore).emit("create lobby", ({ lobby } : { lobby: LobbyJSON }) => {
+      id_partie = lobby.uuid;
+      router.goto("/lobby/" + id_partie);
+    });
   }
 
   function join_game() {
-    if (validate_input(id_partie)) {
-      router.goto(`/lobby/${id_partie}`)
-    }
+    get(socketStore).emit("join lobby", id_partie, ({valid, lobby} : {valid:boolean, lobby: LobbyJSON} ) => {
+      if (valid) {
+        router.goto("/lobby/" + lobby.uuid);
+      } else {
+        alert("Invalid id");
+      }
+    });
   }
 
 </script>
