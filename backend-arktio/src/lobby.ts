@@ -239,6 +239,7 @@ export class Lobby {
 
             socket.on("update token", (token: number) => {
                 player.setToken(token);
+                this.updateLobby();
             });
 
             socket.on("quit", (callback: () => void) => {
