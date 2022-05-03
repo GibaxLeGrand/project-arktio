@@ -55,7 +55,7 @@ export class LobbyManager {
                     }
 
                     let lobbyUUID: string = LobbyManager.generateLobbyId()
-                    let lobby: Lobby = new Lobby(lobbyUUID, this.io, true);
+                    let lobby: Lobby = new Lobby(lobbyUUID, this.io);
                     this.lobbies.set(lobbyUUID, lobby);
                 
                     lobby.addPlayer(player, socket);
