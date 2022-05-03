@@ -32,7 +32,7 @@ export default class CaseAchat implements Case {
     prepare(state: State, playerID: string, step: number) : TypeReponse {
         let s = State.createFrom(state);
         let choix = this.choiceOfPlayer(state, playerID);
-        let messages = ["Ne rien acheter"]
+        let messages = ["Ne rien acheter"];
 
         for (let i=0; i<choix.length; i++) {
             messages.push(this.write(choix[i]));
