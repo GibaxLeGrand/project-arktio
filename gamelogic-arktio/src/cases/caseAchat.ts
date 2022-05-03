@@ -1,21 +1,12 @@
 import {Case, CaseManager, TypeReponse} from "../caseManager";
-import { Objet } from "../objetManager";
+import { Objet, ObjetManager } from "../objetManager";
 import {State} from "../state";
-
-class AchatsPossibles {
-
-    private objets: Objet[] = [];
-
-    constructor(objets: Objet[]) {
-        this.objets = objets;
-    }
-}
 
 export default class CaseAchat implements Case {
     play(state: State, playerID: string, choices: number[]) : State {
         let achatsPossibles = this.choiceOfPlayer(state, playerID);
         
-        if (choices[0] != 0) {
+        if (choices[0] != 0 || achatsPossibles.length >= choices[0]) {
             let objet = achatsPossibles[choices[0] - 1];
             if (state.joueurs[playerID].argent < objet.prix) {
                 return state;
@@ -55,7 +46,21 @@ export default class CaseAchat implements Case {
         let result: Objet[] = [];
 
         for (let i=0; i<objetsDuMois.length; i++) {
-            state.joueurs[playerID].inventaire
+            if (ObjetManager.getObjet(objetsDuMois[i]).prix > state.joueurs[playerID].argent) {
+                continue;
+            }
+
+            let own = false;
+            for (let j=0; i<state.joueurs[playerID].inventaire.length; j++) {
+                if (state.joueurs[playerID].inventaire[j] === ObjetManager.getObjet(objetsDuMois[i])) {
+                   own = true;
+                   break; 
+                }
+            }
+            
+            if (!own) {
+                result.push(ObjetManager.getObjet(objetsDuMois[i]));
+            }
         }
 
         return result;
