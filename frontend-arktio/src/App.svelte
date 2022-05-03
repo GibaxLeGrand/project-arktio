@@ -43,38 +43,45 @@
 
     router.subscribe(() => {
         isAuth();
+        console.log($router.path);
     });
 </script>
 
 <main>
     <Route path="/">
-        <div class="logo">
-            <img alt="logo" src="logo.png"/>
+        <div>
+            <a href="/">
+                <img
+                        src="https://cdn.discordapp.com/attachments/942433231599456307/952985982595104878/unknown.png"
+                        alt="Logo Arktio représentant un ours"
+                />
+            </a>
         </div>
         <div class="boutons">
             {#if state === RULES.GUEST}
                 <button
                         id="connexion"
                         on:click={() => {
-					router.goto("/login");
-					}}>Connexion
+            router.goto("/login");
+          }}
+                >Connexion
                 </button>
                 <button
                         id="inscription"
                         on:click={() => {
-					router.goto("/register");
-					}}>Inscription
+            router.goto("/register");
+          }}
+                >Inscription
                 </button>
             {/if}
-
-            {#if [RULES.CONNECTED, RULES.GUEST].includes(state)}
+            {#if [RULES.CONNECTED].includes(state)}
                 <button
                         id="create_join_party"
                         on:click={() => {
-					router.goto("/partie");
-					}}>Créer / Rejoindre Partie
+            router.goto("/partie");
+          }}
+                >Créer / Rejoindre Partie
                 </button>
-
             {/if}
             <button
                     id="regles"
@@ -82,43 +89,46 @@
                     on:click={() => router.goto("/Regles")}>Règles
             </button
             >
-
             {#if [RULES.CONNECTED].includes(state)}
                 <button
                         id="disconnect"
                         on:click={async () => {
-					disconnect().then(isAuth);
-					}}>Déconnexion
+            disconnect().then(isAuth);
+          }}
+                >Déconnexion
                 </button>
             {/if}
         </div>
-
-        <footer>
-            <a href="https://m.facebook.com/Arktio/?locale2=fr_FR">Facebook</a>
-            <a href="https://arktio.fr/">Site d'Arktio</a>
-        </footer>
     </Route>
-
     <Route path="/login">
         <Login/>
     </Route>
-    <Route path="/lobby">
-        <Lobby/>
-    </Route>
+
     <Route path="/register">
         <Register/>
     </Route>
-    <Route path="/partie/">
-        <Partie/>
-    </Route>
+
     <Route path="/Regles/">
         <Regles/>
     </Route>
-    <Route path="/jeu/">
-        <Jeu/>
-    </Route>
+    {#if [RULES.CONNECTED].includes(state)}
+        <Route path="/jeu/">
+            <Jeu/>
+        </Route>
+        <Route path="/partie/">
+            <Partie/>
+        </Route>
+        <Route path="/lobby/:id" let:meta>
+            {#if meta.params.id.length === 6 && !isNaN(meta.params.id)}
+                <Lobby id={meta.params.id}/>
+            {:else}
+                <Route fallback redirect="/partie/"/>
+            {/if}
+        </Route>
+    {/if}
 
-    <Tailwindcss/>
+    <Route fallback redirect="/"/>
+
 </main>
 
 

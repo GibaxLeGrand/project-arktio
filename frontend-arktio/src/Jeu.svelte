@@ -72,14 +72,19 @@
      * quit the game without asking if the button is yes
      */
     function quit() {
-        // TODO
-        router.goto("/");
+        console.log("quit");
+        get(socketStore).emit("quit", () => {
+            router.goto("/");
+            lobbyStore.set(null);
+            stateStore.set(null);
+        });
+
     }
 
     enum Etat {
         intact, // cassable
         outil, // incassable
-        cassé, // cassé
+        casse, // cassé
     }
 
     enum Statut {
@@ -145,7 +150,7 @@
 
         casser_objet(idx_objet: number) {
             if (!this.possede_objet(idx_objet)) return;
-            this.objets[idx_objet].etat = Etat.cassé;
+            this.objets[idx_objet].etat = Etat.casse;
         }
 
         reparer_objet(idx_objet: number, idx_outil: number) {
@@ -220,10 +225,10 @@
 
         if (item_name == "" || item_name == undefined || item_name == null) {
             child.title = "item de l'inventaire";
-            child.ariaLabel = "item de l'inventaire'";
+            child["ariaLabel"] = "item de l'inventaire'";
         } else {
             child.title = item_name;
-            child.ariaLabel = item_name;
+            child["ariaLabel"] = item_name;
         }
         child.style.cssText =
             "background-image: url(" +
@@ -299,7 +304,7 @@
         </button>
         <div id="classement">
             {#each $stateStore.ordre_joueurs as joueurID}
-                <div id="classement_1">{$lobbyStore.players.find(x=>joueurID).name}</div>
+                <div id="classement_1">{$lobbyStore.players.find(x => joueurID).name}</div>
             {/each}
         </div>
         <button id="quit_game" on:click={quit_game_handler}

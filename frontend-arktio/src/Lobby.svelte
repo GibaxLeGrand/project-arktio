@@ -51,9 +51,7 @@
             userStore.set(lobby.players.find(x => x.uuid == $userStore.uuid));
         })
         .on("update gamestate", (state: State) => {
-            console.log("update gamestate");
             stateStore.set(state);
-            console.log(state);
             router.goto("/jeu/");
         });
 
@@ -89,38 +87,37 @@
                 <span> | </span>
             </div>
         {/each}
+    </div>
 
-        <div id="choix_pion">
-            <span>Choissisez un pion :</span>
-            <select value={$userStore.token} on:change={set_token}>
-                {#each availablePions as pion}
-                    <option value={pion.id}>{pion.text}</option>
-                {/each}
-            </select>
-        </div>
+    <div id="choix_pion">
+        <span>Choissisez un pion :</span>
+        <select value={$userStore.token} on:change={set_token}>
+            {#each availablePions as pion}
+                <option value={pion.id}>{pion.text}</option>
+            {/each}
+        </select>
+    </div>
 
 
-        {#if $lobbyStore, players_ready()}
-            {#if $lobbyStore.owner.uuid === $userStore.uuid}
-                <button aria-label="Lancer la partie" on:click={start_game}>Commencer partie</button>
-            {:else}
-                <button aria-label="Lancer la partie" disabled
-                >En attente du début de partie
-                </button
-                >
-            {/if}
+    {#if $lobbyStore, players_ready()}
+        {#if $lobbyStore.owner.uuid === $userStore.uuid}
+            <button aria-label="Lancer la partie" on:click={start_game}>Commencer partie</button>
         {:else}
-            <button aria-label="Lancer la partie" disabled
-            >En attente des autres joueurs
-            </button
-            >
+            <button aria-label="Lancer la partie" disabled>
+                En attente du début de partie
+            </button>
         {/if}
+    {:else}
+        <button aria-label="Lancer la partie" disabled>
+            En attente des autres joueurs
+        </button>
+    {/if}
 
-        <footer>
-            <a href="url">condition générale d'utilisation</a>
-            <a href="non je déconne">Politique de cookie</a>
-            <a href="Qui est tu ?">Qui sommes nous ?</a>
-        </footer>
+    <footer>
+        <a href="url">condition générale d'utilisation</a>
+        <a href="non je déconne">Politique de cookie</a>
+        <a href="Qui est tu ?">Qui sommes nous ?</a>
+    </footer>
 </main>
 
 
