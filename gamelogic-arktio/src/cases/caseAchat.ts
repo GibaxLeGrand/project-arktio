@@ -3,6 +3,10 @@ import { Objet, ObjetManager } from "../objetManager";
 import {State} from "../state";
 
 export default class CaseAchat implements Case {
+    name = "Achat";
+    id_name = "achat";
+    max_number = 3;
+
     play(state: State, playerID: string, choices: number[]) : State {
         let achatsPossibles = this.choiceOfPlayer(state, playerID);
         
@@ -33,7 +37,7 @@ export default class CaseAchat implements Case {
         for (let i=0; i<choix.length; i++) {
             messages.push(this.write(choix[i]));
         }
-        
+
         return { titre: "Souhaitez-vous acheter un objet ?", messages: messages };
     }
 
@@ -54,10 +58,10 @@ export default class CaseAchat implements Case {
             for (let j=0; i<state.joueurs[playerID].inventaire.length; j++) {
                 if (state.joueurs[playerID].inventaire[j] === ObjetManager.getObjet(objetsDuMois[i])) {
                    own = true;
-                   break; 
+                   break;
                 }
             }
-            
+
             if (!own) {
                 result.push(ObjetManager.getObjet(objetsDuMois[i]));
             }

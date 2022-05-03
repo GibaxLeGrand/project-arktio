@@ -24,6 +24,13 @@ export interface Objet {
     prix: number;
 }
 
+
+export interface Case {
+    name: string;
+    id_name: string;
+}
+
+
 export interface Player {
     id: string;
     inventaire : Objet[];
@@ -52,7 +59,7 @@ export enum Mois {
 
 export class State {
     joueurs: {[key:string] : Player} = {};
-    plateau: number[] = [];
+    plateau: Case[] = [];
     tour: number = 1;
     mois: Mois = Mois.SEPTEMBRE;
     objets_par_mois: {[key:number] : number[]} = {};

@@ -4,7 +4,10 @@ import {Objet, ObjetManager} from "../objetManager"
 
 
 
-export default class CaseObjet implements Case {
+export default class CaseOutil implements Case {
+    name = "Outil";
+    id_name = "outil";
+    max_number = 2;
 
     play(state: State, playerID: string, choices: number[]) : State {
         return state;
@@ -22,6 +25,7 @@ export default class CaseObjet implements Case {
     next(state: State, playerID: string, step: number, choice: number) : { end: boolean, step: number } {
         return { end: false, step: 0 };
     }
+
 
     
 }

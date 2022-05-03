@@ -2,6 +2,9 @@ import {Case, TypeReponse,} from "../caseManager";
 import {State} from "../state";
 
 export default class CasePaie implements Case {
+    name = "Paie";
+    id_name = "paie";
+    max_number = 1;
 
     play(state: State, playerID: string, choices: number[]) : State {
         state.joueurs[playerID].argent += 1000;

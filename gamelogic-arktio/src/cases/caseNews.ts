@@ -2,6 +2,10 @@ import {Case, TypeReponse} from "../caseManager";
 import {State} from "../state";
 
 export default class CaseNews implements Case {
+    name = "News";
+    id_name = "news";
+    max_number = 2;
+
     play(state: State, playerID: string, choices: number[]) : State {
         return state;
     }

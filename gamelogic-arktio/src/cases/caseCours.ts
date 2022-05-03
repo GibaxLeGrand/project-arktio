@@ -4,6 +4,9 @@ import ObjetOrdinateur from "../objets/objetOrdinateur";
 import {State} from "../state";
 
 export default class CaseCours implements Case {
+    name = "Cours";
+    id_name = "cours";
+    max_number = 4;
 
     play(state: State, playerID: string, choices: number[]) : State {
         return state;
@@ -21,7 +24,7 @@ export default class CaseCours implements Case {
             }
         }
 
-        return new TypeReponse("C'est une jour de cours aujourd'hui", [ordinateur ? 
+        return new TypeReponse("C'est une jour de cours aujourd'hui", [ordinateur ?
             "Tu vas en cours grâce à ton super ordinateur" : "Tu es trop pauvre pour aller en cours"]);
     }
 

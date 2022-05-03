@@ -31,6 +31,9 @@ class FraisDeScolarité extends Facture {
 }
 
 export default class CaseFacture implements Case {
+    name = "Facture";
+    id_name = "facture";
+    max_number = 1;
 
     private possibilities: Map<Facture, number>;
     private bufferChoice: Map<string, number>;
