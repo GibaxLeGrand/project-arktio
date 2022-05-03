@@ -1,132 +1,134 @@
 <!-- Script -->
 <script lang="ts">
-  import Tailwindcss from "./Tailwindcss.svelte";
-  import { connect } from "./scripts/userScripts";
+	import {connect} from "./scripts/userScripts";
+	import {router} from "tinro";
 
-  let email: string | null = null;
-  let mdp: string | null = null;
+	let email: string | null = null;
+	let mdp: string | null = null;
+
+	let test: boolean = true;
+	function erreur() {
+		test = !test;
+	}
 </script>
 
-<Tailwindcss />
 
 <!-- Page -->
 <main>
-  <div class="logo">
-    <a href="/">
-      <img
-        src="https://www.adobe.com/express/create/logo/media_1ba2722b76062fb428e1071c5cd59a5d9bc7fb94f.jpeg?width=400&format=jpeg&optimize=medium"
-        alt="Logo Arktio"
-      />
-    </a>
-  </div>
+	<div class="logo">
+		<img alt="logo" src="logo.png"/>
+	</div>
 
-  <div class="page">
-    <form
-      class="connection"
-      action="javascript:"
-      on:submit={() => {
-        connect(email, mdp);
-      }}
-    >
-      <label for="email">Email</label>
-      <input required type="email" id="email" name="email" bind:value={email} />
-      <br />
-      <label for="password">Mot de passe</label>
-      <input
-        required
-        type="password"
-        id="password"
-        name="password"
-        bind:value={mdp}
-      />
+	<div class="boutons">
+		<form
+			class="connection"
+			action="javascript:"
+			on:submit={() => {
+			connect(email, mdp);
+			}}
+		>
+			<label for="email">Email</label>
+			<input required type="email" id="email" name="email" bind:value={email} />
+			
+			<label for="password">Mot de passe</label>
+			<input required type="password" id="password" name="password" bind:value={mdp} />
+			{#if !test}
+				<h1>Le mail/mot de passe n'est pas correct.</h1>
+			{/if}
 
-      <button id="entrer" type="submit">Connexion</button>
-    </form>
-  </div>
-
-  <footer>
-    <a href="url">condition générale d'utilisation</a>
-    <a href="non je déconne">Politique de cookie</a>
-    <a href="Qui est tu ?">Qui sommes nous ?</a>
-  </footer>
+			<button id="entrer" type="submit">Connexion</button>
+			<button id="retour" on:click={()=>router.goto("/")}>Retour</button>
+		</form>
+	</div>
+	
 </main>
 
-<!-- CSS -->
+<!-- CSS 
+
 <style lang="scss">
-  $turquoise: #00a19a;
-  $blanc: #ffffff;
-  $framboise: #ba105a;
-  $caramel: #ffd49a;
-  $turquoise_clair: #98d1cd;
-  $gris: #90908f;
-  $gris_fonce: #2c2c2c;
-  $font_arktio: Raleway;
+	$turquoise: #00a19a;
+	$blanc: #ffffff;
+	$framboise: #ba105a;
+	$caramel: #ffd49a;
+	$turquoise_clair: #98d1cd;
+	$gris: #90908f;
+	$gris_fonce: #2c2c2c;
+	$font_arktio: Raleway;
 
-  main {
-    background-color: $turquoise;
-    min-width: 100vw;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    font-family: $font_arktio;
-  }
 
-  img {
-    width: 15rem;
-    height: 15rem;
-    margin: 1rem;
-  }
+main {
+	margin: 0;
+	padding: 0;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	height: 100%;
+}
 
-  input {
-    display: inherit;
-    color: $turquoise;
-    text-align: center;
-    background-color: $blanc;
-    font-size: x-large;
-    height: 7vh;
-    width: 40vw;
-    padding: 1em;
-  }
 
-  button {
-    align-items: center;
-    text-align: center;
-    background-color: $blanc;
-    font-size: x-large;
-    height: 6vh;
-    width: 40vw;
-    margin: 1em;
-    color: $turquoise;
-  }
+div {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	font-family: $font_arktio;
+}
 
-  footer {
-    display: inherit;
-    bottom: 0;
-    position: absolute;
-    text-align: center;
-    color: $blanc;
-    padding: 1em;
-  }
+img {
+	width: 15rem;
+	height: 15rem;
+	margin: 1rem;
+}
 
-  .page {
-    display: flex;
-    flex-flow: column;
-    align-items: center;
-    block-size: 50vh;
-  }
+form {
+	display: flex;
+	flex-flow: column;
+	align-items: center;
+	width: 50vw;
+}
 
-  .connection {
-    display: flex;
-    flex-flow: column;
-    align-items: center;
-    background-color: $blanc;
-    padding: 1em;
-  }
+input {
+	display: inherit;
+	color: $turquoise;
+	text-align: center;
+	background-color: $blanc;
+	font-size: x-large;
+	height: 5vh;
+	width: 60%;
+	padding: 1em;
+	margin: 2%;
+    border-radius: 10em;
+    border: solid $gris;
+}
 
-  @media (min-width: 640px) {
-    main {
-      max-width: none;
-    }
-  }
+h1 {
+	color: $framboise;
+	font-size: x-large;
+	text-align: center;
+}
+
+button{
+	align-items: center;
+	text-align: center;
+	background-color: $blanc;
+	font-size: 100%;
+	height: 6vh;
+	color: $turquoise;
+    margin: 2%;
+    width: 50%;
+    border-radius: 10em;
+    border: solid $gris;
+}
+
+.connection {
+	padding: 1em;
+}
+
+@media (max-width: 640px) {
+
+	div, form {
+		width: 100%;
+	}
+
+}
 </style>
+-->

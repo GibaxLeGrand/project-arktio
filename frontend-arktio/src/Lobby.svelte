@@ -123,95 +123,140 @@
         </footer>
 </main>
 
+
+<!-- CSS
 <style lang="scss">
-  $color: #286143; // PS : c'était juste un test ou ça va servir ?
-  $turquoise: #00a19a;
-  $blanc: #ffffff;
-  $caramel: #ffd49a;
+	$turquoise: #00a19a;
+	$blanc: #ffffff;
+	$framboise: #ba105a;
+	$caramel: #ffd49a;
+	$turquoise_clair: #98d1cd;
+	$gris: #90908f;
+	$gris_fonce: #2c2c2c;
+	$font_arktio: Raleway;
 
-  body {
-    background-color: $turquoise;
-  }
 
-  main {
-    @apply py-32;
-    text-align: center;
-    align-items: center;
+main {
+	margin: 0;
+	padding: 0;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	height: 100%;
+	width: 100vw;
+}
+
+
+div {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	font-family: $font_arktio;
+}
+
+img {
+	width: 15rem;
+	height: 15rem;
+	margin: 1rem;
+}
+
+label {
+	color: $blanc;
+	font-size: x-large;
+}
+
+button{
+	align-items: center;
+	text-align: center;
+	background-color: $blanc;
+	height: 6vh;
+	color: $turquoise;
+    margin: 2%;
+    width: 50%;
+    border-radius: 10em;
+    border: solid $gris;
+	font-size: x-large;
+}
+
+#block {
+	display: flex;
+	flex-direction: row;
+	width: 50%;
+}
+
+#players {
+	display: flex;
+	flex-direction: column;
+	background-color: $caramel;
+	border: solid $gris 5px;
+	border-radius: 1em;
+	width: 50%;
+	padding: 1em;
+}
+
+.player {
+	background-color: $blanc;
+	padding: 1em;
+	margin: 5px;
+	width: 80%;
+	border-radius: 1em;
+}
+
+.droite {
+	float: right;
+}
+
+.gauche {
+	float: left;
+}
+
+#choix_pion {
+	background-color: $caramel;
+	padding: 1em;
+	margin: 1em;
+	align-items: center;
+	border: solid $gris 5px;
+	border-radius: 1em;
+}
+
+select {
+	background-color: $blanc;
+	border-radius: 1em;
+}
+
+#chatbox {
+    text-align:left;
+    margin: 1em auto;
     padding: 1em;
-    margin: 0 auto;
-  }
+    background: $blanc;
+	border-radius: 1em;
+    border: solid $gris;
+	width: 70%;
+	height: 20em;
+	color: $turquoise;
+}
 
-  div {
-    font-family: Raleway;
-    text-decoration-color: $blanc;
-    background-color: $turquoise;
-  }
+#msg {
+    width: 50%;
+    border-radius: 1em;
+    border: solid $gris;
+	color: $turquoise;
+}
 
-  .logo {
-    color: $blanc;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 5vh;
-  }
+#envoyer {
+	width: 5em;
+	border-radius: 1em;
+    border: solid $gris;
+	color: $turquoise;
+	background-color: $blanc;
+}
 
-  #players {
-    background-color: $blanc;
-    display: flex;
-    flex-direction: column;
-  }
+@media (max-width: 640px) {
 
-  .player {
-    background-color: $caramel;
-    padding: 1em;
-    margin: 5px;
-  }
+	div {
+		width: 100%;
+	}
 
-  .droite {
-    float: right;
-  }
-
-  .gauche {
-    float: left;
-  }
-
-  #choix_pion {
-    background-color: $blanc;
-    padding: 2px;
-    margin: 1em;
-    align-items: center;
-  }
-
-  button {
-    color: $turquoise;
-    align-items: center;
-    justify-content: space-around;
-    text-align: center;
-    background-color: $blanc;
-    font-weight: 400;
-    font-size: x-large;
-    height: 7vh;
-    width: 40vw;
-  }
-
-  footer {
-    text-align: center;
-    font-family: Raleway;
-    color: $blanc;
-    background-color: $turquoise;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-  }
-
-  @media (max-width: 900px) {
-    button,
-    input,
-    select,
-    option {
-      width: 60vw;
-    }
-  }
+}
 </style>
-
+-->

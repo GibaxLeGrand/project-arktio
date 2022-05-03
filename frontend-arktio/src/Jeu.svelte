@@ -5,13 +5,13 @@
     import {get} from "svelte/store";
     import {State} from "./types/types";
 
-    // import { loop_guard } from "svelte/internal"; // c'est quoi ça ?
+  // import { loop_guard } from "svelte/internal"; // c'est quoi ça ?
 
-    const NB_CASES = 30;
+  const NB_CASES = 30;
 
-    let quit_game_button_text: string = "Quitter";
-    let print_yes_no: boolean = false;
-    let message: string;
+  let quit_game_button_text: string = "Quitter";
+  let print_yes_no: boolean = false;
+  let message: string;
 
     /**
      * envoie un message à la base de donnée
@@ -314,384 +314,360 @@
     </div>
 </main>
 
+<!-- CSS -->
 <style lang="scss">
-  $nb_cases_horizontal: 5;
-  $nb_cases_vertical: 10; // les cases dans les coins sont comptées
-  $taille_case: 1fr;
-
-  $turquoise: #00a19a;
-  $blanc: #ffffff;
-  $framboise: #ba105a;
-  $caramel: #ffd49a;
-  $turquoise_clair: #98d1cd;
-  $gris: #90908f;
-  $gris_fonce: #2c2c2c;
-  $font_arktio: Raleway;
-
-  main {
-    width: 100%;
-    height: 100%;
-    background-color: $turquoise_clair;
-
-    justify-content: center;
-    align-items: center;
-
-    font-size: xx-large;
-    color: #ffffff;
-    font-family: $font_arktio;
-  }
-
-  .plateau {
-    width: 100%;
-    height: 100%;
-    border: solid $framboise;
-    border-width: 5px;
-    display: grid;
-    grid-gap: 5px;
-    grid-template-rows: repeat(10, $taille_case);
-    grid-template-columns: repeat(11, $taille_case);
-  }
-
-  // toutes les cases y compris contener + autres div
-  .plateau > div {
-    border: dashed black;
-  }
-
-  // 1 -> 7
-  .cases_haut {
-    grid-row-start: 1;
-  }
-
-  // 8 -> 15
-  .cases_droite {
-    grid-column-start: 9;
-  }
-
-  // 16 -> 22
-  .cases_bas {
-    grid-row-start: 10;
-  }
-
-  // 23 -> 30
-  .cases_gauche {
-    grid-column-start: 3;
-  }
-
-  #conteneur {
-    grid-column-start: 4;
-    grid-column-end: 9;
-    grid-row-start: 2;
-    grid-row-end: 10;
-
-    border: dashed red;
-    color: #2c2c2c;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-
-  // actualise la case selon le lancé de dé
-
-  #event {
-    background-color: $framboise;
-    height: 20%;
-  }
-
-  #image {
-    background-color: #fff;
-    height: 50%;
-  }
-
-  button {
-    width: fit-content;
-    height: fit-content;
-    align-self: flex-end;
-    display: inline-flex;
-    justify-content: space-around;
-    border: solid $gris;
-    background-color: $blanc;
-    border-radius: 10px;
-    color: $gris_fonce;
-  }
-
-  button:hover {
-    background-color: rgb(41, 39, 39);
-    color: $blanc;
-  }
-
-  button:active {
-    background-color: rgb(150, 150, 150);
-  }
-
-  .options {
-    height: 7%;
-    width: 40%;
-    align-items: center;
-    justify-content: space-around;
-    margin-top: 2%;
-    margin-bottom: 2%;
-    margin-right: 4.5%;
-    margin-left: 4.5%;
-  }
-
-  .bouton_choix {
-    width: 80%;
-    justify-content: center;
-    align-items: center;
-    justify-self: center;
-  }
-
-  #boutonoui {
-    grid-column-start: 2;
-    grid-row-start: 2;
-  }
-
-  #boutonnon {
-    grid-column-start: 1;
-    grid-row-start: 2;
-  }
-
-  #quit_game {
-    grid-column-start: 1;
-    grid-column-end: 3;
-    height: 100%;
-    width: 70%;
-    font-size: 2vw;
-
-    justify-content: center;
-    align-items: center;
-    justify-self: left;
-    margin-top: auto;
-  }
-
-  #titre_inventaire {
-    grid-column-start: 1;
-    grid-column-end: 3;
-    grid-row-start: 3;
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    font-size: 3vw;
-    color: $gris_fonce;
-    border: none;
-  }
-
-  #classement {
-    grid-column-start: 10;
-    grid-column-end: 12;
-    grid-row-start: 7;
-    grid-row-end: 11;
-    display: flex;
-    border: dashed $caramel;
-    color: $gris_fonce;
-    align-items: center;
-    justify-content: space-around;
-    flex-direction: column;
-  }
-
-  #classement_1 {
-    background-color: #fff;
-    width: 80%;
-  }
-
-  #classement_2 {
-    background-color: rgb(255, 232, 232);
-    width: 80%;
-  }
-
-  #classement_3 {
-    background-color: rgb(255, 174, 174);
-    width: 80%;
-  }
-
-  #classement_4 {
-    background-color: rgb(255, 134, 134);
-    width: 80%;
-  }
-
-  #inventaire {
-    grid-column-start: 1;
-    grid-column-end: 3;
-    grid-row-start: 4;
-    grid-row-end: 11;
-    border: dashed $caramel;
-
-    width: 100%;
-    align-items: center;
-    justify-content: space-between;
-    display: flex;
-    overflow: auto;
-    flex-wrap: wrap;
-  }
-
-  #chat {
-    grid-column-start: 10;
-    grid-column-end: 12;
-    grid-row-start: 1;
-    grid-row-end: 6;
-
-    width: 100%;
-    display: flex;
-    align-content: center;
-    justify-content: flex-start;
-    flex-direction: column;
-    overflow: auto;
-    overflow-wrap: anywhere;
-    overflow-x: unset;
-  }
-
-  // TODO gérer la taille de ce truc
-  input {
-    width: 55%;
-    height: fit-content;
-    font-size: 60%;
-    font-family: $font_arktio;
-    display: flex;
-    justify-content: center;
-    justify-self: flex-start;
-    align-self: center;
-    grid-column-start: 10;
-    grid-column-end: 13;
-    grid-row-start: 6;
-
-    color: #000000;
-  }
-
-  // bouton
-  #send_message {
-    width: 80%;
-    font-size: 70%;
-    justify-content: center;
-    justify-self: flex-end;
-    align-self: center;
-
-    grid-column-start: 11;
-    grid-row-start: 6;
-  }
-
-  #image {
-    align-self: center;
-  }
-
-  #x1 {
-    grid-column-start: 3;
-  }
-
-  #x2 {
-    grid-column-start: 4;
-  }
-
-  #x3 {
-    grid-column-start: 5;
-  }
-
-  #x4 {
-    grid-column-start: 6;
-  }
-
-  #x5 {
-    grid-column-start: 7;
-  }
-
-  #x6 {
-    grid-column-start: 8;
-  }
-
-  #x7 {
-    grid-column-start: 9;
-  }
-
-  #x8 {
-    grid-row-start: 2;
-  }
-
-  #x9 {
-    grid-row-start: 3;
-  }
-
-  #x10 {
-    grid-row-start: 4;
-  }
-
-  #x11 {
-    grid-row-start: 5;
-  }
-
-  #x12 {
-    grid-row-start: 6;
-  }
-
-  #x13 {
-    grid-row-start: 7;
-  }
-
-  #x14 {
-    grid-row-start: 8;
-  }
-
-  #x15 {
-    grid-row-start: 9;
-  }
-
-  #x16 {
-    grid-column-start: 9;
-  }
-
-  #x17 {
-    grid-column-start: 8;
-  }
-
-  #x18 {
-    grid-column-start: 7;
-  }
-
-  #x19 {
-    grid-column-start: 6;
-  }
-
-  #x20 {
-    grid-column-start: 5;
-  }
-
-  #x21 {
-    grid-column-start: 4;
-  }
-
-  #x22 {
-    grid-column-start: 3;
-  }
-
-  #x23 {
-    grid-row-start: 9;
-  }
-
-  #x24 {
-    grid-row-start: 8;
-  }
-
-  #x25 {
-    grid-row-start: 7;
-  }
-
-  #x26 {
-    grid-row-start: 6;
-  }
-
-  #x27 {
-    grid-row-start: 5;
-  }
-
-  #x28 {
-    grid-row-start: 4;
-  }
-
-  #x29 {
-    grid-row-start: 3;
-  }
-
-  #x30 {
-    grid-row-start: 2;
-  }
+	$nb_cases_horizontal: 5;
+	$nb_cases_vertical: 10; // les cases dans les coins sont comptées
+	$taille_case: 1fr;
+
+	$turquoise: #00a19a;
+	$blanc: #ffffff;
+	$framboise: #ba105a;
+	$caramel: #ffd49a;
+	$turquoise_clair: #98d1cd;
+	$gris: #90908f;
+	$gris_fonce: #2c2c2c;
+	$font_arktio: Raleway;
+
+
+
+	main {
+		background-color: $turquoise_clair;
+		font-size: x-large;
+		color: #ffffff;
+	}
+
+	div {
+		display: grid;
+		align-items: normal;
+	}
+
+	button {
+		width: fit-content;
+		height: fit-content;
+		align-self: flex-end;
+		display: inline-flex;
+		justify-self: space-around;
+		border: solid $gris;
+		background-color: $blanc;
+		border-radius: 10px;
+		color: $gris_fonce;
+	}
+
+	button:hover {
+		background-color: rgb(41, 39, 39);
+		color: $blanc;
+	}
+
+	button:active {
+		background-color: rgb(150, 150, 150);
+	}
+
+	input {
+		width: 55%;
+		height: fit-content;
+		font-size: 60%;
+		font-family: $font_arktio;
+		display: flex;
+		justify-content: center;
+		justify-self: flex-start;
+		align-self: center;
+		grid-column-start: 10;
+		grid-column-end: 13;
+		grid-row-start: 6;
+		color: black;
+		padding: 0.4em;
+		margin-bottom: initial;
+		border-radius: 10px;
+	}
+
+
+
+	// plateau
+	.plateau {
+		display: grid;
+		width: 100%;
+		height: 100%;
+		border: solid $framboise;
+		border-width: 5px;
+		display: grid;
+		grid-gap: 5px;
+		grid-template-rows: repeat(10, $taille_case);
+		grid-template-columns: repeat(11, $taille_case);
+	}
+
+	// toutes les cases y compris contener + autres div
+	.plateau > div {
+		border: dashed black;
+	}
+
+	// 1 -> 7
+	.cases_haut {
+		grid-row-start: 1;
+	}
+
+	// 8 -> 15
+	.cases_droite {
+		grid-column-start: 9;
+	}
+
+	// 16 -> 22
+	.cases_bas {
+		grid-row-start: 10;
+	}
+
+	// 23 -> 30
+	.cases_gauche {
+		grid-column-start: 3;
+	}
+
+
+
+	// bloc action
+	#conteneur {
+		display: block;
+		grid-column-start: 4;
+		grid-column-end: 9;
+		grid-row-start: 2;
+		grid-row-end: 10;
+		border: dashed red;
+		color: $gris_fonce;
+	}
+
+	#event {
+		background-color: $framboise;
+		height: 20%;
+	}
+
+	#image {
+		background-color: #fff;
+		height: 50%;
+	}
+
+	.options {
+		width: 40%;
+		align-items: center;
+		justify-content: space-around;
+		margin-top: 2%;
+		margin-bottom: 2%;
+		margin-right: 4.5%;
+		margin-left: 4.5%;
+	}
+
+
+
+	// bouton quitter
+	.bouton_choix {
+		width: 80%;
+		justify-content: center;
+		align-items: center;
+		justify-self: center;
+	}
+
+	#boutonoui {
+		grid-column-start: 2;
+		grid-row-start: 2;
+	}
+
+	#boutonnon {
+		grid-column-start: 1;
+		grid-row-start: 2;
+	}
+
+	#quit_game {
+		grid-column-start: 1;
+		grid-column-end: 3;
+		height: 100%;
+		width: 70%;
+		font-size: 2vw;
+		justify-content: center;
+		align-items: center;
+		justify-self: left;
+		margin-top: auto;
+	}
+
+
+
+	// classement
+	#classement {
+		grid-column-start: 10;
+		grid-column-end: 12;
+		grid-row-start: 7;
+		grid-row-end: 11;
+		display: flex;
+		border: dashed $caramel;
+		color: $gris_fonce;
+		align-items: center;
+		justify-content: space-around;
+		flex-direction: column;
+	}
+
+	#classement_1 {
+		background-color: #fff;
+		width: 80%;
+	}
+	#classement_2 {
+		background-color: rgb(255, 232, 232);
+		width: 80%;
+	}
+	#classement_3 {
+		background-color: rgb(255, 174, 174);
+		width: 80%;
+	}
+	#classement_4 {
+		background-color: rgb(255, 134, 134);
+		width: 80%;
+	}
+
+
+
+	// inventaire
+	#titre_inventaire {
+		display: grid;
+		grid-column-start: 1;
+		grid-column-end: 3;
+		grid-row-start: 3;
+		justify-content: center;
+		align-items: flex-end;
+		font-size: 3vw;
+		color: $gris_fonce;
+		border: none;
+	}
+
+	#inventaire {
+		grid-column-start: 1;
+		grid-column-end: 3;
+		grid-row-start: 4;
+		grid-row-end: 11;
+		border: dashed $caramel;
+		width: 100%;
+		align-items: center;
+		justify-content: space-between;
+		display: flex;
+		overflow: auto;
+		flex-wrap: wrap;
+	}
+
+
+
+	// tchat
+	#chat {
+		grid-column-start: 10;
+		grid-column-end: 12;
+		grid-row-start: 1;
+		grid-row-end: 6;
+		width: 100%;
+		display: flex;
+		align-content: center;
+		justify-content: flex-start;
+		flex-direction: column;
+		overflow: auto;
+		overflow-wrap: anywhere;
+		overflow-x: unset;
+	}
+
+	#send_message {
+		width: 80%;
+		font-size: 70%;
+		justify-content: center;
+		justify-self: flex-end;
+		align-self: center;
+		margin: 0.4em;
+		grid-column-start: 11;
+		grid-row-start: 6;
+	}
+
+
+
+	// grille
+	#x1 {
+		grid-column-start: 3;
+	}
+	#x2 {
+		grid-column-start: 4;
+	}
+	#x3 {
+		grid-column-start: 5;
+	}
+	#x4 {
+		grid-column-start: 6;
+	}
+	#x5 {
+		grid-column-start: 7;
+	}
+	#x6 {
+		grid-column-start: 8;
+	}
+	#x7 {
+		grid-column-start: 9;
+	}
+	#x8 {
+		grid-row-start: 2;
+	}
+	#x9 {
+		grid-row-start: 3;
+	}
+	#x10 {
+		grid-row-start: 4;
+	}
+	#x11 {
+		grid-row-start: 5;
+	}
+	#x12 {
+		grid-row-start: 6;
+	}
+	#x13 {
+		grid-row-start: 7;
+	}
+	#x14 {
+		grid-row-start: 8;
+	}
+	#x15 {
+		grid-row-start: 9;
+	}
+	#x16 {
+		grid-column-start: 9;
+	}
+	#x17 {
+		grid-column-start: 8;
+	}
+	#x18 {
+		grid-column-start: 7;
+	}
+	#x19 {
+		grid-column-start: 6;
+	}
+	#x20 {
+		grid-column-start: 5;
+	}
+	#x21 {
+		grid-column-start: 4;
+	}
+	#x22 {
+		grid-column-start: 3;
+	}
+	#x23 {
+		grid-row-start: 9;
+	}
+	#x24 {
+		grid-row-start: 8;
+	}
+	#x25 {
+		grid-row-start: 7;
+	}
+	#x26 {
+		grid-row-start: 6;
+	}
+	#x27 {
+		grid-row-start: 5;
+	}
+	#x28 {
+		grid-row-start: 4;
+	}
+	#x29 {
+		grid-row-start: 3;
+	}
+	#x30 {
+		grid-row-start: 2;
+	}
 </style>
