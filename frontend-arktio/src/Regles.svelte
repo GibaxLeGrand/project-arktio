@@ -104,10 +104,11 @@
   div {
     display: flex;
     width: 90%;
-    height: 79%;
+    height: 50%;
     position: fixed;
     padding-bottom: 5%;
     margin: 5%;
+    margin-top: 10%;
     border: solid $blanc;
     border-radius: 10px;
     flex-direction: column;
@@ -119,7 +120,9 @@
     height: 90%;
     margin: 5%;
     padding: 2%;
-    overflow: scroll;
+    overflow: auto;
+    overflow-x: unset;
+    overflow-wrap: anywhere;
   }
 
   #accueil {
@@ -129,15 +132,23 @@
 
   #next {
     position: fixed;
-    left: 80%;
-    align-self: flex-end;
-    justify-items: right;
+    display: inherit;
+    bottom: 0;
+    right: 0;
+    font-size: 70%;
+
+    // align-self: flex-end;
+    // justify-items: right;
   }
   #previous {
     position: fixed;
-    flex-direction: row;
-    align-self: flex-end;
-    font-size: 75%;
+    display: inherit;
+    bottom: 0;
+    left: 0;
+    font-size: 70%;
+    // flex-direction: row;
+    // align-self: flex-end;
+    // font-size: 75%;
   }
 
   // WIDTH
