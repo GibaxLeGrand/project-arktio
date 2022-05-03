@@ -5,8 +5,8 @@ export async function up(knex: Knex): Promise<void> {
     return knex.schema.createTable("History", (table) =>
     {
         table.increments("history_id").primary();
-        table.timestamp("history_start").notNullable();
-        table.timestamp("history_end").notNullable();
+        table.timestamp("history_start").notNullable().defaultTo(knex.fn.now());
+        table.timestamp("history_end").notNullable().defaultTo(knex.fn.now());
     })
     // Création d'une table "PlayerHistory"
     .createTable("PlayerHistory", (table) =>
