@@ -1,22 +1,7 @@
-import {Case, Choix, Information} from "../caseManager";
+import {Case, TypeReponse} from "../caseManager";
 import { Objet } from "../objetManager";
 import ObjetOrdinateur from "../objets/objetOrdinateur";
 import {State} from "../state";
-
-class Cours implements Information {
-
-    private ordinateur: boolean;
-
-    constructor(ordinateur: boolean) {
-        this.ordinateur = ordinateur;
-    }
-
-    public message() : any {
-        return {
-            ordinateur: this.ordinateur
-        }
-    }
-}
 
 export default class CaseCours implements Case {
     name = "Cours";
@@ -36,7 +21,7 @@ export default class CaseCours implements Case {
         return state;
     }
 
-    action(state : State, playerID: string) : Choix {
+    prepare(state: State, playerID: string, step: number) : TypeReponse {
         let st: State = State.createFrom(state);
         let inventaire: Objet[] = st.joueurs[playerID].inventaire;
         let ordinateur: boolean = false;
@@ -48,6 +33,12 @@ export default class CaseCours implements Case {
             }
         }
 
-        return new Choix("cours", new Cours(ordinateur));
+        return new TypeReponse("C'est une jour de cours aujourd'hui", [ordinateur ?
+            "Tu vas en cours grâce à ton super ordinateur" : "Tu es trop pauvre pour aller en cours"]);
     }
+
+    next(state: State, playerID: string, step: number, choice: number) : { end: boolean, step: number } {
+        return { end: true, step: -1 };
+    }
+
 }

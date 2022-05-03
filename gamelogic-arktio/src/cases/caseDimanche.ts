@@ -1,4 +1,4 @@
-import {Case, Choix} from "../caseManager";
+import {Case, TypeReponse} from "../caseManager";
 import {State} from "../state";
 
 export default class CaseDimanche implements Case {
@@ -6,11 +6,15 @@ export default class CaseDimanche implements Case {
     id_name = "dimanche";
     max_number = 4;
 
-    play(state: State, playerID: string, choice: number) : State {
+    play(state: State, playerID: string, choices: number[]) : State {
         return state;
     }
 
-    action(state : State, playerID: string) : Choix {
-        return new Choix("dimanche");
+    prepare(state: State, playerID: string, step: number) : TypeReponse {
+        return { titre: "oui", messages: [] };
+    }
+
+    next(state: State, playerID: string, step: number, choice: number) : { end: boolean, step: number } {
+        return { end: false, step: 0 };
     }
 }

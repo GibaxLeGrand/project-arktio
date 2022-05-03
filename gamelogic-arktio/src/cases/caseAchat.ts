@@ -1,22 +1,6 @@
-import {Case, Choix, Information} from "../caseManager";
-import { Objet } from "../objetManager";
+import {Case, CaseManager, TypeReponse} from "../caseManager";
+import { Objet, ObjetManager } from "../objetManager";
 import {State} from "../state";
-
-class AchatsPossibles implements Information {
-
-    private objets: Objet[] = [];
-
-    constructor(objets: Objet[]) {
-        this.objets = objets;
-    }
-
-    public message() : any {
-        return {
-            achats_possibles: this.objets
-        }
-    }
-
-}
 
 export default class CaseAchat implements Case {
     name = "Achat";
@@ -34,11 +18,11 @@ export default class CaseAchat implements Case {
         return result;
     }
 
-    play(state: State, playerID: string, choice: number) : State {
+    play(state: State, playerID: string, choices: number[]) : State {
         let achatsPossibles = this.choiceOfPlayer(state, playerID);
         
-        if (choice != -1) {
-            let objet = achatsPossibles[choice];
+        if (choices[0] != 0 || achatsPossibles.length >= choices[0]) {
+            let objet = achatsPossibles[choices[0] - 1];
             if (state.joueurs[playerID].argent < objet.prix) {
                 return state;
             } else {
@@ -52,8 +36,49 @@ export default class CaseAchat implements Case {
         }
     }
 
-    action(state : State, playerID: string) : Choix {       
-        return new Choix("achat", new AchatsPossibles(this.choiceOfPlayer(State.createFrom(state), playerID)));
+    write(objet: Objet) : string {
+        return objet.nom + " / " + objet.prix + " euros / " + objet.point + " Point Terre";
+    }
+
+    prepare(state: State, playerID: string, step: number) : TypeReponse {
+        let s = State.createFrom(state);
+        let choix = this.choiceOfPlayer(state, playerID);
+        let messages = ["Ne rien acheter"]
+
+        for (let i=0; i<choix.length; i++) {
+            messages.push(this.write(choix[i]));
+        }
+
+        return { titre: "Souhaitez-vous acheter un objet ?", messages: messages };
+    }
+
+    next(state: State, playerID: string, step: number, choice: number) : { end: boolean, step: number } {
+        return { end: true, step: -1 };
+    }
+
+    choiceOfPlayer(state: State, playerID: string) : Objet[] {
+        let objetsDuMois = state.objets_par_mois[state.mois];
+        let result: Objet[] = [];
+
+        for (let i=0; i<objetsDuMois.length; i++) {
+            if (ObjetManager.getObjet(objetsDuMois[i]).prix > state.joueurs[playerID].argent) {
+                continue;
+            }
+
+            let own = false;
+            for (let j=0; i<state.joueurs[playerID].inventaire.length; j++) {
+                if (state.joueurs[playerID].inventaire[j] === ObjetManager.getObjet(objetsDuMois[i])) {
+                   own = true;
+                   break;
+                }
+            }
+
+            if (!own) {
+                result.push(ObjetManager.getObjet(objetsDuMois[i]));
+            }
+        }
+
+        return result;
     }
 
 }

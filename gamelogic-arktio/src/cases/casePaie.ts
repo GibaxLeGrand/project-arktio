@@ -1,27 +1,22 @@
-import {Case, Choix, Information} from "../caseManager";
+import {Case, TypeReponse,} from "../caseManager";
 import {State} from "../state";
-
-class Paie implements Information {
-    public message() : any {
-        return {
-            value: 1000
-        }
-    }
-}
 
 export default class CasePaie implements Case {
     name = "Paie";
     id_name = "paie";
     max_number = 1;
 
-    play(state: State, playerID: string, choice: number) : State {
+    play(state: State, playerID: string, choices: number[]) : State {
         state.joueurs[playerID].argent += 1000;
         return state;
     }
 
-    action(state : State, playerID: string) : Choix {
-        return new Choix("paie", new Paie());
+    prepare(state: State, playerID: string, step: number) : TypeReponse {
+        return { titre: "Jour de Paie", messages: ["Tu gagnes " + 1000 + " euros!"] };
     }
 
-    
+    next(state: State, playerID: string, step: number, choice: number) : { end: boolean, step: number } {
+        return { end: true, step: -1 };
+    }
+
 }
