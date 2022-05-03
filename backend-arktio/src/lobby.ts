@@ -197,8 +197,7 @@ export class Lobby {
     }
 
     private getActualPlayerCase(): Case {
-        return CaseManager.getCase(this.game.plateau[this.game
-            .joueurs[this.game.joueur_actuel].caseActuelle]);
+        return this.game.plateau[this.game.joueurs[this.game.joueur_actuel].caseActuelle];
     }
 
     private nextTurn(): LobbyPlayer | null {
