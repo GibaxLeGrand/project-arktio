@@ -194,8 +194,6 @@
 		padding: 1em;
 		margin: 1em;
 		align-items: center;
-		border: solid var(--gris) 5px;
-		border-radius: 1em;
 	}
 
 	#msg {

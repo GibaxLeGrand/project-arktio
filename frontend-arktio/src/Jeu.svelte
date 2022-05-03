@@ -198,7 +198,7 @@
 
 
 	main {
-		background-color: $turquoise_clair;
+		display: block;
 		font-size: x-large;
 		color: #ffffff;
 	}
@@ -230,18 +230,17 @@
 	}
 
 	input {
+		display: flex;
 		width: 55%;
 		height: fit-content;
 		font-size: 60%;
-		font-family: $font_arktio;
-		display: flex;
+		font-family: $font_arktio;		
 		justify-content: center;
 		justify-self: flex-start;
 		align-self: center;
 		grid-column-start: 10;
 		grid-column-end: 13;
 		grid-row-start: 6;
-		color: black;
 		padding: 0.4em;
 		margin-bottom: initial;
 		border-radius: 10px;
@@ -254,8 +253,6 @@
 		display: grid;
 		width: 100%;
 		height: 100%;
-		border: solid $framboise;
-		border-width: 5px;
 		display: grid;
 		grid-gap: 5px;
 		grid-template-rows: repeat(10, $taille_case);
@@ -361,11 +358,14 @@
 		grid-row-start: 7;
 		grid-row-end: 11;
 		display: flex;
-		border: dashed $caramel;
+		border: solid $gris;
+		border-radius: 10px;
+		background-color: $caramel;
 		color: $gris_fonce;
 		align-items: center;
 		justify-content: space-around;
 		flex-direction: column;
+		width: 100%;
 	}
 
 	#classement_1 {
@@ -427,7 +427,7 @@
 		align-content: center;
 		justify-content: flex-start;
 		flex-direction: column;
-		overflow: auto;
+		overflow: scroll;
 		overflow-wrap: anywhere;
 		overflow-x: unset;
 	}
@@ -435,6 +435,7 @@
 	#send_message {
 		width: 80%;
 		font-size: 70%;
+		color: $turquoise;
 		justify-content: center;
 		justify-self: flex-end;
 		align-self: center;

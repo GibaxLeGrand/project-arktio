@@ -101,6 +101,14 @@
 					>{player_3.present ? player_3.pion.text : "---------"}</span
 				>
 			</div>
+			<div id="choix_pion">
+				<span>Choissisez un pion :</span>
+				<select bind:value={player_local.pion}>
+					{#each pions as pion}
+						<option value={pion}>{pion.text}</option>
+					{/each}
+				</select>
+			</div>
 		</div>
 
 		<div id="tchat">
@@ -108,16 +116,11 @@
 			<input name="msg" type="text" id="msg" bind:value={msg} />
 			<button id="envoyer" type="submit">Envoyer</button>
 		</div>
+
+		
 	</div>
 	
-	<div id="choix_pion">
-		<span>Choissisez un pion :</span>
-		<select bind:value={player_local.pion}>
-			{#each pions as pion}
-				<option value={pion}>{pion.text}</option>
-			{/each}
-		</select>
-	</div>
+	
 
 	{#if is_lobby_owner}
 		<button aria-label="Lancer la partie">Commencer partie</button>
