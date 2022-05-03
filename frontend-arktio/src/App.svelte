@@ -49,13 +49,8 @@
 
 <main>
     <Route path="/">
-        <div>
-            <a href="/">
-                <img
-                        src="https://cdn.discordapp.com/attachments/942433231599456307/952985982595104878/unknown.png"
-                        alt="Logo Arktio représentant un ours"
-                />
-            </a>
+        <div class="logo">
+            <img alt="logo" src="logo.png"/>
         </div>
         <div class="boutons">
             {#if state === RULES.GUEST}
@@ -99,6 +94,10 @@
                 </button>
             {/if}
         </div>
+        <footer>
+            <a href="https://m.facebook.com/Arktio/?locale2=fr_FR">Facebook</a>
+            <a href="https://arktio.fr/">Site d'Arktio</a>
+        </footer>
     </Route>
     <Route path="/login">
         <Login/>

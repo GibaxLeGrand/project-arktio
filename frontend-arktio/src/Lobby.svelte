@@ -32,15 +32,12 @@
         let tokenId = availablePions[tokenEvent.target["selectedIndex"]].id;
         $socketStore.emit("update token", tokenId);
     }
-  }
 
     function player_quit() {
         get(socketStore).emit("quit", () => {
             router.goto("/");
         });
     }
-    return nb_players_present;
-  }
 
     function start_game() {
         get(socketStore).emit("launch game", () => {
