@@ -1,160 +1,165 @@
 <script lang="ts">
-    import Tailwindcss from "./Tailwindcss.svelte";
-    import {router} from "tinro";
+  import Tailwindcss from "./Tailwindcss.svelte";
+  import { router } from "tinro";
 
-    export let id: string;
+  export let id: string;
 
-    let pions = [
-        {id: 0, text: "Aucun"},
-        {id: 1, text: "Boite de conserve"},
-        {id: 2, text: "Terre"},
-        {id: 3, text: "Plante"},
-        {id: 4, text: "Grain de café"},
-        {id: 5, text: "Bonnet"},
-        {id: 6, text: "Papillon"},
-        {id: 7, text: "Arrosoir"},
-        {id: 8, text: "Nuage"},
-    ];
+  let pions = [
+    { id: 0, text: "Aucun" },
+    { id: 1, text: "Boite de conserve" },
+    { id: 2, text: "Terre" },
+    { id: 3, text: "Plante" },
+    { id: 4, text: "Grain de café" },
+    { id: 5, text: "Bonnet" },
+    { id: 6, text: "Papillon" },
+    { id: 7, text: "Arrosoir" },
+    { id: 8, text: "Nuage" },
+  ];
 
-    class Player_lobby {
-        present: boolean;
-        name: string;
-        uuid: string;
-        pion: { id: number; text: string };
+  class Player_lobby {
+    present: boolean;
+    name: string;
+    uuid: string;
+    pion: { id: number; text: string };
 
-        constructor(present: boolean = false, name: string = "") {
-            this.present = present;
-            this.name = name;
-            this.uuid = "";
-            this.pion = pions[0];
-        }
+    constructor(present: boolean = false, name: string = "") {
+      this.present = present;
+      this.name = name;
+      this.uuid = "";
+      this.pion = pions[0];
+    }
+  }
+
+  // Joueur-euse local
+  let player_local: Player_lobby = new Player_lobby(true, "Player 1");
+  let is_lobby_owner: boolean = true;
+
+  // Autres joueur-euses dans le lobby
+  let player_1: Player_lobby = new Player_lobby();
+  let player_2: Player_lobby = new Player_lobby();
+  let player_3: Player_lobby = new Player_lobby();
+
+  let players: Player_lobby[] = [player_1, player_2, player_3];
+  let all_players_ready = false;
+  $: {
+    player_local;
+    players;
+    all_players_ready = players_ready() == count_players_present();
+  }
+
+  /**
+   * Fonction pour bloquer les options de pions déjà pris dans le select
+   */
+  function update_pions_occupes() {
+    let choix_pions = document.getElementById("players").children;
+
+    for (let i = 0; i++; i < choix_pions.length) {
+      choix_pions[i].removeAttribute("disabled");
     }
 
-    // Joueur-euse local
-    let player_local: Player_lobby = new Player_lobby(true, "Player 1");
-    let is_lobby_owner: boolean = true;
-
-    // Autres joueur-euses dans le lobby
-    let player_1: Player_lobby = new Player_lobby();
-    let player_2: Player_lobby = new Player_lobby();
-    let player_3: Player_lobby = new Player_lobby();
-
-    let players: Player_lobby[] = [player_1, player_2, player_3];
-    let all_players_ready = false;
-    $: {player_local; players; all_players_ready = players_ready() == count_players_present();}
-
-    /**
-     * Fonction pour bloquer les options de pions déjà pris dans le select
-     */
-    function update_pions_occupes() {
-        let choix_pions = document.getElementById('players').children;
-
-        for (let i = 0; i++; i < choix_pions.length) {
-            choix_pions[i].removeAttribute("disabled");
-        }
-
-        for (let player: Player_lobby in players) {
-            choix_pions[player.pion.id + 1].setAttribute("disabled", "");
-        }
+    for (let player: Player_lobby in players) {
+      choix_pions[player.pion.id + 1].setAttribute("disabled", "");
     }
+  }
 
-    function count_players_present(): number {
-        let nb_players_present = 1;
-        for (let player: Player_lobby in players) {
-            if (player.present) {
-                nb_players_present++;
-            }
-        }
-        return nb_players_present;
+  function count_players_present(): number {
+    let nb_players_present = 1;
+    for (let player: Player_lobby in players) {
+      if (player.present) {
+        nb_players_present++;
+      }
     }
+    return nb_players_present;
+  }
 
-    function player_ready(player: Player_lobby): boolean {
-        if (player.pion.id === 0 || !player.present) {
-            return false;
-        }
-        return true;
+  function player_ready(player: Player_lobby): boolean {
+    if (player.pion.id === 0 || !player.present) {
+      return false;
     }
+    return true;
+  }
 
-    function players_ready(): number {
-        console.log("aaaaaa")
-        return [player_local, player_1, player_2, player_3].filter(player_ready).length;
-    }
+  function players_ready(): number {
+    console.log("aaaaaa");
+    return [player_local, player_1, player_2, player_3].filter(player_ready)
+      .length;
+  }
 </script>
 
-<Tailwindcss/>
+<Tailwindcss />
 
 <main>
-    <div class="logo">
-        <a href="/"> logo ici </a>
-    </div>
-    <button>Quitter partie</button>
+  <div class="logo">
+    <a href="/"> logo ici </a>
+  </div>
+  <button>Quitter partie</button>
 
-    <div id="players">
-        <h id="lobby_name">Lobby {id}</h>
-        <label for="players">Joueur-euses :</label>
-        <div class="player">
+  <div id="players">
+    <h id="lobby_name">Lobby {id}</h>
+    <label for="players">Joueur-euses :</label>
+    <div class="player">
       <span class="gauche"
-      >{player_local.present ? player_local.name : "---------"}</span
+        >{player_local.present ? player_local.name : "---------"}</span
       >
-            <span class="droite"
-            >{player_local.pion ? player_local.pion.text : "---------"}</span
-            >
-        </div>
-        <div class="player">
-      <span class="gauche"
-      >{player_1.present ? player_1.name : "---------"}</span
+      <span class="droite"
+        >{player_local.pion ? player_local.pion.text : "---------"}</span
       >
-            <span class="droite"
-            >{player_1.present ? player_1.pion.text : "---------"}</span
-            >
-        </div>
-        <div class="player">
-      <span class="gauche"
-      >{player_2.present ? player_2.name : "---------"}</span
-      >
-            <span class="droite"
-            >{player_2.present ? player_2.pion.text : "---------"}</span
-            >
-        </div>
-        <div class="player">
-      <span class="gauche"
-      >{player_3.present ? player_3.name : "---------"}</span
-      >
-            <span class="droite"
-            >{player_3.present ? player_3.pion.text : "---------"}</span
-            >
-        </div>
     </div>
-    <div id="choix_pion">
-        <span>Choissisez un pion :</span>
-        <select bind:value={player_local.pion}>
-            {#each pions as pion}
-                <option value={pion}>{pion.text}</option>
-            {/each}
-        </select>
+    <div class="player">
+      <span class="gauche"
+        >{player_1.present ? player_1.name : "---------"}</span
+      >
+      <span class="droite"
+        >{player_1.present ? player_1.pion.text : "---------"}</span
+      >
     </div>
+    <div class="player">
+      <span class="gauche"
+        >{player_2.present ? player_2.name : "---------"}</span
+      >
+      <span class="droite"
+        >{player_2.present ? player_2.pion.text : "---------"}</span
+      >
+    </div>
+    <div class="player">
+      <span class="gauche"
+        >{player_3.present ? player_3.name : "---------"}</span
+      >
+      <span class="droite"
+        >{player_3.present ? player_3.pion.text : "---------"}</span
+      >
+    </div>
+  </div>
+  <div id="choix_pion">
+    <span>Choissisez un pion :</span>
+    <select bind:value={player_local.pion}>
+      {#each pions as pion}
+        <option value={pion}>{pion.text}</option>
+      {/each}
+    </select>
+  </div>
 
-    {#if all_players_ready}
-        {#if is_lobby_owner}
-            <button aria-label="Lancer la partie" on:click={()=>router.goto("/jeu")}>Commencer partie</button>
-        {:else}
-            <button aria-label="Lancer la partie" disabled
-            >En attente du début de partie
-            </button
-            >
-        {/if}
+  {#if all_players_ready}
+    {#if is_lobby_owner}
+      <button aria-label="Lancer la partie" on:click={() => router.goto("/jeu")}
+        >Commencer partie</button
+      >
     {:else}
-        <button aria-label="Lancer la partie" disabled
-        >En attente des autres joueurs
-        </button
-        >
+      <button aria-label="Lancer la partie" disabled
+        >En attente du début de partie
+      </button>
     {/if}
+  {:else}
+    <button aria-label="Lancer la partie" disabled
+      >En attente des autres joueurs
+    </button>
+  {/if}
 
-    <footer>
-        <a href="url">condition générale d'utilisation</a>
-        <a href="non je déconne">Politique de cookie</a>
-        <a href="Qui est tu ?">Qui sommes nous ?</a>
-    </footer>
+  <footer>
+    <a href="url">condition générale d'utilisation</a>
+    <a href="non je déconne">Politique de cookie</a>
+    <a href="Qui est tu ?">Qui sommes nous ?</a>
+  </footer>
 </main>
 
 <style lang="scss">
@@ -248,4 +253,3 @@
     }
   }
 </style>
-
