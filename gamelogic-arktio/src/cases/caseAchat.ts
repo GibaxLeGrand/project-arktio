@@ -19,6 +19,9 @@ class AchatsPossibles implements Information {
 }
 
 export default class CaseAchat implements Case {
+    name = "Achat";
+    id_name = "achat";
+    max_number = 3;
 
     choiceOfPlayer(state: State, playerID: string) : Objet[] {
         let objetsDuMois = state.objets_par_mois[state.mois];

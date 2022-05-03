@@ -54,21 +54,16 @@
 		<img alt="logo" src="logo.png"/>
 	</div>
 
-  <div class="page">
-    <button id="creer" on:click={()=>new_game()}>Créer une partie</button>
-    <div class="connection">
+  <div class="boutons">
+    <form class="connection">
+      <button id="creer" on:click={()=>new_game()}>Créer une partie</button>
       <input bind:value={id_partie} on:input|preventDefault={(event)=>validate_input(event.target["value"])} />
       <button id="rejoindre" on:click={join_game}>Rejoindre une partie</button>
-    </div>
+      <button id="retour" on:click={()=>router.goto("/")}>Retour</button>
+    </form>
 
-    <button id="retour" on:click={()=>router.goto("/")}>Retour</button>
+
   </div>
-
-  <footer>
-    <a href="/url">condition générale d'utilisation</a>
-    <a href="/non je déconne">Politique de cookie</a>
-    <a href="/Qui est tu ?">Qui sommes nous ?</a>
-  </footer>
 </main>
 
 

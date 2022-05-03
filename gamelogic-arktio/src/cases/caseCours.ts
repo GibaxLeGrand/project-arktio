@@ -19,6 +19,10 @@ class Cours implements Information {
 }
 
 export default class CaseCours implements Case {
+    name = "Cours";
+    id_name = "cours";
+    max_number = 4;
+
     play(state: State, playerID: string, choice: number) : State {
         if (choice === 0) {
             let caseActuelle: {position: number, type: number} = state.joueurs[playerID].caseActuelle;
