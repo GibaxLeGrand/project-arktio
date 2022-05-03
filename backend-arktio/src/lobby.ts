@@ -2,9 +2,9 @@ import { Server, Socket } from 'socket.io';
 import { Chat } from './chat';
 import { LobbyPlayer, PlayerJSON } from './player';
 import { State, Mois } from "../../gamelogic-arktio/dist/state";
-import { Objet } from "../../gamelogic-arktio/dist/objetManager";
 import { Player } from '../../gamelogic-arktio/dist/player';
-import { CaseManager, Case, TypeReponse } from '../../gamelogic-arktio/dist/caseManager'
+import { CaseManager, Case } from '../../gamelogic-arktio/dist/caseManager'
+import { LobbyManager } from './lobbymanager';
 
 export enum LobbyState {
     Lobby,
@@ -245,6 +245,8 @@ export class Lobby {
         let oldSocket: Socket = this.players.get(this.owner);
         oldSocket?.removeAllListeners("launch game");
 
+        if (player == null) return;
+
         this.owner = player;
         let newSocket: Socket = this.players.get(this.owner);
     
@@ -253,6 +255,15 @@ export class Lobby {
                 this.launchTheGame();
             });
         }
+    }
+
+    public contain(player: LobbyPlayer) : boolean {
+        this.players.forEach((socket, p) => {
+           if (player === p)
+            return true;
+        });
+
+        return false;
     }
 
     public addPlayer(player: LobbyPlayer, socket: Socket) : boolean {
@@ -268,7 +279,13 @@ export class Lobby {
 
             socket.on("update token", (token: number) => {
                 player.setToken(token);
+                this.updateLobby();
             });
+
+            socket.on("quit", (callback: () => void) => {
+                this.removePlayer(player);
+                callback();
+            })
 
             if (this.owner === null) 
                 this.setOwner(player);
@@ -289,17 +306,18 @@ export class Lobby {
 
         let socket: Socket = this.players.get(player);
         socket.removeAllListeners("update token");
+        socket.removeAllListeners("quit");
 
         if (this.owner === player) {
-            if (this.players.size === 0) {
-                this.setOwner(null);
+            if (this.players.size <= 1) {
+                LobbyManager.destroyLobby(this);
             } else {
                 let iterator = this.players.entries();
-                let player = iterator.next();
-                while (player.value[1] === null || player.value[0] === player) 
-                    player = iterator.next();
+                let p = iterator.next();
+                while (p.value[1] === null || p.value[0] === player) 
+                    p = iterator.next();
 
-                this.setOwner(player.value[0]);
+                this.setOwner(p.value[0]);
             }
         }
 

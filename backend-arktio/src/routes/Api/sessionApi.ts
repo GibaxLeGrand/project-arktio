@@ -8,6 +8,11 @@ const router = Router();
 router.post("/login", async (req, res) => {
     const [email, password] = [req.body.email, req.body.password]
 
+    if (!email || !password) {
+        res.status(400).json({error: "Missing parameters"})
+        return
+    }
+
     // Verify if the user exists
     try {
         const user = await getUserAuthentificate(email);
@@ -30,6 +35,11 @@ router.post("/login", async (req, res) => {
 
 router.post("/register", async (req, res, next) => {
     const [username, email, password, confirm_password] = [req.body.name, req.body.email, req.body.password, req.body.confirm_password]
+
+    if (!username || !email || !password || !confirm_password) {
+        res.status(400).json({error: "Missing parameters"})
+        return
+    }
 
     // Test if both passwords are the same
     if (password.length < 7) {

@@ -119,7 +119,7 @@
     height: 90%;
     margin: 5%;
     padding: 2%;
-    overflow: scroll;
+    overflow: auto;
   }
 
   #accueil {

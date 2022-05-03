@@ -7,10 +7,11 @@
   import Register from "./register.svelte";
   import { env } from "./scripts/envfile";
   import { routerFetch } from "./scripts/fetchOverride";
-  import { disconnect } from "./scripts/userScripts";
-  import { base } from "./stores/locationStore";
+  import {disconnect, getPlayerInfos} from "./scripts/userScripts";
+  import {base, socketStore, userStore} from "./stores/storeLibrary";
   import Regles from "./Regles.svelte";
   import Jeu from "./Jeu.svelte";
+  import * as io from "socket.io-client"
 
   router.mode.hash();
 
@@ -28,6 +29,11 @@
     const data = await routerFetch("/api/session/isAuth", { method: "GET" });
     if ((await data.json()).authenticated) {
       state = RULES.CONNECTED;
+      if (get(socketStore) == null) {
+        socketStore.set(io.connect());
+        const pinfos = await getPlayerInfos();
+        get(socketStore).on("connect", () => get(socketStore).emit("player information", pinfos.userUUID, (({player})=>userStore.set(player))));
+      }
     } else {
       state = RULES.GUEST;
     }
@@ -93,9 +99,10 @@
   <Route path="/login">
     <Login />
   </Route>
-  <Route path="/lobby">
-    <Lobby />
-    // TODO peut être comme partie avec /:id
+  <Route path="/lobby/:id" let:meta>
+    {#if meta.params.id.length == 6 && !isNaN(meta.params.id)}
+      <Lobby id={meta.params.id}/>
+    {/if}
   </Route>
   <Route path="/register">
     <Register />

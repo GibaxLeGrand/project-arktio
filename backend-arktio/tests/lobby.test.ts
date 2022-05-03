@@ -10,7 +10,6 @@ import { connect } from '../src/bdd';
 import { createTestUser } from './resources/create_test_user';
 
 describe("lobby choice", () => {
-    let lobbyManager: LobbyManager;
     let clientSocket: io.Socket;
     let httpServer: http.Server;
     let usersUUID: string[];
@@ -28,7 +27,7 @@ describe("lobby choice", () => {
         await new Promise<void>(connected => {
             httpServer.listen(() => {
                 const port = (httpServer.address() as AddressInfo).port;
-                lobbyManager = new LobbyManager(httpServer, port);
+                LobbyManager.init(httpServer, port);
                 clientSocket = io.connect(`http://localhost:${port}`);
                 clientSocket.on("connect", connected);
             });
@@ -37,7 +36,7 @@ describe("lobby choice", () => {
 
     afterAll(async () => {
         clientSocket.close();
-        lobbyManager.destroy();
+        LobbyManager.destroy();
         httpServer.close();
         await db.disconnect();
     });
