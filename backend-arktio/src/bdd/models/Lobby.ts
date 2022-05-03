@@ -27,7 +27,7 @@ export class Lobby extends Model {
     static override get jsonSchema() {
         return {
             type: "object",
-            required : ["lobby_uuid", "lobby_host"],
+            required : ["lobby_uuid", "lobby_name", "lobby_password"],
             properties: {
                 lobby_uuid: { type: 'string' },
                 lobby_name: { type: 'string', minLength: 3, maxLength: 255 },

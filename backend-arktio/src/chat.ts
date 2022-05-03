@@ -1,5 +1,5 @@
 import { Lobby } from './lobby';
-import { Player } from './player';
+import { LobbyPlayer } from './player';
 import { Socket } from 'socket.io';
 
 export class Chat {
@@ -13,16 +13,16 @@ export class Chat {
 
     public update(): void {
         let playersAndTheirSocket = this.lobby.getPlayersAndTheirSocket();
-        
-        this.destroy();
+
+        this.clear();
         this.sockets.clear();
 
-        playersAndTheirSocket.forEach((socket: Socket, player: Player) => {
-            socket.removeAllListeners("send message");
-            socket.join(this.lobby.getUUID());    
+        playersAndTheirSocket.forEach((socket: Socket, player: LobbyPlayer) => {
+            if (socket === null) return;
+
             this.sockets.add(socket);
 
-            socket.on("send message", (message: string) => {                
+            socket.on("send message", (message: string) => {             
                 this.lobby.getIO().sockets
                     .in(this.lobby.getUUID())
                     .emit("recv message", { player: player.getUUID(), message: message });
@@ -30,10 +30,14 @@ export class Chat {
         });
     }
 
-    public destroy(): void {
+    public clear(): void {
         this.sockets.forEach((socket: Socket) => {
-            socket.leave(this.lobby.getUUID());
+            socket.removeAllListeners("send message");
         });
+    }
+
+    public destroy(): void {
+        this.clear();
     }
 
 }
