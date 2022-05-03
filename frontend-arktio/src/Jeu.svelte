@@ -30,6 +30,9 @@
         affiche_message(message);
     }).on("update gamestate", (state: State) => {
         stateStore.set(state);
+        $stateStore.plateau.forEach((case_, index) => {
+            console.log(case_.name, index);
+        });
     });
 
     /**
@@ -81,134 +84,6 @@
 
     }
 
-    enum Etat {
-        intact, // cassable
-        outil, // incassable
-        casse, // cassé
-    }
-
-    enum Statut {
-        en_jeu,
-        absent,
-    }
-
-    class Plateau {
-        readonly cases: Case[];
-        nombre_joueurs: number;
-
-        // randomize_plateau(){}
-
-        // TODO expliquer ou éclaircir mdr
-        constructor(id_event: number[]) {
-            this.cases = [];
-            for (let i = 0; i < NB_CASES; i++) {
-                this.cases.push(new Case(i, i));
-            }
-        }
-    }
-
-    class Case {
-        id: number;
-        event: number; // id de la fonction handler
-
-        constructor(id: number, event: number) {
-            this.id = id;
-            this.event = event;
-        }
-    }
-
-    class Inventaire {
-        objets: { [key: number]: { etat: Etat } };
-
-        possede_objet(id: number): boolean {
-            return this.objets[id] !== undefined;
-        }
-
-        ajouter_objet(id_objet: number, etat: Etat) {
-            this.objets[id_objet] = {etat: etat};
-        }
-
-        supprimer_objet(idx_objet: number) {
-            if (!this.possede_objet(idx_objet)) return;
-            delete this.objets[idx_objet];
-        }
-
-        __objets_cassables(): number[] {
-            return Object.keys(this.objets)
-                .filter((id) => this.objets[id].etat === Etat.intact)
-                .map((id) => parseInt(id));
-        }
-
-        // renvoie l'indice d'un objet de l'inventaire
-        objet_aleatoire(): number {
-            let objets_cassables = this.__objets_cassables();
-            if (objets_cassables.length == 0) return -1;
-
-            let index_objet = Math.floor(Math.random() * objets_cassables.length);
-            return objets_cassables[index_objet];
-        }
-
-        casser_objet(idx_objet: number) {
-            if (!this.possede_objet(idx_objet)) return;
-            this.objets[idx_objet].etat = Etat.casse;
-        }
-
-        reparer_objet(idx_objet: number, idx_outil: number) {
-            if (!this.possede_objet(idx_objet)) return;
-            this.objets[idx_objet].etat = Etat.intact;
-            this.supprimer_objet(idx_outil);
-        }
-    }
-
-    class Joueur {
-        private uid: number;
-        protected statut: Statut = Statut.en_jeu;
-        protected argent: number = 1000;
-        protected pt_terre: number = 0;
-        protected inventaire: Inventaire;
-        protected pion: number;
-        protected case_actuelle: Case;
-
-        constructor(uid: number, pion: number) {
-            this.uid = uid;
-            this.pion = pion;
-            this.inventaire = new Inventaire();
-            this.case_actuelle = plateau.cases[0];
-        }
-
-        getUid(): number {
-            return this.uid;
-        }
-
-        ajouter_argent(somme: number) {
-            this.argent += somme;
-        }
-
-        retirer_argent(somme: number) {
-            if (this.argent < somme) {
-                this.statut = Statut.absent;
-                this.argent = 0;
-                return;
-            }
-            this.argent -= somme;
-        }
-
-        ajouter_pt_terre(pts: number) {
-            this.pt_terre += pts;
-        }
-
-        retirer_pt_terre(pts: number) {
-            this.pt_terre -= pts;
-        }
-
-        // actualise la case selon le lancé de dé
-        nouvelle_case(dice_number: number) {
-            this.case_actuelle =
-                plateau.cases[(this.case_actuelle.id + dice_number) % 30];
-        }
-    }
-
-    let plateau = new Plateau(null);
 
     /**
      * ajoute un item dans l'inventaire avec l'image path_to_img
@@ -240,40 +115,29 @@
 
         inventaire.appendChild(child);
     }
+
+    function pos_case(number: number) {
+        if (number < 7) {
+            return "cases_haut";
+        } else if (number < 15) {
+            return "cases_droite";
+        } else if (number < 22) {
+            return "cases_bas";
+        } else {
+            return "cases_gauche";
+        }
+    }
 </script>
 
 <main>
     <div class="plateau">
-        <div id="x1" class="cases_haut">X 1</div>
-        <div id="x2" class="cases_haut">X 2</div>
-        <div id="x3" class="cases_haut">X 3</div>
-        <div id="x4" class="cases_haut">X 4</div>
-        <div id="x5" class="cases_haut">X 5</div>
-        <div id="x6" class="cases_haut">X 6</div>
-        <div id="x7" class="cases_haut">X 7</div>
-        <div id="x8" class="cases_droite">X 8</div>
-        <div id="x9" class="cases_droite">X 9</div>
-        <div id="x10" class="cases_droite">X 10</div>
-        <div id="x11" class="cases_droite">X 11</div>
-        <div id="x12" class="cases_droite">X 12</div>
-        <div id="x13" class="cases_droite">X 13</div>
-        <div id="x14" class="cases_droite">X 14</div>
-        <div id="x15" class="cases_droite">X 15</div>
-        <div id="x16" class="cases_bas">X 16</div>
-        <div id="x17" class="cases_bas">X 17</div>
-        <div id="x18" class="cases_bas">X18</div>
-        <div id="x19" class="cases_bas">X 19</div>
-        <div id="x20" class="cases_bas">X 20</div>
-        <div id="x21" class="cases_bas">X 21</div>
-        <div id="x22" class="cases_bas">X 22</div>
-        <div id="x23" class="cases_gauche">X 23</div>
-        <div id="x24" class="cases_gauche">X 24</div>
-        <div id="x25" class="cases_gauche">X 25</div>
-        <div id="x26" class="cases_gauche">X 26</div>
-        <div id="x27" class="cases_gauche">X 27</div>
-        <div id="x28" class="cases_gauche">X 28</div>
-        <div id="x29" class="cases_gauche">X 29</div>
-        <div id="x30" class="cases_gauche">X 30</div>
+        {#each $stateStore.plateau as _case, index}
+            <div  id={"x" + (index+1)}
+                  class={pos_case($stateStore.plateau.indexOf(_case))}
+                  style={`background-size: contain; background-repeat: no-repeat; background-position:center; background-image: url(./Cases/case_${_case.id_name}.PNG);`}>
+
+            </div>
+        {/each}
         <div id="conteneur">
             <div id="event">"ÉVÉNEMENTS ( tu dois payer ...)"</div>
             <div id="image">image</div>

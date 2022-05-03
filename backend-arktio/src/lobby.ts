@@ -1,11 +1,10 @@
-import {Server, Socket} from 'socket.io';
-import {Chat} from './chat';
-import {LobbyPlayer, PlayerJSON} from './player';
-import {State, Mois} from "../../gamelogic-arktio/dist/state";
-import {Objet} from "../../gamelogic-arktio/dist/objetManager";
-import {Player} from '../../gamelogic-arktio/dist/player';
-import {CaseManager, Case, Choix} from '../../gamelogic-arktio/dist/caseManager'
-import {LobbyManager} from './lobbymanager';
+import { Server, Socket } from 'socket.io';
+import { Chat } from './chat';
+import { LobbyPlayer, PlayerJSON } from './player';
+import { State, Mois } from "../../gamelogic-arktio/dist/state";
+import { Player } from '../../gamelogic-arktio/dist/player';
+import { CaseManager, Case } from '../../gamelogic-arktio/dist/caseManager'
+import { LobbyManager } from './lobbymanager';
 
 export enum LobbyState {
     Lobby,
@@ -23,7 +22,7 @@ export interface LobbyJSON {
 export class Lobby {
     private game: State;
     private uuid: string;
-    private players: Map<LobbyPlayer, Socket>;
+    private players: Map<LobbyPlayer, Socket | null>;
     private owner: LobbyPlayer | null;
     private state: LobbyState;
     private chat: Chat;
@@ -51,9 +50,9 @@ export class Lobby {
                     inventaire: [],
                     argent: 1000,
                     pointTerre: 0,
-                    pion: i,
-                    caseActuelle: {position: 0, type: -1},
-                    statut: 0,
+                    pion : i,
+                    caseActuelle : 0,
+                    statut : 0,
                     avertissement: 0
                 }
             }
@@ -66,14 +65,16 @@ export class Lobby {
 
             this.players.forEach((socket, player) => {
                 let dice = true;
+                if (socket == null) return;
+
                 socket.on("end turn", () => {
                     if (this.isActualPlayer(player)) {
                         let players = Array.from(this.players.entries());
                         let p = player;
                         let endMonth = true;
                         for (let i = 0; i < players.length; i++) {
-                            p = this.nextTurn();
-                            if (this.game.joueurs[p.getUUID()].caseActuelle.position < this.game.plateau.length - 1
+                            p = this.nextTurn()!;
+                            if (this.game.joueurs[p.getUUID()].caseActuelle < this.game.plateau.length - 1 
                                 && this.players.get(p) != null) {
                                 endMonth = false;
                                 break;
@@ -86,11 +87,8 @@ export class Lobby {
                             if (this.game.mois >= 10) {
                                 this.io.sockets.in(this.uuid).emit("end");
                             } else {
-                                for (let i = 0; i < players.length; i++) {
-                                    this.game.joueurs[players[i][0].getUUID()].caseActuelle = {
-                                        position: 0,
-                                        type: this.game.plateau[0]
-                                    };
+                                for (let i=0; i<players.length; i++) {
+                                    this.game.joueurs[players[i][0].getUUID()].caseActuelle = 0;
                                 }
                             }
                         }
@@ -105,10 +103,7 @@ export class Lobby {
                         let result = 1 + Math.floor(Math.random() * (6 - 1));
 
                         let caseActuelle = this.game.joueurs[this.game.joueur_actuel].caseActuelle;
-                        this.game.joueurs[this.game.joueur_actuel].caseActuelle = {
-                            position: Math.min(caseActuelle.position + result, this.game.plateau.length - 1),
-                            type: this.game.plateau[Math.min(caseActuelle.position + result, this.game.plateau.length - 1)]
-                        }
+                        this.game.joueurs[this.game.joueur_actuel].caseActuelle = Math.min(caseActuelle + result, this.game.plateau.length - 1);
 
                         callback({result: result});
                         dice = false;
@@ -119,22 +114,66 @@ export class Lobby {
                     }
                 });
 
-                let choice = false;
-                socket.on("play", (callback: (choixJSON: string) => void) => {
+                let choices: number[] = [];
+                let end = false;
+
+                socket.on("play", () => {
                     if (this.isActualPlayer(player)) {
                         let mycase: Case = this.getActualPlayerCase();
+                        let step = 0;   
+                        let reponse = mycase.prepare(this.game, this.game.joueur_actuel, step);
+                        
+                        socket.on("next", () => {
+                            if (this.isActualPlayer(player)) {
+                                socket.emit("choix", reponse, (choice: number) =>  {
+                                    let next = mycase.next(this.game, this.game.joueur_actuel, step, choice);
+                                    end = next.end;
+                                    
+                                    if (!end) {
+                                        socket.emit("next");
+                                    } else {
+                                        if (step > next.step)
+                                            choices.pop();
+                                        else
+                                            choices.push(choice);
 
-                        callback(mycase.action(this.game, this.game.joueur_actuel).message());
-                        choice = true;
+                                        step = next.step;
+                                    }
+                                });
+                            }
+                        });
+
+                        socket.emit("choix", reponse, (choice: number) =>  {
+                            let next = mycase.next(this.game, this.game.joueur_actuel, step, choice);
+                            end = next.end;
+                            
+                            if (!end) {
+                                socket.emit("next");
+                            } else {
+                                if (step > next.step)
+                                    choices.pop();
+                                else
+                                    choices.push(choice);
+
+                                step = next.step;
+                            }
+                        });
                     }
                 });
 
-                socket.on("choice", (input: number) => {
-                    if (this.isActualPlayer(player) && choice) {
-                        let mycase: Case = this.getActualPlayerCase();
-                        this.game = mycase.play(this.game, this.game.joueur_actuel, input);
+                socket.on("next turn", () => {
+                    if (this.isActualPlayer(player)) {
+                        this.nextTurn();
+                    }
+                });
 
-                        choice = false;
+                socket.on("action", () => {
+                    if (this.isActualPlayer(player) && end) {
+                        let mycase: Case = this.getActualPlayerCase();
+                        this.game = mycase.play(this.game, this.game.joueur_actuel, choices);
+
+                        choices = [];
+                        end = false;
                         this.updateGameState();
                     }
                 });
@@ -158,11 +197,10 @@ export class Lobby {
     }
 
     private getActualPlayerCase(): Case {
-        return CaseManager.getCase(this.game.plateau[this.game
-            .joueurs[this.game.joueur_actuel].caseActuelle.position]);
+        return this.game.plateau[this.game.joueurs[this.game.joueur_actuel].caseActuelle];
     }
 
-    private nextTurn(): LobbyPlayer {
+    private nextTurn(): LobbyPlayer | null {
         if (this.state === LobbyState.Game) {
             let player: string = this.game.joueur_actuel;
             let ordre: string[] = this.game.ordre_joueurs;
@@ -191,7 +229,7 @@ export class Lobby {
         return {
             uuid: this.uuid,
             players: Array.from(this.players.keys()).map((player: LobbyPlayer) => player.toJSON()),
-            owner: this.owner.toJSON(),
+            owner: this.owner!.toJSON(),
             state: this.state
         }
     }
@@ -205,13 +243,13 @@ export class Lobby {
     }
 
     public setOwner(player: LobbyPlayer): void {
-        let oldSocket: Socket = this.players.get(this.owner);
+        let oldSocket: Socket = this.players.get(this.owner!)!;
         oldSocket?.removeAllListeners("launch game");
 
         if (player == null) return;
 
         this.owner = player;
-        let newSocket: Socket = this.players.get(this.owner);
+        let newSocket: Socket = this.players.get(this.owner)!;
 
         if (this.state === LobbyState.Lobby && newSocket !== null) {
             newSocket.on("launch game", () => {
@@ -268,7 +306,7 @@ export class Lobby {
     public removePlayer(player: LobbyPlayer): void {
         if (!this.players.has(player)) return;
 
-        let socket: Socket = this.players.get(player);
+        let socket: Socket = this.players.get(player)!;
         socket.removeAllListeners("update token");
         socket.removeAllListeners("quit");
 
@@ -305,7 +343,7 @@ export class Lobby {
         return this.state;
     }
 
-    public getPlayersAndTheirSocket(): Map<LobbyPlayer, Socket> {
+    public getPlayersAndTheirSocket(): Map<LobbyPlayer, Socket | null> {
         return this.players;
     }
 

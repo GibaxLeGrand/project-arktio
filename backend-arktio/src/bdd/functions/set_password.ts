@@ -6,7 +6,8 @@ export async function setPassword(uuid: string, new_password: string): Promise<U
     // On recherche l'utilisateur par son id et on modifie son mot de passe
     await Users.query()
         .patch({user_password: new_password})
-        .where("user_uuid", "=", uuid);
+        .where("user_uuid", "=", uuid)
+        .throwIfNotFound();
 
     // On retourne l'utilisateur modifié
     const user: Promise<Users> = getUser(uuid);

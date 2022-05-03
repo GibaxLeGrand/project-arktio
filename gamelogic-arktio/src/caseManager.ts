@@ -7,40 +7,62 @@ import CaseEvenement from "./cases/caseEvenement";
 import CaseFacture from "./cases/caseFacture";
 import CaseInformation from "./cases/caseInformation";
 import CaseNews from "./cases/caseNews";
-import CaseObjet from "./cases/caseObjet";
+import CaseOutil from "./cases/caseOutil";
 import CasePaie from "./cases/casePaie";
 import CaseProbleme from "./cases/caseProbleme";
 import CaseTroc from "./cases/caseTroc";
 import type {State} from "./state";
 
-
 export interface Case {
-    play: (state: State, playerID: string, choice: number) => State;
-    action: (state: State, playerID: string,) => Choix;
+    name: string;
+    id_name: string;
+    max_number: number;
+    play: (state: State, playerID: string, choices: number[]) => State;
+    prepare: (state: State, playerID: string, step: number) => TypeReponse;
+    next: (state: State, playerID: string, step: number, choice: number) => { end: boolean, step: number };
 }
 
+export class TypeReponse {
+    titre: string;
+    messages: string[];
 
-
-export class Choix {
-    id: string;
-    choix: Information[];
-
-    constructor(id: string, ...choix: Information[]) {
-        this.id = id;
-        this.choix = choix;
+    constructor(titre: string, messages: string[]) {
+        this.titre = titre;
+        this.messages = messages;
     }
-    
-    public message() : string {
-        return JSON.stringify({ id: this.id, info: this.choix.map(c => c.message()) });
-    }
-}
-
-export interface Information {
-    message: () => any;
 }
 
 export class CaseManager {
         private static cases: { [key: number]: Case } = {};
+
+        public static generate_board() {
+            // for each cases
+            let allCase : Case[] = []
+            for (let i = 0; i < Object.keys(this.cases).length; i++) {
+                if (i == 3 || i == 10) continue;
+                let c = this.cases[i];
+                console.log(`addding ${c.max_number} ${c.name}`);
+                for (let j = 0; j < c.max_number; j++) {
+                    allCase.push(c);
+                }
+            }
+
+            let board : Case[] = [];
+            for (let i = 0; i < 30; i++) {
+                if (i >= 6 && (i+1) % 7 == 0){
+                    board.push(this.cases[3]);
+                } else if (i == 29) {
+                    board.push(this.cases[10]);
+                } else {
+                    let r = Math.floor(Math.random() * allCase.length);
+                    board.push(allCase[r])
+                    ;
+                    allCase.splice(r, 1);
+                }
+                console.log(board[i].name);
+            }
+            return board;
+        }
 
         private static addCase(caseID: number, caseObj: Case) {
             console.log("Adding " + caseObj.constructor.name + " \t as ID " + caseID);
@@ -65,9 +87,9 @@ export class CaseManager {
             CaseManager.addCase(6, new CaseFacture());
             CaseManager.addCase(7, new CaseInformation());
             CaseManager.addCase(8, new CaseNews());
-            CaseManager.addCase(9, new CaseObjet());
+            CaseManager.addCase(9, new CaseOutil());
             CaseManager.addCase(10, new CasePaie());
             CaseManager.addCase(11, new CaseProbleme());
-            CaseManager.addCase(12, new CaseTroc());
+            CaseManager.addCase(12, new CaseTroc())
         }
     }

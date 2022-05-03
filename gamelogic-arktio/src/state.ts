@@ -1,4 +1,5 @@
 import { Player } from "./player";
+import {Case, CaseManager} from "./caseManager";
 
 
 export enum Mois {
@@ -17,14 +18,14 @@ export enum Mois {
 
 export class State {
     joueurs: {[key:string] : Player} = {};
-    plateau: number[] = [];
+    plateau: Case[] = [];
     tour: number = 1;
     mois: Mois = Mois.SEPTEMBRE;
     objets_par_mois: {[key:number] : number[]} = {};
     ordre_joueurs: string[];
     joueur_actuel: string;
 
-    private constructor(joueurs: {[key:string] : Player}, plateau: number[], tour: number, mois: Mois,
+    private constructor(joueurs: {[key:string] : Player}, plateau: Case[], tour: number, mois: Mois,
         objets_par_mois: {[key:number] : number[]}, ordre_joueurs: string[], joueur_actuel: string) {
         this.joueurs = joueurs;
         this.plateau = plateau;
@@ -51,7 +52,7 @@ export class State {
             }
         }
 
-        return new State(joueurs, plateau, 1, 1, objets_par_mois, ordre_joueurs, ordre_joueurs[0]);
+        return new State(joueurs, CaseManager.generate_board(), 0, 0, objets_par_mois, ordre_joueurs, ordre_joueurs[0]);
     }
 
     static createFrom(state: State): State {

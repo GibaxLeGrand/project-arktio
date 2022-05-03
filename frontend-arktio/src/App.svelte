@@ -8,12 +8,14 @@
     import {env} from "./scripts/envfile";
     import {routerFetch} from "./scripts/fetchOverride";
     import {disconnect, getPlayerInfos} from "./scripts/userScripts";
-    import {base, socketStore, userStore} from "./stores/storeLibrary";
+    import {base, lobbyStore, socketStore, userStore} from "./stores/storeLibrary";
     import Regles from "./Regles.svelte";
     import Jeu from "./Jeu.svelte";
     import * as io from "socket.io-client"
     import Tailwindcss from "./Tailwindcss.svelte";
+    import type {LobbyJSON} from "./types/types";
 
+    let cnt = 0;
 
     router.mode.hash();
 
@@ -50,7 +52,7 @@
 <main>
     <Route path="/">
         <div class="logo">
-            <img alt="logo" src="logo.png"/>
+            <img on:click={()=>{if (cnt < 10){cnt++} else {cnt = 0}}} alt="logo" src={cnt < 10 ? "logo.png" : "https://cdn.discordapp.com/attachments/942433231599456307/952985982595104878/unknown.png"}/>
         </div>
         <div class="boutons">
             {#if state === RULES.GUEST}
@@ -69,7 +71,7 @@
                 >Inscription
                 </button>
             {/if}
-            {#if [RULES.CONNECTED].includes(state)}
+            {#if [RULES.CONNECTED].includes(state) }
                 <button
                         id="create_join_party"
                         on:click={() => {

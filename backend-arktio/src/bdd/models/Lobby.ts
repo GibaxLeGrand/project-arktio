@@ -1,13 +1,15 @@
 import { Model } from "objection";
-import { Users } from "./Users";
+// import { Users } from "./Users";
 
-export class Lobby extends Model{
+export class Lobby extends Model {
     // Attibuts à définir pour pouvoir utiliser les valeurs.
     lobby_uuid!: string;
-    lobby_name!: string;
     lobby_password!: string;
 
-    // current_users?: Users[];
+    // lobby_host!: Users;
+    // lobby_users!: Users[];
+    lobby_host!: string;
+    lobby_users!: string;
 
     // Propiété obligatoire à ajouter qui permet de retrouver la table
     static override get tableName() {
@@ -22,7 +24,7 @@ export class Lobby extends Model{
     // pour essentiellement la validation de la requête demandée.
     
     // Méthode permettant de vérifier les données avant d'insèrer dans la BDD.
-    static get jsonSchema() {
+    static override get jsonSchema() {
         return {
             type: "object",
             required : ["lobby_uuid", "lobby_name", "lobby_password"],
@@ -35,8 +37,20 @@ export class Lobby extends Model{
     }
 
     // Attribut permettant de donner les relations entre les tables.
-    static relationMappings = {
-        current_users: {
+    // /!\ Bug : Les relations semblent pas marcher
+    /*
+    static override relationMappings = {
+        // Hôte du lobby
+        lobby_host: {
+            relation: Model.HasOneRelation, // relation 1-1 (Un seul hôte)
+            modelClass: Users,
+            join: {
+                from: 'Lobby.lobby_host',
+                to: 'Users.user_uuid'
+            }
+        },
+        // Les joueurs dans le lobby
+        lobby_users: {
             relation: Model.HasManyRelation, // relation 0-n
             modelClass: Users,
             join: {
@@ -45,4 +59,5 @@ export class Lobby extends Model{
             }
         }       
     }
+    */
 }
