@@ -7,7 +7,7 @@ import CaseEvenement from "./cases/caseEvenement";
 import CaseFacture from "./cases/caseFacture";
 import CaseInformation from "./cases/caseInformation";
 import CaseNews from "./cases/caseNews";
-import CaseObjet from "./cases/caseOutil";
+import CaseOutil from "./cases/caseOutil";
 import CasePaie from "./cases/casePaie";
 import CaseProbleme from "./cases/caseProbleme";
 import CaseTroc from "./cases/caseTroc";

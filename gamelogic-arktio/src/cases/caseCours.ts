@@ -8,16 +8,7 @@ export default class CaseCours implements Case {
     id_name = "cours";
     max_number = 4;
 
-    play(state: State, playerID: string, choice: number) : State {
-        if (choice === 0) {
-            let caseActuelle: {position: number, type: number} = state.joueurs[playerID].caseActuelle;
-            let position = Math.min(caseActuelle.position + 1, state.plateau.length-1);
-            state.joueurs[playerID].caseActuelle = {
-                position: position,
-                type: state.plateau[position]
-            }
-        }
-
+    play(state: State, playerID: string, choices: number[]) : State {
         return state;
     }
 

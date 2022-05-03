@@ -7,17 +7,6 @@ export default class CaseAchat implements Case {
     id_name = "achat";
     max_number = 3;
 
-    choiceOfPlayer(state: State, playerID: string) : Objet[] {
-        let objetsDuMois = state.objets_par_mois[state.mois];
-        let result: Objet[] = [];
-
-        for (let i=0; i<objetsDuMois.length; i++) {
-            state.joueurs[playerID].inventaire
-        }
-
-        return result;
-    }
-
     play(state: State, playerID: string, choices: number[]) : State {
         let achatsPossibles = this.choiceOfPlayer(state, playerID);
         
