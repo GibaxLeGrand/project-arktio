@@ -174,9 +174,9 @@
         obtiendra 10 points terre.<br /> Il y a une case de ce type sur le plateau
       </section>{/if}
     {#if page == 19}<section>
-        <!-- TODO enlever le (?) ou pas ?  -->
-        - Case cours : accessible si le joueur est en possession d'un ordinateur,
-        dans ce cas le joueur avance d'une case (?), sinon il passe son tour.
+        - Case cours : accessible si le joueur est en possession d'un
+        ordinateur, dans ce cas le joueur avance d'une case, sinon il passe son
+        tour.
       </section>{/if}
     {#if page == 20}<section>
         - Case jour de paie :<br /> la dernière case du plateau, les joueurs s'arrêteront
