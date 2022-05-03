@@ -91,6 +91,5 @@ export class CaseManager {
             CaseManager.addCase(10, new CasePaie());
             CaseManager.addCase(11, new CaseProbleme());
             CaseManager.addCase(12, new CaseTroc())
-            CaseManager.generate_board();
         }
     }

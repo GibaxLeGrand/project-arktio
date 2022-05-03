@@ -9,6 +9,7 @@ import cookieParser from "cookie-parser";
 import * as db from './bdd';
 import {hash_password} from "./scripts/security/password";
 import {LobbyManager} from './lobbymanager';
+import {CaseManager} from "../../gamelogic-arktio/dist/caseManager"
 
 dotenv.config();
 
@@ -92,4 +93,5 @@ db.connect(process.env.NODE_ENV!)
         }
     });
 
+CaseManager.initCases();
 LobbyManager.init(server, port);

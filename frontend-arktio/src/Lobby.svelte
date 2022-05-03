@@ -52,6 +52,9 @@
         })
         .on("update gamestate", (state: State) => {
             stateStore.set(state);
+            state.plateau.forEach((_case, index) => {
+                console.log(_case.name, index);
+            });
             router.goto("/jeu/");
         });
 
