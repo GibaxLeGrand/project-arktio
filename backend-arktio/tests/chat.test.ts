@@ -11,7 +11,6 @@ import { createTestUser } from './resources/create_test_user';
 describe("chat", () => {
     let httpServer: http.Server;
     let lobbyUUID: string;
-    let lobbyManager: LobbyManager;
     let clientSocket: io.Socket;
     let usersUUID: string[];
 
@@ -28,7 +27,7 @@ describe("chat", () => {
         await new Promise<void>(connected => {
             httpServer.listen(() => {
                 const port = (httpServer.address() as AddressInfo).port;
-                lobbyManager = new LobbyManager(httpServer, port);
+                LobbyManager.init(httpServer, port);
 
                 clientSocket = io.connect(`http://localhost:${port}`);
                 clientSocket.on("connect", () => {
@@ -45,7 +44,7 @@ describe("chat", () => {
 
     afterAll(async () => {
         clientSocket.close();
-        lobbyManager.destroy();
+        LobbyManager.destroy();
         httpServer.close();
         await db.disconnect();
     });

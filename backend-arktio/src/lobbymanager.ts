@@ -6,19 +6,31 @@ import * as http from 'http';
 
 
 export class LobbyManager {
-    private io: Server;
-    private lobbies: Map<string, Lobby>;
-    private port: string | number;
+    private static io: Server;
+    private static lobbies: Map<string, Lobby>;
+    private static port: string | number;
 
-    constructor(server: http.Server, port: string | number) {
-        this.io = new Server(server);
-        this.lobbies = new Map();
-        this.port = port;
-        this.setup();
+    public static init(server: http.Server, port: string | number) {
+        LobbyManager.io = new Server(server);
+        LobbyManager.lobbies = new Map();
+        LobbyManager.port = port;
+        LobbyManager.setup();
+    }
+
+    public static isInLobby(player: LobbyPlayer) :boolean{
+        let array = Array.from(this.lobbies.entries());
+    
+        for (let i=0; i<array.length; i++) {
+            if (array[i][1].contain(player)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     // Genrate 6 digit lobby id
-    private generateLobbyId(): string {
+    private static generateLobbyId(): string {
         let id = '';
         do {
             for (let i = 0; i < 6; i++) {
@@ -28,7 +40,7 @@ export class LobbyManager {
         return id;
     }
 
-    private setup() : void {
+    private static setup() : void {
         this.io.on("connection", (socket: Socket) => {
             console.log("Connected client on port %s", this.port);
         
@@ -38,17 +50,23 @@ export class LobbyManager {
                 socket.removeAllListeners("player information");
 
                 socket.on("create lobby", (callback: (({ lobby } : { lobby: LobbyJSON }) => void)) => {
-                    let lobbyUUID: string = this.generateLobbyId()
+                    if (this.isInLobby(player)) {
+                        return;
+                    }
+
+                    let lobbyUUID: string = LobbyManager.generateLobbyId()
                     let lobby: Lobby = new Lobby(lobbyUUID, this.io, true);
                     this.lobbies.set(lobbyUUID, lobby);
                 
                     lobby.addPlayer(player, socket);
-                    socket.removeAllListeners("create lobby");
-                    socket.removeAllListeners("join lobby");
                     callback({ lobby: lobby.toJSON() });
                 });
 
-                socket.on("join lobby", (lobbyUUID: string, callback: (({ valid, lobby } : { valid: boolean, lobby: LobbyJSON }) => void)) => {                    
+                socket.on("join lobby", (lobbyUUID: string, callback: (({ valid, lobby } : { valid: boolean, lobby: LobbyJSON }) => void)) => { 
+                    if (this.isInLobby(player)) {
+                        return;
+                    }
+                    
                     if (!this.lobbies.has(lobbyUUID)) {
                         callback({ valid: false, lobby: null });
                         return;
@@ -60,8 +78,6 @@ export class LobbyManager {
                         let valid = lobby.addPlayer(player, socket);
 
                         if (valid) { 
-                            socket.removeAllListeners("create lobby");
-                            socket.removeAllListeners("join lobby");
                             callback({ valid: true, lobby: lobby.toJSON() });
                         } else {
                             // Ne pas donner des informations qui ne servent à rien
@@ -86,12 +102,17 @@ export class LobbyManager {
         });
     }
 
-    public getLobbies() : Map<string, Lobby> {
-        return this.lobbies;
+    public static destroyLobby(lobby: Lobby) : void {
+        lobby.destroy();
+        LobbyManager.lobbies.delete(lobby.getUUID());
     }
 
-    public destroy() : void {
-        this.lobbies.forEach(lobby => {
+    public static getLobbies() : Map<string, Lobby> {
+        return LobbyManager.lobbies;
+    }
+
+    public static destroy() : void {
+        LobbyManager.lobbies.forEach(lobby => {
             lobby.destroy();
         })
     }

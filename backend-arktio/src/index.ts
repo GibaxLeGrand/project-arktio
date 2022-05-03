@@ -92,4 +92,4 @@ db.connect(process.env.NODE_ENV!)
         }
     });
 
-new LobbyManager(server, port);
+LobbyManager.init(server, port);

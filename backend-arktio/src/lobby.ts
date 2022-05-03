@@ -1,10 +1,11 @@
-import { Server, Socket } from 'socket.io';
-import { Chat } from './chat';
-import { LobbyPlayer, PlayerJSON } from './player';
-import { State, Mois } from "../../gamelogic-arktio/dist/state";
-import { Objet } from "../../gamelogic-arktio/dist/objetManager";
-import { Player } from '../../gamelogic-arktio/dist/player';
-import { CaseManager, Case, Choix } from '../../gamelogic-arktio/dist/caseManager'
+import {Server, Socket} from 'socket.io';
+import {Chat} from './chat';
+import {LobbyPlayer, PlayerJSON} from './player';
+import {State, Mois} from "../../gamelogic-arktio/dist/state";
+import {Objet} from "../../gamelogic-arktio/dist/objetManager";
+import {Player} from '../../gamelogic-arktio/dist/player';
+import {CaseManager, Case, Choix} from '../../gamelogic-arktio/dist/caseManager'
+import {LobbyManager} from './lobbymanager';
 
 export enum LobbyState {
     Lobby,
@@ -26,7 +27,7 @@ export class Lobby {
     private owner: LobbyPlayer | null;
     private state: LobbyState;
     private chat: Chat;
-    private io : Server;
+    private io: Server;
 
     constructor(uuid: string, io: Server, privacy: boolean) {
         this.uuid = uuid;
@@ -37,28 +38,28 @@ export class Lobby {
         this.io = io;
     }
 
-    public launchTheGame() : void {
+    public launchTheGame(): void {
         if (this.state === LobbyState.Lobby) {
-            let players : { [key: string] : Player } = {};
+            let players: { [key: string]: Player } = {};
             let ordre = [];
-            let buffer : LobbyPlayer[] = Array.from(this.players.keys());
-            for (let i=0; i<buffer.length; i++) {
+            let buffer: LobbyPlayer[] = Array.from(this.players.keys());
+            for (let i = 0; i < buffer.length; i++) {
                 ordre.push(buffer[i].getUUID());
 
                 players[buffer[i].getUUID()] = {
                     id: buffer[i].getUUID(),
-                    inventaire : [],
-                    argent : 1000,
+                    inventaire: [],
+                    argent: 1000,
                     pointTerre: 0,
-                    pion : i,
-                    caseActuelle : {position: 0, type: -1},
-                    statut : 0,
+                    pion: i,
+                    caseActuelle: {position: 0, type: -1},
+                    statut: 0,
                     avertissement: 0
                 }
             }
 
             this.game = State.create(players, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], ordre);
-            
+
             // Au cas où et pour + de lisibilité
             this.game.mois = Mois.SEPTEMBRE;
             this.game.tour = 0;
@@ -70,9 +71,9 @@ export class Lobby {
                         let players = Array.from(this.players.entries());
                         let p = player;
                         let endMonth = true;
-                        for (let i=0; i<players.length; i++) {
+                        for (let i = 0; i < players.length; i++) {
                             p = this.nextTurn();
-                            if (this.game.joueurs[p.getUUID()].caseActuelle.position < this.game.plateau.length - 1 
+                            if (this.game.joueurs[p.getUUID()].caseActuelle.position < this.game.plateau.length - 1
                                 && this.players.get(p) != null) {
                                 endMonth = false;
                                 break;
@@ -85,7 +86,7 @@ export class Lobby {
                             if (this.game.mois >= 10) {
                                 this.io.sockets.in(this.uuid).emit("end");
                             } else {
-                                for (let i=0; i<players.length; i++) {
+                                for (let i = 0; i < players.length; i++) {
                                     this.game.joueurs[players[i][0].getUUID()].caseActuelle = {
                                         position: 0,
                                         type: this.game.plateau[0]
@@ -99,10 +100,10 @@ export class Lobby {
                     }
                 });
 
-                socket.on("dice", (callback: ({ result } : { result: number }) => void) => {
+                socket.on("dice", (callback: ({result}: { result: number }) => void) => {
                     if (this.isActualPlayer(player) && dice) {
                         let result = 1 + Math.floor(Math.random() * (6 - 1));
-                        
+
                         let caseActuelle = this.game.joueurs[this.game.joueur_actuel].caseActuelle;
                         this.game.joueurs[this.game.joueur_actuel].caseActuelle = {
                             position: Math.min(caseActuelle.position + result, this.game.plateau.length - 1),
@@ -132,7 +133,7 @@ export class Lobby {
                     if (this.isActualPlayer(player) && choice) {
                         let mycase: Case = this.getActualPlayerCase();
                         this.game = mycase.play(this.game, this.game.joueur_actuel, input);
-                        
+
                         choice = false;
                         this.updateGameState();
                     }
@@ -143,36 +144,36 @@ export class Lobby {
         }
     }
 
-    private isActualPlayer(player: LobbyPlayer) : boolean {
+    private isActualPlayer(player: LobbyPlayer): boolean {
         if (this.state === LobbyState.Game) {
             let p = Array.from(this.players.entries()).filter(entry => entry[0].getUUID() === this.game.joueur_actuel);
 
             if (p.length > 0)
                 return player === p[0][0];
             else
-                return false; 
+                return false;
         }
 
         return false;
     }
 
-    private getActualPlayerCase() : Case {
+    private getActualPlayerCase(): Case {
         return CaseManager.getCase(this.game.plateau[this.game
             .joueurs[this.game.joueur_actuel].caseActuelle.position]);
     }
 
-    private nextTurn() : LobbyPlayer {
+    private nextTurn(): LobbyPlayer {
         if (this.state === LobbyState.Game) {
             let player: string = this.game.joueur_actuel;
             let ordre: string[] = this.game.ordre_joueurs;
-            
-            for (let i=0; i<ordre.length; i++) {
+
+            for (let i = 0; i < ordre.length; i++) {
                 if (ordre[i] === player) {
-                    if (i+1 === ordre.length) {
+                    if (i + 1 === ordre.length) {
                         this.game.tour += 1
                         this.game.joueur_actuel = ordre[0];
                     } else {
-                        this.game.joueur_actuel = ordre[i+1];
+                        this.game.joueur_actuel = ordre[i + 1];
                     }
 
                     break;
@@ -186,7 +187,7 @@ export class Lobby {
         return null;
     }
 
-    public toJSON() : LobbyJSON {
+    public toJSON(): LobbyJSON {
         return {
             uuid: this.uuid,
             players: Array.from(this.players.keys()).map((player: LobbyPlayer) => player.toJSON()),
@@ -195,21 +196,23 @@ export class Lobby {
         }
     }
 
-    public updateGameState() : void {
+    public updateGameState(): void {
         this.io.sockets.in(this.uuid).emit("update gamestate", this.game);
     }
 
-    public updateLobby() : void {
+    public updateLobby(): void {
         this.io.sockets.in(this.uuid).emit("update lobby", this.toJSON());
     }
 
-    public setOwner(player: LobbyPlayer) : void {
+    public setOwner(player: LobbyPlayer): void {
         let oldSocket: Socket = this.players.get(this.owner);
         oldSocket?.removeAllListeners("launch game");
 
+        if (player == null) return;
+
         this.owner = player;
         let newSocket: Socket = this.players.get(this.owner);
-    
+
         if (this.state === LobbyState.Lobby && newSocket !== null) {
             newSocket.on("launch game", () => {
                 this.launchTheGame();
@@ -217,16 +220,16 @@ export class Lobby {
         }
     }
 
-    public contain(player: LobbyPlayer) : boolean {
+    public contain(player: LobbyPlayer): boolean {
         this.players.forEach((socket, p) => {
-           if (player === p)
-            return true;
+            if (player === p)
+                return true;
         });
 
         return false;
     }
 
-    public addPlayer(player: LobbyPlayer, socket: Socket) : boolean {
+    public addPlayer(player: LobbyPlayer, socket: Socket): boolean {
         if (this.state !== LobbyState.Lobby) {
             return false;
         } else if (this.getNumberOfPlayers() < 4 || this.players.has(player)) {
@@ -234,33 +237,35 @@ export class Lobby {
 
             socket.join(this.uuid);
             this.chat.update();
-            
+
             console.log("Player %s added on lobby %s", player.getUUID(), this.uuid);
 
             socket.on("update token", (token: number) => {
                 player.setToken(token);
+                this.updateLobby();
             });
 
             socket.on("quit", (callback: () => void) => {
+                console.log("Player %s quit lobby %s", player.getUUID(), this.uuid);
                 this.removePlayer(player);
                 callback();
             })
 
-            if (this.owner === null) 
+            if (this.owner === null)
                 this.setOwner(player);
 
             this.updateLobby();
             return true;
-        } else { 
-            return false;     
+        } else {
+            return false;
         }
     }
 
-    public destroy() : void {
+    public destroy(): void {
         this.chat.destroy();
     }
 
-    public removePlayer(player: LobbyPlayer) : void {
+    public removePlayer(player: LobbyPlayer): void {
         if (!this.players.has(player)) return;
 
         let socket: Socket = this.players.get(player);
@@ -268,23 +273,23 @@ export class Lobby {
         socket.removeAllListeners("quit");
 
         if (this.owner === player) {
-            if (this.players.size === 0) {
-                this.setOwner(null);
+            if (this.players.size <= 1) {
+                LobbyManager.destroyLobby(this);
             } else {
                 let iterator = this.players.entries();
-                let player = iterator.next();
-                while (player.value[1] === null || player.value[0] === player) 
-                    player = iterator.next();
+                let p = iterator.next();
+                while (p.value[1] === null || p.value[0] === player)
+                    p = iterator.next();
 
-                this.setOwner(player.value[0]);
+                this.setOwner(p.value[0]);
             }
         }
 
-        if (this.state !== LobbyState.Lobby) 
+        if (this.state !== LobbyState.Lobby)
             this.players.set(player, null);
         else
             this.players.delete(player);
-        
+
         this.chat.update();
         socket.leave(this.uuid);
         this.updateLobby();
@@ -292,43 +297,43 @@ export class Lobby {
         player.setToken(0);
     }
 
-    public isAccessible() : boolean {
+    public isAccessible(): boolean {
         return this.state === LobbyState.Lobby && this.getNumberOfPlayers() < 4;
     }
 
-    public getState() : LobbyState {
+    public getState(): LobbyState {
         return this.state;
     }
 
-    public getPlayersAndTheirSocket() : Map<LobbyPlayer, Socket> {
+    public getPlayersAndTheirSocket(): Map<LobbyPlayer, Socket> {
         return this.players;
     }
 
-    public getPlayers() : LobbyPlayer[] {
+    public getPlayers(): LobbyPlayer[] {
         return Array.from(this.players.keys());
     }
 
-    public getNumberOfPlayers() : number {
+    public getNumberOfPlayers(): number {
         return this.players.size;
     }
 
-    public isOwner(player: LobbyPlayer) : boolean {
+    public isOwner(player: LobbyPlayer): boolean {
         return this.owner === player;
     }
 
-    public getOwner() : LobbyPlayer | null {
+    public getOwner(): LobbyPlayer | null {
         return this.owner;
     }
 
-    public getUUID() : string {
+    public getUUID(): string {
         return this.uuid;
     }
 
-    public getIO() : Server {
+    public getIO(): Server {
         return this.io;
     }
 
-    public getGameState() : State {
+    public getGameState(): State {
         return this.game;
     }
 

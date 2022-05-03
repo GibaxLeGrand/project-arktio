@@ -11,7 +11,6 @@ import { State } from '../../gamelogic-arktio/src/state'
 import { createTestUser } from './resources/create_test_user';
 
 describe("game", () => {
-    let lobbyManager: LobbyManager;
     let clientSockets: io.Socket[] = [];
     let httpServer: http.Server;
     let usersUUID: string[] = [];
@@ -30,7 +29,7 @@ describe("game", () => {
         await new Promise<void>(connected => {
             httpServer.listen(() => {
                 const port = (httpServer.address() as AddressInfo).port;
-                lobbyManager = new LobbyManager(httpServer, port);
+                LobbyManager.init(httpServer, port);
 
                 clientSockets.push(io.connect(`http://localhost:${port}`));
                 clientSockets.push(io.connect(`http://localhost:${port}`));
@@ -74,7 +73,7 @@ describe("game", () => {
         for (let i=0; i<clientSockets.length; i++) 
             clientSockets[i].close();
 
-        lobbyManager.destroy();
+        LobbyManager.destroy();
         httpServer.close();
         await db.disconnect();
 

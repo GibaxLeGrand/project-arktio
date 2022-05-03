@@ -1,89 +1,72 @@
 <script lang="ts">
-  import Tailwindcss from "./Tailwindcss.svelte";
-  import { router } from "tinro";
+    import Tailwindcss from "./Tailwindcss.svelte";
+    import {router} from "tinro";
+    import { lobbyStore, socketStore, stateStore, userStore} from "./stores/storeLibrary";
+    import {get} from "svelte/store";
+    import type {LobbyJSON, PlayerJSON} from "./types/types";
+    import type {State} from "./types/types";
 
-  export let id: string;
+    export let id: string;
 
-  let pions = [
-    { id: 0, text: "Aucun" },
-    { id: 1, text: "Boite de conserve" },
-    { id: 2, text: "Terre" },
-    { id: 3, text: "Plante" },
-    { id: 4, text: "Grain de café" },
-    { id: 5, text: "Bonnet" },
-    { id: 6, text: "Papillon" },
-    { id: 7, text: "Arrosoir" },
-    { id: 8, text: "Nuage" },
-  ];
+    let pions = [
+        {id: 0, text: "Aucun"},
+        {id: 1, text: "Boite de conserve"},
+        {id: 2, text: "Terre"},
+        {id: 3, text: "Plante"},
+        {id: 4, text: "Grain de café"},
+        {id: 5, text: "Bonnet"},
+        {id: 6, text: "Papillon"},
+        {id: 7, text: "Arrosoir"},
+        {id: 8, text: "Nuage"},
+    ];
 
-  class Player_lobby {
-    present: boolean;
-    name: string;
-    uuid: string;
-    pion: { id: number; text: string };
+    let availablePions: { id: number, text: string }[] = [];
+    let currentPion: number = 0;
 
-    constructor(present: boolean = false, name: string = "") {
-      this.present = present;
-      this.name = name;
-      this.uuid = "";
-      this.pion = pions[0];
+
+    function players_ready(): boolean {
+        return $lobbyStore.players.filter(x => x.token != 0).length == $lobbyStore.players.length;
+    }
+
+    function set_token(tokenEvent: Event) {
+        let tokenId = availablePions[tokenEvent.target["selectedIndex"]].id;
+        $socketStore.emit("update token", tokenId);
     }
   }
 
-  // Joueur-euse local
-  let player_local: Player_lobby = new Player_lobby(true, "Player 1");
-  let is_lobby_owner: boolean = true;
-
-  // Autres joueur-euses dans le lobby
-  let player_1: Player_lobby = new Player_lobby();
-  let player_2: Player_lobby = new Player_lobby();
-  let player_3: Player_lobby = new Player_lobby();
-
-  let players: Player_lobby[] = [player_1, player_2, player_3];
-  let all_players_ready = false;
-  $: {
-    player_local;
-    players;
-    all_players_ready = players_ready() == count_players_present();
-  }
-
-  /**
-   * Fonction pour bloquer les options de pions déjà pris dans le select
-   */
-  function update_pions_occupes() {
-    let choix_pions = document.getElementById("players").children;
-
-    for (let i = 0; i++; i < choix_pions.length) {
-      choix_pions[i].removeAttribute("disabled");
-    }
-
-    for (let player: Player_lobby in players) {
-      choix_pions[player.pion.id + 1].setAttribute("disabled", "");
-    }
-  }
-
-  function count_players_present(): number {
-    let nb_players_present = 1;
-    for (let player: Player_lobby in players) {
-      if (player.present) {
-        nb_players_present++;
-      }
+    function player_quit() {
+        get(socketStore).emit("quit", () => {
+            router.goto("/");
+        });
     }
     return nb_players_present;
   }
 
-  function player_ready(player: Player_lobby): boolean {
-    if (player.pion.id === 0 || !player.present) {
-      return false;
+    function start_game() {
+        get(socketStore).emit("launch game", () => {
+        });
     }
-    return true;
-  }
 
-  function players_ready(): number {
-    console.log("aaaaaa");
-    return [player_local, player_1, player_2, player_3].filter(player_ready)
-      .length;
-  }
+
+    $socketStore
+        .on("update lobby", (lobby: LobbyJSON) => {
+            lobbyStore.set(lobby);
+            userStore.set(lobby.players.find(x => x.uuid == $userStore.uuid));
+        })
+        .on("update gamestate", (state: State) => {
+            stateStore.set(state);
+            router.goto("/jeu/");
+        });
+
+    lobbyStore.subscribe(lobby => {
+        availablePions = pions.filter(pion => {
+            return !$lobbyStore.players.find(player => player.token != 0 && player.token === pion.id && $userStore.uuid != player.uuid && (() => {
+                currentPion = pion.id;
+                return true;
+            })());
+        });
+    })
+
 </script>
 
 <Tailwindcss />
@@ -92,66 +75,45 @@
   <div class="logo">
     <a href="/"> logo ici </a>
   </div>
-  <button>Quitter partie</button>
-
+  <button on:click={player_quit}>Quitter partie</button>
+  <label for="players">Joueur-euses :</label>
   <div id="players">
     <h id="lobby_name">Lobby {id}</h>
-    <label for="players">Joueur-euses :</label>
-    <div class="player">
-      <span class="gauche"
-        >{player_local.present ? player_local.name : "---------"}</span
-      >
-      <span class="droite"
-        >{player_local.pion ? player_local.pion.text : "---------"}</span
-      >
-    </div>
-    <div class="player">
-      <span class="gauche"
-        >{player_1.present ? player_1.name : "---------"}</span
-      >
-      <span class="droite"
-        >{player_1.present ? player_1.pion.text : "---------"}</span
-      >
-    </div>
-    <div class="player">
-      <span class="gauche"
-        >{player_2.present ? player_2.name : "---------"}</span
-      >
-      <span class="droite"
-        >{player_2.present ? player_2.pion.text : "---------"}</span
-      >
-    </div>
-    <div class="player">
-      <span class="gauche"
-        >{player_3.present ? player_3.name : "---------"}</span
-      >
-      <span class="droite"
-        >{player_3.present ? player_3.pion.text : "---------"}</span
-      >
-    </div>
+    {#each $lobbyStore.players as player}
+      <div class="player">
+        <span class="gauche">{player.name}</span>
+        <span class="droite">{pions[player.token].text}</span>
+      </div>
+    {/each}
+    {#each [1, 2, 3, 4].splice(0, 4 - $lobbyStore.players.length) as i}
+      <div class="player">
+        <span> | </span>
+      </div>
+    {/each}
   </div>
+
   <div id="choix_pion">
     <span>Choissisez un pion :</span>
-    <select bind:value={player_local.pion}>
-      {#each pions as pion}
-        <option value={pion}>{pion.text}</option>
+    <select value={$userStore.token} on:change={set_token}>
+      {#each availablePions as pion}
+        <option value={pion.id}>{pion.text}</option>
       {/each}
     </select>
   </div>
 
-  {#if all_players_ready}
-    {#if is_lobby_owner}
-      <button aria-label="Lancer la partie" on:click={() => router.goto("/jeu")}
+  {#if ($lobbyStore, players_ready())}
+    {#if $lobbyStore.owner.uuid === $userStore.uuid}
+      <button aria-label="Lancer la partie" on:click={start_game}
         >Commencer partie</button
       >
     {:else}
-      <button aria-label="Lancer la partie" disabled
-        >En attente du début de partie
+      <button aria-label="Lancer la partie" disabled>
+        En attente du début de partie
       </button>
     {/if}
   {:else}
-    <button aria-label="Lancer la partie" disabled
-      >En attente des autres joueurs
+    <button aria-label="Lancer la partie" disabled>
+      En attente des autres joueurs
     </button>
   {/if}
 
@@ -162,94 +124,139 @@
   </footer>
 </main>
 
+<!-- CSS
 <style lang="scss">
-  $color: #286143; // PS : c'était juste un test ou ça va servir ?
-  $turquoise: #00a19a;
-  $blanc: #ffffff;
-  $caramel: #ffd49a;
+	$turquoise: #00a19a;
+	$blanc: #ffffff;
+	$framboise: #ba105a;
+	$caramel: #ffd49a;
+	$turquoise_clair: #98d1cd;
+	$gris: #90908f;
+	$gris_fonce: #2c2c2c;
+	$font_arktio: Raleway;
 
-  body {
-    background-color: $turquoise;
-  }
 
-  main {
-    @apply py-32;
-    text-align: center;
-    align-items: center;
+main {
+	margin: 0;
+	padding: 0;
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	height: 100%;
+	width: 100vw;
+}
+
+
+div {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	font-family: $font_arktio;
+}
+
+img {
+	width: 15rem;
+	height: 15rem;
+	margin: 1rem;
+}
+
+label {
+	color: $blanc;
+	font-size: x-large;
+}
+
+button{
+	align-items: center;
+	text-align: center;
+	background-color: $blanc;
+	height: 6vh;
+	color: $turquoise;
+    margin: 2%;
+    width: 50%;
+    border-radius: 10em;
+    border: solid $gris;
+	font-size: x-large;
+}
+
+#block {
+	display: flex;
+	flex-direction: row;
+	width: 50%;
+}
+
+#players {
+	display: flex;
+	flex-direction: column;
+	background-color: $caramel;
+	border: solid $gris 5px;
+	border-radius: 1em;
+	width: 50%;
+	padding: 1em;
+}
+
+.player {
+	background-color: $blanc;
+	padding: 1em;
+	margin: 5px;
+	width: 80%;
+	border-radius: 1em;
+}
+
+.droite {
+	float: right;
+}
+
+.gauche {
+	float: left;
+}
+
+#choix_pion {
+	background-color: $caramel;
+	padding: 1em;
+	margin: 1em;
+	align-items: center;
+	border: solid $gris 5px;
+	border-radius: 1em;
+}
+
+select {
+	background-color: $blanc;
+	border-radius: 1em;
+}
+
+#chatbox {
+    text-align:left;
+    margin: 1em auto;
     padding: 1em;
-    margin: 0 auto;
-  }
+    background: $blanc;
+	border-radius: 1em;
+    border: solid $gris;
+	width: 70%;
+	height: 20em;
+	color: $turquoise;
+}
 
-  div {
-    font-family: Raleway;
-    text-decoration-color: $blanc;
-    background-color: $turquoise;
-  }
+#msg {
+    width: 50%;
+    border-radius: 1em;
+    border: solid $gris;
+	color: $turquoise;
+}
 
-  .logo {
-    color: $blanc;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 5vh;
-  }
+#envoyer {
+	width: 5em;
+	border-radius: 1em;
+    border: solid $gris;
+	color: $turquoise;
+	background-color: $blanc;
+}
 
-  #players {
-    background-color: $blanc;
-    display: flex;
-    flex-direction: column;
-  }
+@media (max-width: 640px) {
 
-  .player {
-    background-color: $caramel;
-    padding: 1em;
-    margin: 5px;
-  }
+	div {
+		width: 100%;
+	}
 
-  .droite {
-    float: right;
-  }
-
-  .gauche {
-    float: left;
-  }
-
-  #choix_pion {
-    background-color: $blanc;
-    padding: 2px;
-    margin: 1em;
-    align-items: center;
-  }
-
-  button {
-    color: $turquoise;
-    align-items: center;
-    justify-content: space-around;
-    text-align: center;
-    background-color: $blanc;
-    font-weight: 400;
-    font-size: x-large;
-    height: 7vh;
-    width: 40vw;
-  }
-
-  footer {
-    text-align: center;
-    font-family: Raleway;
-    color: $blanc;
-    background-color: $turquoise;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-  }
-
-  @media (max-width: 900px) {
-    button,
-    input,
-    select,
-    option {
-      width: 60vw;
-    }
-  }
+}
 </style>
+-->
