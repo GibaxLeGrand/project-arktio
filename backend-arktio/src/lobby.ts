@@ -28,7 +28,7 @@ export class Lobby {
     private chat: Chat;
     private io: Server;
 
-    constructor(uuid: string, io: Server, privacy: boolean) {
+    constructor(uuid: string, io: Server) {
         this.uuid = uuid;
         this.players = new Map();
         this.owner = null;
@@ -57,7 +57,7 @@ export class Lobby {
                 }
             }
 
-            this.game = State.create(players, [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], ordre);
+            this.game = State.create(players, ordre);
 
             // Au cas où et pour + de lisibilité
             this.game.mois = Mois.SEPTEMBRE;
