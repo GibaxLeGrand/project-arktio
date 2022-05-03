@@ -1,21 +1,32 @@
 import { Knex } from "knex";
 
-
 export async function up(knex: Knex): Promise<void> {
-    // Opération de creation d'une table Lobby
-	return knex.schema.createTable("Lobby", (table) =>
-	{
-		table.string("lobby_uuid").primary();
-        table.string("lobby_name", 64).notNullable();
-        table.string("lobby_password", 256).notNullable();
+    return knex.schema
+    // Création d'une table "Lobby"
+    .createTable("Lobby", (table) =>
+    {
+        table.increments("lobby_id").primary();
+        table.string("lobby_uuid").notNullable();
+        table.string("lobby_password", 64).nullable();
 
-        table.string("users_list").references("user_uuid").inTable("Users").onDelete("SET NULL");
-	});
+        table.string("lobby_host").notNullable().references("user_uuid").inTable("Users").onDelete("CASCADE");
+        table.string("lobby_users").notNullable().references("user_uuid").inTable("Users").onDelete("CASCADE");
+    })
+    // On modifie la table User pour ajouter un champ "current_lobby"
+    .alterTable("Users", (table) =>
+    {
+        table.string("user_current_lobby").nullable();
+    })
 }
 
-
 export async function down(knex: Knex): Promise<void> {
-    // Opération inverse d'une création de table
-	return knex.schema.dropTableIfExists("Lobby");
+    // On supprime la table "Lobby"
+    return knex.schema
+        // On supprime le champ "current_lobby" de la table User
+        .alterTable("Users", (table) =>
+        {
+            table.dropColumn("user_current_lobby");
+        })
+        .dropTableIfExists("Lobby")
 }
 

@@ -8,5 +8,10 @@ export async function getUserAuthentificate(email: string): Promise<Users> {
         .where("user_email", "=", email)
         .throwIfNotFound();
 
+    // throw error
+    if (user[0] === undefined) {
+        throw new Error("User not found");
+    }
+
     return user[0];
 }

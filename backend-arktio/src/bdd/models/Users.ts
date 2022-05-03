@@ -1,5 +1,5 @@
 import { Model } from "objection";
-import { Lobby } from "./Lobby";
+// import { Lobby } from "./Lobby";
 
 export class Users extends Model {
     // Attibuts à définir pour pouvoir utiliser les valeurs.
@@ -8,7 +8,8 @@ export class Users extends Model {
     user_email!: string;
     user_password!: string;
     
-    // lobby_id?: Lobby;
+    // user_current_lobby?: Lobby;
+    user_current_lobby!: string;
 
     // Propiété obligatoire à ajouter qui permet de retrouver la table
     static override get tableName() {
@@ -23,28 +24,31 @@ export class Users extends Model {
     // pour essentiellement la validation de la requête demandée.
     
     // Méthode permettant de vérifier les données avant d'insèrer dans la BDD.
-    static get jsonSchema() {
+    static override get jsonSchema() {
         return {
             type: "object",
-            required: ["user_name", "user_email", "user_password"],
+            required: ["user_uuid", "user_name", "user_email", "user_password"],
             properties: {
                 user_uuid: { type: 'string' },
                 user_name: { type: 'string', minLength: 3, maxLength: 256 },
                 user_email: { type: 'string', minLength: 1, maxLength: 256 },
-                user_password: { type: 'string', minLength: 7, maxLength: 256 },
+                user_password: { type: 'string', minLength: 7, maxLength: 256 }
             }
         }
     }
 
     // Attribut permettant de donner les relations entre les tables.
-    static relationMappings = {
-        current_users: {
+    // /!\ Bug : Les relations semblent pas marcher
+    /*
+    static override relationMappings = {
+        user_current_lobby: {
             relation: Model.HasOneRelation, // relation 0-1 (peut pas rejoindre plusieurs lobbys)
             modelClass: Users,
             join: {
-                from: 'Users.lobby_uuid',
-                to: 'Lobby.current_users'
+                from: 'Users.user_current_lobby',
+                to: 'Lobby.lobby_users'
             }
         }       
     }
+    */
 }
