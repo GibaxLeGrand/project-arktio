@@ -13,30 +13,20 @@ import CaseProbleme from "./cases/caseProbleme";
 import CaseTroc from "./cases/caseTroc";
 import type {State} from "./state";
 
-
 export interface Case {
-    play: (state: State, playerID: string, choice: number) => State;
-    action: (state: State, playerID: string,) => Choix;
-}
+    play: (state: State, playerID: string, choices: number[]) => State;
+    prepare: (state: State, playerID: string, step: number) => TypeReponse;
+    next: (state: State, playerID: string, step: number, choice: number) => { end: boolean, step: number };
+} 
 
+export class TypeReponse {
+    titre: string;
+    messages: string[];
 
-
-export class Choix {
-    id: string;
-    choix: Information[];
-
-    constructor(id: string, ...choix: Information[]) {
-        this.id = id;
-        this.choix = choix;
+    constructor(titre: string, messages: string[]) {
+        this.titre = titre;
+        this.messages = messages;
     }
-    
-    public message() : string {
-        return JSON.stringify({ id: this.id, info: this.choix.map(c => c.message()) });
-    }
-}
-
-export interface Information {
-    message: () => any;
 }
 
 export class CaseManager {

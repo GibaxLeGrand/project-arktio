@@ -51,7 +51,7 @@ export class State {
             }
         }
 
-        return new State(joueurs, plateau, 1, 1, objets_par_mois, ordre_joueurs, ordre_joueurs[0]);
+        return new State(joueurs, plateau, 0, 0, objets_par_mois, ordre_joueurs, ordre_joueurs[0]);
     }
 
     static createFrom(state: State): State {

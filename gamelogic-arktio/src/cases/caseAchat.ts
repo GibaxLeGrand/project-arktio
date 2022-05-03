@@ -1,41 +1,22 @@
-import {Case, Choix, Information} from "../caseManager";
+import {Case, CaseManager, TypeReponse} from "../caseManager";
 import { Objet } from "../objetManager";
 import {State} from "../state";
 
-class AchatsPossibles implements Information {
+class AchatsPossibles {
 
     private objets: Objet[] = [];
 
     constructor(objets: Objet[]) {
         this.objets = objets;
     }
-
-    public message() : any {
-        return {
-            achats_possibles: this.objets
-        }
-    }
-
 }
 
 export default class CaseAchat implements Case {
-
-    choiceOfPlayer(state: State, playerID: string) : Objet[] {
-        let objetsDuMois = state.objets_par_mois[state.mois];
-        let result: Objet[] = [];
-
-        for (let i=0; i<objetsDuMois.length; i++) {
-            state.joueurs[playerID].inventaire
-        }
-
-        return result;
-    }
-
-    play(state: State, playerID: string, choice: number) : State {
+    play(state: State, playerID: string, choices: number[]) : State {
         let achatsPossibles = this.choiceOfPlayer(state, playerID);
         
-        if (choice != -1) {
-            let objet = achatsPossibles[choice];
+        if (choices[0] != 0) {
+            let objet = achatsPossibles[choices[0] - 1];
             if (state.joueurs[playerID].argent < objet.prix) {
                 return state;
             } else {
@@ -49,8 +30,35 @@ export default class CaseAchat implements Case {
         }
     }
 
-    action(state : State, playerID: string) : Choix {       
-        return new Choix("achat", new AchatsPossibles(this.choiceOfPlayer(State.createFrom(state), playerID)));
+    write(objet: Objet) : string {
+        return objet.nom + " / " + objet.prix + " euros / " + objet.point + " Point Terre";
+    }
+
+    prepare(state: State, playerID: string, step: number) : TypeReponse {
+        let s = State.createFrom(state);
+        let choix = this.choiceOfPlayer(state, playerID);
+        let messages = ["Ne rien acheter"]
+
+        for (let i=0; i<choix.length; i++) {
+            messages.push(this.write(choix[i]));
+        }
+        
+        return { titre: "Souhaitez-vous acheter un objet ?", messages: messages };
+    }
+
+    next(state: State, playerID: string, step: number, choice: number) : { end: boolean, step: number } {
+        return { end: true, step: -1 };
+    }
+
+    choiceOfPlayer(state: State, playerID: string) : Objet[] {
+        let objetsDuMois = state.objets_par_mois[state.mois];
+        let result: Objet[] = [];
+
+        for (let i=0; i<objetsDuMois.length; i++) {
+            state.joueurs[playerID].inventaire
+        }
+
+        return result;
     }
 
 }
