@@ -25,7 +25,7 @@ export default class CaseCours implements Case {
         }
 
         return new TypeReponse("C'est une jour de cours aujourd'hui", [ordinateur ?
-            "Tu vas en cours grâce à ton super ordinateur" : "Tu es trop pauvre pour aller en cours"]);
+            "Tu vas en cours grâce à ton super ordinateur" : "Tu n'as pas le matériel nécessaire pour aller en cours"]);
     }
 
     next(state: State, playerID: string, step: number, choice: number) : { end: boolean, step: number } {
