@@ -136,11 +136,12 @@
 			<!-- // TODO remove on:click={() => {
           add_item_inventory("../logo.png", "informations");
         }} -->
-
-			<button id="option1" class="options">options 1</button>
-			<button id="option2" class="options">options 2</button>
-			<button id="option3" class="options">options 3</button>
-			<button id="option4" class="options">options 4</button>
+			<div id="choix">
+				<button id="option1" class="options">options 1</button>
+				<button id="option2" class="options">options 2</button>
+				<button id="option3" class="options">options 3</button>
+				<button id="option4" class="options">options 4</button>	
+			</div>
 		</div>
 
 		<div id="titre_inventaire">Inventaire</div>
@@ -196,11 +197,11 @@
 	$font_arktio: Raleway;
 
 
-
 	main {
 		display: block;
 		font-size: x-large;
 		color: #ffffff;
+		width: 100vw;
 	}
 
 	div {
@@ -299,12 +300,18 @@
 
 	#event {
 		background-color: $framboise;
-		height: 20%;
+		height: 30%;
 	}
 
 	#image {
-		background-color: #fff;
-		height: 50%;
+		background-color: $blanc;
+		height: 30%;
+	}
+
+	#choix {
+		display: block;
+		background-color: $caramel;
+		height: 40%;
 	}
 
 	.options {
@@ -316,8 +323,6 @@
 		margin-right: 4.5%;
 		margin-left: 4.5%;
 	}
-
-
 
 	// bouton quitter
 	.bouton_choix {
@@ -341,8 +346,8 @@
 		grid-column-start: 1;
 		grid-column-end: 3;
 		height: 100%;
-		width: 70%;
-		font-size: 2vw;
+		width: fit-content;
+		min-width: 50%;
 		justify-content: center;
 		align-items: center;
 		justify-self: left;
@@ -412,6 +417,9 @@
 		display: flex;
 		overflow: auto;
 		flex-wrap: wrap;
+		border: solid $gris;
+		border-radius: 10px;
+		background-color: $caramel;
 	}
 
 
@@ -422,6 +430,7 @@
 		grid-column-end: 12;
 		grid-row-start: 1;
 		grid-row-end: 6;
+		height: 23em;
 		width: 100%;
 		display: flex;
 		align-content: center;
@@ -430,6 +439,9 @@
 		overflow: scroll;
 		overflow-wrap: anywhere;
 		overflow-x: unset;
+		border: solid $gris;
+		border-radius: 10px;
+		background-color: $caramel;
 	}
 
 	#send_message {

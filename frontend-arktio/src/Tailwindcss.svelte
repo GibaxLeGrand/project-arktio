@@ -18,7 +18,7 @@
 		align-items: center;
 		flex-direction: column;
 		height: 100%;
-		width: 100vw;
+		width: 98%;
 	}
 
 	div {
