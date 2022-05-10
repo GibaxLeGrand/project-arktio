@@ -8,6 +8,18 @@
 
   // import { loop_guard } from "svelte/internal"; // c'est quoi ça ?
 
+  let pions = [
+        {id: 0, text: "Aucun"},
+        {id: 1, text: "Boite de conserve"},
+        {id: 2, text: "Terre"},
+        {id: 3, text: "Plante"},
+        {id: 4, text: "Grain de café"},
+        {id: 5, text: "Bonnet"},
+        {id: 6, text: "Papillon"},
+        {id: 7, text: "Arrosoir"},
+        {id: 8, text: "Nuage"},
+    ];
+
   const NB_CASES = 30;
 
   let possibilites:{titre:string, messages:string[]};
@@ -166,6 +178,25 @@
             return "cases_gauche";
         }
 	}
+
+	function affichage_pions(){
+		document.querySelectorAll("pion").forEach(p => p.remove());
+
+		for(let joueurID of $stateStore.ordre_joueurs){
+			let _pos:number = $stateStore.joueurs[joueurID].caseActuelle.position;
+			let nom_pion:string = pions[$stateStore.joueurs[joueurID].pion].text;
+
+			let _case:HTMLElement = document.getElementById(`x${_pos+1}`);
+
+			let _pion:HTMLImageElement = document.createElement("img");
+			_pion.src = `./Pions/pion_${nom_pion}.PNG`
+			_pion.alt = `Pion ${nom_pion} de ${$lobbyStore.players[joueurID].name}.`;
+			_pion.classList.add("pion");
+			
+			_case.appendChild(_pion);
+		}
+	}
+
 </script>
 
 <main>
