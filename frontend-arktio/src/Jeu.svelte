@@ -1,18 +1,23 @@
 <script lang="ts">
-    import {lobbyStore, socketStore, stateStore} from "./stores/storeLibrary";
+    import {lobbyStore, socketStore, stateStore, userStore} from "./stores/storeLibrary";
     import {router} from "tinro";
     import * as ioClient from "../../backend-arktio/node_modules/socket.io-client";
     import {get} from "svelte/store";
     import {State} from "./types/types";
+	import { add_flush_callback, element } from "svelte/internal";
 
   // import { loop_guard } from "svelte/internal"; // c'est quoi ça ?
 
   const NB_CASES = 30;
 
+  let possibilites:{titre:string, messages:string[]};
+  let callbacks: function(number);
+
+  let local_uuid:string = $userStore.uuid;
+
   let quit_game_button_text: string = "Quitter";
   let print_yes_no: boolean = false;
   let message: string;
-
     /**
      * envoie un message à la base de donnée
      */
@@ -33,7 +38,41 @@
         $stateStore.plateau.forEach((case_, index) => {
             console.log(case_.name, index);
         });
-    });
+	});
+	
+	$socketStore.on("choix", ({possibilites, callbacks}) => {
+		let container:HTMLElement = document.getElementById("conteneur");
+
+		container.innerHTML = "";
+
+		if($stateStore.joueur_actuel != local_uuid){
+			let elem:HTMLElement = document.createElement("span");
+			elem.textContent = `C'est le tour de ${$lobbyStore.players.find(x => $stateStore.joueur_actuel).name}...`;
+		}
+		else{
+			let titre:HTMLElement = document.createElement("div");
+			titre.textContent = possibilites.titre;
+			container.appendChild(titre);
+
+			for(let i = 0; i < possibilites.messages.length; i++){
+				let _choix:HTMLElement = document.createElement("button");
+				_choix.classList.add(`option${i}`);
+				_choix.textContent = possibilites.messages[i];
+				_choix.onclick = callbacks.bind(null,i);
+				container.appendChild(_choix);
+			}
+		}
+	});
+
+	$socketStore.emit("dice", (resultat) => {
+		let container: HTMLElement = document.getElementById("conteneur");
+		container.innerHTML = "";
+
+		let resultat_affiche: HTMLElement = document.createElement("div");
+		resultat_affiche.textContent=`Le dé à une valeur de : <b>${resultat}</b>`;
+
+		container.appendChild(resultat_affiche);
+	});
 
     /**
      * affiche le message dans le chat
@@ -126,7 +165,7 @@
         } else {
             return "cases_gauche";
         }
-    }
+	}
 </script>
 
 <main>
@@ -135,21 +174,12 @@
             <div  id={"x" + (index+1)}
                   class={pos_case($stateStore.plateau.indexOf(_case))}
                   style={`background-size: contain; background-repeat: no-repeat; background-position:center; background-image: url(./Cases/case_${_case.id_name}.PNG);`}>
-
+					
             </div>
         {/each}
         <div id="conteneur">
-            <div id="event">"ÉVÉNEMENTS ( tu dois payer ...)"</div>
-            <div id="image">image</div>
-            <!-- // TODO remove on:click={() => {
-                      add_item_inventory("../logo.png", "informations");
-                    }} -->
 
-            <button id="option1" class="options">options 1</button>
-            <button id="option2" class="options">options 2</button>
-            <button id="option3" class="options">options 3</button>
-            <button id="option4" class="options">options 4</button>
-        </div>
+		</div>
 
         <div id="titre_inventaire">Inventaire</div>
         <div id="inventaire"/>
