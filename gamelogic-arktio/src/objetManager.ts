@@ -55,6 +55,7 @@ export class ObjetManager {
     }
 
     public static initObjets() {
+        console.log("Initializing objets");
         this.addObjet(0, new ObjetAdhesionAssoEco());
         this.addObjet(1, new ObjetAdhesionAssoReparation());
         this.addObjet(2, new ObjetLivreEco());
@@ -85,6 +86,9 @@ export class ObjetManager {
         this.addObjet(27, new ObjetJean());
         this.addObjet(28, new ObjetLivreOccasion());
         this.addObjet(29, new ObjetSejourSki());
+        for (let i = 0; i < 30; i++) {
+            console.log(this.getObjet(i));
+        }
     }
 
     public static howManyObjets() : number {

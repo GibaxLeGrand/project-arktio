@@ -1,10 +1,10 @@
-import { Server, Socket } from 'socket.io';
-import { Chat } from './chat';
-import { LobbyPlayer, PlayerJSON } from './player';
-import { State, Mois } from "../../gamelogic-arktio/dist/state";
-import { Player } from '../../gamelogic-arktio/dist/player';
-import { CaseManager, Case } from '../../gamelogic-arktio/dist/caseManager'
-import { LobbyManager } from './lobbymanager';
+import {Server, Socket} from 'socket.io';
+import {Chat} from './chat';
+import {LobbyPlayer, PlayerJSON} from './player';
+import {State, Mois} from "../../gamelogic-arktio/dist/state";
+import {Player} from '../../gamelogic-arktio/dist/player';
+import {CaseManager, Case, TypeReponse} from '../../gamelogic-arktio/dist/caseManager'
+import {LobbyManager} from './lobbymanager';
 
 export enum LobbyState {
     Lobby,
@@ -50,9 +50,9 @@ export class Lobby {
                     inventaire: [],
                     argent: 1000,
                     pointTerre: 0,
-                    pion : i,
-                    caseActuelle : 0,
-                    statut : 0,
+                    pion: i,
+                    caseActuelle: 0,
+                    statut: 0,
                     avertissement: 0
                 }
             }
@@ -62,6 +62,7 @@ export class Lobby {
             // Au cas où et pour + de lisibilité
             this.game.mois = Mois.SEPTEMBRE;
             this.game.tour = 0;
+            this.state = LobbyState.Game;
 
             this.players.forEach((socket, player) => {
                 let dice = true;
@@ -74,7 +75,7 @@ export class Lobby {
                         let endMonth = true;
                         for (let i = 0; i < players.length; i++) {
                             p = this.nextTurn()!;
-                            if (this.game.joueurs[p.getUUID()].caseActuelle < this.game.plateau.length - 1 
+                            if (this.game.joueurs[p.getUUID()].caseActuelle < this.game.plateau.length - 1
                                 && this.players.get(p) != null) {
                                 endMonth = false;
                                 break;
@@ -87,7 +88,7 @@ export class Lobby {
                             if (this.game.mois >= 10) {
                                 this.io.sockets.in(this.uuid).emit("end");
                             } else {
-                                for (let i=0; i<players.length; i++) {
+                                for (let i = 0; i < players.length; i++) {
                                     this.game.joueurs[players[i][0].getUUID()].caseActuelle = 0;
                                 }
                             }
@@ -98,19 +99,25 @@ export class Lobby {
                     }
                 });
 
-                socket.on("dice", (callback: ({result}: { result: number }) => void) => {
+                socket.on("dice", (callback: (result: TypeReponse) => void) => {
                     if (this.isActualPlayer(player) && dice) {
                         let result = 1 + Math.floor(Math.random() * (6 - 1));
 
                         let caseActuelle = this.game.joueurs[this.game.joueur_actuel].caseActuelle;
                         this.game.joueurs[this.game.joueur_actuel].caseActuelle = Math.min(caseActuelle + result, this.game.plateau.length - 1);
 
-                        callback({result: result});
+                        callback({
+                            titre: `Vous avez fait ${result}`,
+                            messages: ["Suivant"],
+                        });
                         dice = false;
 
                         this.updateGameState();
                     } else {
-                        callback({result: -1});
+                        callback({
+                            titre: `Ce n'est pas votre tour`,
+                            messages: ["Attendre"],
+                        });
                     }
                 });
 
@@ -120,17 +127,20 @@ export class Lobby {
                 socket.on("play", () => {
                     if (this.isActualPlayer(player)) {
                         let mycase: Case = this.getActualPlayerCase();
-                        let step = 0;   
+                        let step = 0;
                         let reponse = mycase.prepare(this.game, this.game.joueur_actuel, step);
-                        
-                        socket.on("next", () => {
-                            if (this.isActualPlayer(player)) {
-                                socket.emit("choix", reponse, (choice: number) =>  {
-                                    let next = mycase.next(this.game, this.game.joueur_actuel, step, choice);
+                        let that = this;
+
+                        const nextStep = async () => {
+                            console.log("nextStep");
+                            if (that.isActualPlayer(player)) {
+                                socket.emit("choix", reponse, (choice: number) => {
+                                    console.log("YAY")
+                                    let next = mycase.next(that.game, that.game.joueur_actuel, step, choice);
                                     end = next.end;
-                                    
+
                                     if (!end) {
-                                        socket.emit("next");
+                                        nextStep();
                                     } else {
                                         if (step > next.step)
                                             choices.pop();
@@ -141,14 +151,16 @@ export class Lobby {
                                     }
                                 });
                             }
-                        });
+                        };
 
-                        socket.emit("choix", reponse, (choice: number) =>  {
+                        socket.emit("choix", reponse, (choice: number) => {
+                            console.log(choice);
                             let next = mycase.next(this.game, this.game.joueur_actuel, step, choice);
                             end = next.end;
-                            
+
                             if (!end) {
-                                socket.emit("next");
+                                console.log("nextStep");
+                                nextStep();
                             } else {
                                 if (step > next.step)
                                     choices.pop();
@@ -185,12 +197,7 @@ export class Lobby {
 
     private isActualPlayer(player: LobbyPlayer): boolean {
         if (this.state === LobbyState.Game) {
-            let p = Array.from(this.players.entries()).filter(entry => entry[0].getUUID() === this.game.joueur_actuel);
-
-            if (p.length > 0)
-                return player === p[0][0];
-            else
-                return false;
+            return this.game.joueur_actuel === player.getUUID();
         }
 
         return false;

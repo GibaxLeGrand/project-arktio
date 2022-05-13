@@ -10,6 +10,7 @@ import * as db from './bdd';
 import {hash_password} from "./scripts/security/password";
 import {LobbyManager} from './lobbymanager';
 import {CaseManager} from "../../gamelogic-arktio/dist/caseManager"
+import {ObjetManager} from "../../gamelogic-arktio/dist/objetManager"
 
 dotenv.config();
 
@@ -171,4 +172,5 @@ db.connect(process.env.NODE_ENV!)
     });
 
 CaseManager.initCases();
+ObjetManager.initObjets();
 LobbyManager.init(server, port);

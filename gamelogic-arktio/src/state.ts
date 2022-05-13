@@ -1,5 +1,6 @@
 import { Player } from "./player";
 import {Case, CaseManager} from "./caseManager";
+import {ObjetManager} from "./objetManager";
 
 
 export enum Mois {
@@ -40,13 +41,14 @@ export class State {
 
         // Initialisation tableaux des objets
         let objets_par_mois: {[key:number] : number[]} = {};
-        
-        for (let i=0; i<10; i++) 
+
+        for (let i=0; i<10; i++)
             objets_par_mois[i] = [];
 
         for (let i = 0; i <Mois.COUNT; i++) {
             for (let j = 0; j < 3; j++) {
                 objets_par_mois[i].push(i*3+j);
+                console.log(ObjetManager.getObjet(i*3+j).nom);
             }
         }
 

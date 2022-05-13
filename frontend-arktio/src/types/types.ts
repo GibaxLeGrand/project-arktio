@@ -66,3 +66,8 @@ export class State {
     ordre_joueurs: string[];
     joueur_actuel: string;
 }
+
+export class TypeReponse {
+    titre: string;
+    messages: string[];
+}
