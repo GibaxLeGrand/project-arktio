@@ -50,7 +50,7 @@
             lobbyStore.set(lobby);
             userStore.set(lobby.players.find(x => x.uuid == $userStore.uuid));
         })
-        .on("update gamestate", (state: State) => {
+        .on("start turn", (state: State) => {
             stateStore.set(state);
             state.plateau.forEach((_case, index) => {
                 console.log(_case.name, index);
