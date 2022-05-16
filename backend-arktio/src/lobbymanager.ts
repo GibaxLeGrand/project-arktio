@@ -11,7 +11,8 @@ export class LobbyManager {
     private static port: string | number;
 
     public static init(server: http.Server, port: string | number) {
-        LobbyManager.io = new Server(server);
+        console.log(server.address());
+        LobbyManager.io = new Server(server, {path: '/socket.io'});
         LobbyManager.lobbies = new Map();
         LobbyManager.port = port;
         LobbyManager.setup();
