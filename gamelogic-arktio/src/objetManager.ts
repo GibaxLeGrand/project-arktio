@@ -28,6 +28,7 @@ import ObjetCouvertBambou from "./objets/objetCouvertBambou";
 import ObjetJean from "./objets/objetJean";
 import ObjetLivreOccasion from "./objets/objetLivreOccasion";
 import ObjetSejourSki from "./objets/objetSejourSki";
+import ObjetKitReparation from './objets/objetKitReparation';
 import {Mois} from "./state";
 
 
@@ -86,7 +87,9 @@ export class ObjetManager {
         this.addObjet(27, new ObjetJean());
         this.addObjet(28, new ObjetLivreOccasion());
         this.addObjet(29, new ObjetSejourSki());
-        for (let i = 0; i < 30; i++) {
+        this.addObjet(30, new ObjetKitReparation());
+        
+        for (let i = 0; i <= this.howManyObjets(); i++) {
             console.log(this.getObjet(i));
         }
     }
