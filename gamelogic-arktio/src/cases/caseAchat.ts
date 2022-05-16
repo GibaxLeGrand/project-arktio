@@ -10,7 +10,7 @@ export default class CaseAchat implements Case {
     play(state: State, playerID: string, choices: number[]) : State {
         let achatsPossibles = this.choiceOfPlayer(state, playerID);
         
-        if (choices[0] != 0 || achatsPossibles.length >= choices[0]) {
+        if (choices[0] != 0 && achatsPossibles.length >= choices[0]) {
             let objet = achatsPossibles[choices[0] - 1];
             if (state.joueurs[playerID].argent < objet.prix) {
                 return state;
