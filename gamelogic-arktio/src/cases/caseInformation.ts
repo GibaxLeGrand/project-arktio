@@ -48,7 +48,7 @@ export default class CaseInformation implements Case {
     }
 
     prepare(state: State, playerID: string, step: number) : TypeReponse {
-        return { titre: "Informations générale", messages: [] };
+        return { titre: "Le savais-tu ?", messages: [] };
     }
 
     next(state: State, playerID: string, step: number, choice: number) : { end: boolean, step: number } {
