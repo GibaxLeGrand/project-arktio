@@ -38,7 +38,7 @@ export class State {
     }
 
     static create(joueurs: {[key:string] : Player}, ordre_joueurs: string[]): State {
-
+        console.log(ordre_joueurs);
         // Initialisation tableaux des objets
         let objets_par_mois: {[key:number] : number[]} = {};
 

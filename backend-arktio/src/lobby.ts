@@ -40,7 +40,7 @@ export class Lobby {
     public launchTheGame(): void {
         if (this.state === LobbyState.Lobby) {
             let players: { [key: string]: Player } = {};
-            let ordre = [];
+            let ordre: string[] = [];
             let buffer: LobbyPlayer[] = Array.from(this.players.keys());
             for (let i = 0; i < buffer.length; i++) {
                 ordre.push(buffer[i].getUUID());
