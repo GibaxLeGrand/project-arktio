@@ -258,8 +258,8 @@
             Envoyer
         </button>
         <div id="classement">
-            {#each $stateStore.ordre_joueurs as joueurID, index}
-                <div id={`classement_${index}`}>{$lobbyStore.players.find(x => x===joueurID).name}</div>
+            {#each $stateStore.ordre_joueurs as joueurID}
+                <div id={`classement_1`}>{$lobbyStore.players.find(x => x===joueurID).name}</div>
             {/each}
         </div>
         <button id="quit_game" on:click={quit_game_handler}
