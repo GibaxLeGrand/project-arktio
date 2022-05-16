@@ -7,6 +7,9 @@ export default class CaseEngagement implements Case {
     max_number = 1;
 
     play(state: State, playerID: string, choices: number[]) : State {
+        state.joueurs[playerID].pointTerre += 20;
+        state.joueurs[playerID].caseActuelle = Math.min(state.plateau.length-1, state.joueurs[playerID].caseActuelle + 5);
+        
         return state;
     }
 
@@ -15,6 +18,6 @@ export default class CaseEngagement implements Case {
     }
 
     next(state: State, playerID: string, step: number, choice: number) : { end: boolean, step: number } {
-        return { end: false, step: 0 };
+        return { end: true, step: -1 };
     }
 }
