@@ -1,17 +1,35 @@
 <script lang="ts">
-    import {lobbyStore, socketStore, stateStore} from "./stores/storeLibrary";
+    import {lobbyStore, socketStore, stateStore, userStore} from "./stores/storeLibrary";
     import {router} from "tinro";
     import * as ioClient from "../../backend-arktio/node_modules/socket.io-client";
     import {get} from "svelte/store";
-    import {State} from "./types/types";
+    import {State, TypeReponse} from "./types/types";
+    import {add_flush_callback, element} from "svelte/internal";
 
-  // import { loop_guard } from "svelte/internal"; // c'est quoi ça ?
+    // import { loop_guard } from "svelte/internal"; // c'est quoi ça ?
 
-  const NB_CASES = 30;
+    let pions = [
+        {id: 0, text: "Aucun"},
+        {id: 1, text: "Boite de conserve"},
+        {id: 2, text: "Terre"},
+        {id: 3, text: "Plante"},
+        {id: 4, text: "Grain de café"},
+        {id: 5, text: "Bonnet"},
+        {id: 6, text: "Papillon"},
+        {id: 7, text: "Arrosoir"},
+        {id: 8, text: "Nuage"},
+    ];
 
-  let quit_game_button_text: string = "Quitter";
-  let print_yes_no: boolean = false;
-  let message: string;
+    const NB_CASES = 30;
+
+    let possibilites: { titre: string, messages: string[] };
+    let globalcallback: (number) => void;
+
+    let local_uuid: string = $userStore.uuid;
+
+    let quit_game_button_text: string = "Quitter";
+    let print_yes_no: boolean = false;
+    let message: string;
 
     /**
      * envoie un message à la base de donnée
@@ -33,6 +51,48 @@
         $stateStore.plateau.forEach((case_, index) => {
             console.log(case_.name, index);
         });
+    });
+
+    $socketStore.on("choix", (possibilites: TypeReponse, callback: (number) => void) => {
+        let container: HTMLElement = document.getElementById("conteneur");
+
+        container.innerHTML = "";
+
+
+        if ($stateStore.joueur_actuel != local_uuid) {
+            let elem: HTMLElement = document.createElement("span");
+            elem.textContent = `C'est le tour de ${$lobbyStore.players.find(x => $stateStore.joueur_actuel).name}...`;
+        } else {
+            let titre: HTMLElement = document.createElement("div");
+            titre.textContent = possibilites.titre;
+            container.appendChild(titre);
+
+            for (let i = 0; i < possibilites.messages.length; i++) {
+                let _choix: HTMLElement = document.createElement("button");
+                _choix.classList.add(`option${i}`);
+                _choix.textContent = possibilites.messages[i];
+                _choix.onclick = () => {
+                    callback(i);
+                };
+                container.appendChild(_choix);
+            }
+        }
+    });
+
+    $socketStore.emit("dice", (resultat: TypeReponse) => {
+        let container: HTMLElement = document.getElementById("conteneur");
+        container.innerHTML = "";
+
+        let resultat_affiche: HTMLElement = document.createElement("div");
+        resultat_affiche.textContent = resultat.titre;
+
+        let _choix: HTMLElement = document.createElement("button");
+        _choix.classList.add(`option0`);
+        _choix.textContent = resultat.messages[0];
+        _choix.onclick = (() => $socketStore.emit("play"));
+        container.appendChild(_choix);
+
+        container.appendChild(resultat_affiche);
     });
 
     /**
@@ -127,28 +187,38 @@
             return "cases_gauche";
         }
     }
+
+    function affichage_pions() {
+        document.querySelectorAll("pion").forEach(p => p.remove());
+
+        for (let joueurID of $stateStore.ordre_joueurs) {
+            let _pos: number = $stateStore.joueurs[joueurID].caseActuelle.position;
+            let nom_pion: string = pions[$stateStore.joueurs[joueurID].pion].text;
+
+            let _case: HTMLElement = document.getElementById(`x${_pos + 1}`);
+
+            let _pion: HTMLImageElement = document.createElement("img");
+            _pion.src = `./Pions/pion_${nom_pion}.PNG`
+            _pion.alt = `Pion ${nom_pion} de ${$lobbyStore.players[joueurID].name}.`;
+            _pion.classList.add("pion");
+
+            _case.appendChild(_pion);
+        }
+    }
+
 </script>
 
 <main>
     <div class="plateau">
         {#each $stateStore.plateau as _case, index}
-            <div  id={"x" + (index+1)}
-                  class={pos_case($stateStore.plateau.indexOf(_case))}
-                  style={`background-size: contain; background-repeat: no-repeat; background-position:center; background-image: url(./Cases/case_${_case.id_name}.PNG);`}>
+            <div id={"x" + (index+1)}
+                 class={pos_case($stateStore.plateau.indexOf(_case))}
+                 style={`background-size: contain; background-repeat: no-repeat; background-position:center; background-image: url(./Cases/case_${_case.id_name}.PNG);`}>
 
             </div>
         {/each}
         <div id="conteneur">
-            <div id="event">"ÉVÉNEMENTS ( tu dois payer ...)"</div>
-            <div id="image">image</div>
-            <!-- // TODO remove on:click={() => {
-                      add_item_inventory("../logo.png", "informations");
-                    }} -->
 
-            <button id="option1" class="options">options 1</button>
-            <button id="option2" class="options">options 2</button>
-            <button id="option3" class="options">options 3</button>
-            <button id="option4" class="options">options 4</button>
         </div>
 
         <div id="titre_inventaire">Inventaire</div>
@@ -185,358 +255,382 @@
 
 <!-- CSS -->
 <style lang="scss">
-	$nb_cases_horizontal: 5;
-	$nb_cases_vertical: 10; // les cases dans les coins sont comptées
-	$taille_case: 1fr;
+  $nb_cases_horizontal: 5;
+  $nb_cases_vertical: 10; // les cases dans les coins sont comptées
+  $taille_case: 1fr;
 
-	$turquoise: #00a19a;
-	$blanc: #ffffff;
-	$framboise: #ba105a;
-	$caramel: #ffd49a;
-	$turquoise_clair: #98d1cd;
-	$gris: #90908f;
-	$gris_fonce: #2c2c2c;
-	$font_arktio: Raleway;
-
-
-
-	main {
-		background-color: $turquoise_clair;
-		font-size: x-large;
-		color: #ffffff;
-	}
-
-	div {
-		display: grid;
-		align-items: normal;
-	}
-
-	button {
-		width: fit-content;
-		height: fit-content;
-		align-self: flex-end;
-		display: inline-flex;
-		justify-self: space-around;
-		border: solid $gris;
-		background-color: $blanc;
-		border-radius: 10px;
-		color: $gris_fonce;
-	}
-
-	button:hover {
-		background-color: rgb(41, 39, 39);
-		color: $blanc;
-	}
-
-	button:active {
-		background-color: rgb(150, 150, 150);
-	}
-
-	input {
-		width: 55%;
-		height: fit-content;
-		font-size: 60%;
-		font-family: $font_arktio;
-		display: flex;
-		justify-content: center;
-		justify-self: flex-start;
-		align-self: center;
-		grid-column-start: 10;
-		grid-column-end: 13;
-		grid-row-start: 6;
-		color: black;
-		padding: 0.4em;
-		margin-bottom: initial;
-		border-radius: 10px;
-	}
+  $turquoise: #00a19a;
+  $blanc: #ffffff;
+  $framboise: #ba105a;
+  $caramel: #ffd49a;
+  $turquoise_clair: #98d1cd;
+  $gris: #90908f;
+  $gris_fonce: #2c2c2c;
+  $font_arktio: Raleway;
 
 
+  main {
+    background-color: $turquoise_clair;
+    font-size: x-large;
+    color: #ffffff;
+  }
 
-	// plateau
-	.plateau {
-		display: grid;
-		width: 100%;
-		height: 100%;
-		border: solid $framboise;
-		border-width: 5px;
-		display: grid;
-		grid-gap: 5px;
-		grid-template-rows: repeat(10, $taille_case);
-		grid-template-columns: repeat(11, $taille_case);
-	}
+  div {
+    display: grid;
+    align-items: normal;
+  }
 
-	// toutes les cases y compris contener + autres div
-	.plateau > div {
-		border: dashed black;
-	}
+  button {
+    width: fit-content;
+    height: fit-content;
+    align-self: flex-end;
+    display: inline-flex;
+    justify-self: space-around;
+    border: solid $gris;
+    background-color: $blanc;
+    border-radius: 10px;
+    color: $gris_fonce;
+  }
 
-	// 1 -> 7
-	.cases_haut {
-		grid-row-start: 1;
-	}
+  button:hover {
+    background-color: rgb(41, 39, 39);
+    color: $blanc;
+  }
 
-	// 8 -> 15
-	.cases_droite {
-		grid-column-start: 9;
-	}
+  button:active {
+    background-color: rgb(150, 150, 150);
+  }
 
-	// 16 -> 22
-	.cases_bas {
-		grid-row-start: 10;
-	}
-
-	// 23 -> 30
-	.cases_gauche {
-		grid-column-start: 3;
-	}
-
-
-
-	// bloc action
-	#conteneur {
-		display: block;
-		grid-column-start: 4;
-		grid-column-end: 9;
-		grid-row-start: 2;
-		grid-row-end: 10;
-		border: dashed red;
-		color: $gris_fonce;
-	}
-
-	#event {
-		background-color: $framboise;
-		height: 20%;
-	}
-
-	#image {
-		background-color: #fff;
-		height: 50%;
-	}
-
-	.options {
-		width: 40%;
-		align-items: center;
-		justify-content: space-around;
-		margin-top: 2%;
-		margin-bottom: 2%;
-		margin-right: 4.5%;
-		margin-left: 4.5%;
-	}
+  input {
+    width: 55%;
+    height: fit-content;
+    font-size: 60%;
+    font-family: $font_arktio;
+    display: flex;
+    justify-content: center;
+    justify-self: flex-start;
+    align-self: center;
+    grid-column-start: 10;
+    grid-column-end: 13;
+    grid-row-start: 6;
+    color: black;
+    padding: 0.4em;
+    margin-bottom: initial;
+    border-radius: 10px;
+  }
 
 
+  // plateau
+  .plateau {
+    display: grid;
+    width: 100%;
+    height: 100%;
+    border: solid $framboise;
+    border-width: 5px;
+    display: grid;
+    grid-gap: 5px;
+    grid-template-rows: repeat(10, $taille_case);
+    grid-template-columns: repeat(11, $taille_case);
+  }
 
-	// bouton quitter
-	.bouton_choix {
-		width: 80%;
-		justify-content: center;
-		align-items: center;
-		justify-self: center;
-	}
+  // toutes les cases y compris contener + autres div
+  .plateau > div {
+    border: dashed black;
+  }
 
-	#boutonoui {
-		grid-column-start: 2;
-		grid-row-start: 2;
-	}
+  // 1 -> 7
+  .cases_haut {
+    grid-row-start: 1;
+  }
 
-	#boutonnon {
-		grid-column-start: 1;
-		grid-row-start: 2;
-	}
+  // 8 -> 15
+  .cases_droite {
+    grid-column-start: 9;
+  }
 
-	#quit_game {
-		grid-column-start: 1;
-		grid-column-end: 3;
-		height: 100%;
-		width: 70%;
-		font-size: 2vw;
-		justify-content: center;
-		align-items: center;
-		justify-self: left;
-		margin-top: auto;
-	}
+  // 16 -> 22
+  .cases_bas {
+    grid-row-start: 10;
+  }
 
-
-
-	// classement
-	#classement {
-		grid-column-start: 10;
-		grid-column-end: 12;
-		grid-row-start: 7;
-		grid-row-end: 11;
-		display: flex;
-		border: dashed $caramel;
-		color: $gris_fonce;
-		align-items: center;
-		justify-content: space-around;
-		flex-direction: column;
-	}
-
-	#classement_1 {
-		background-color: #fff;
-		width: 80%;
-	}
-	#classement_2 {
-		background-color: rgb(255, 232, 232);
-		width: 80%;
-	}
-	#classement_3 {
-		background-color: rgb(255, 174, 174);
-		width: 80%;
-	}
-	#classement_4 {
-		background-color: rgb(255, 134, 134);
-		width: 80%;
-	}
+  // 23 -> 30
+  .cases_gauche {
+    grid-column-start: 3;
+  }
 
 
+  // bloc action
+  #conteneur {
+    display: block;
+    grid-column-start: 4;
+    grid-column-end: 9;
+    grid-row-start: 2;
+    grid-row-end: 10;
+    border: dashed red;
+    color: $gris_fonce;
+  }
 
-	// inventaire
-	#titre_inventaire {
-		display: grid;
-		grid-column-start: 1;
-		grid-column-end: 3;
-		grid-row-start: 3;
-		justify-content: center;
-		align-items: flex-end;
-		font-size: 3vw;
-		color: $gris_fonce;
-		border: none;
-	}
+  #event {
+    background-color: $framboise;
+    height: 20%;
+  }
 
-	#inventaire {
-		grid-column-start: 1;
-		grid-column-end: 3;
-		grid-row-start: 4;
-		grid-row-end: 11;
-		border: dashed $caramel;
-		width: 100%;
-		align-items: center;
-		justify-content: space-between;
-		display: flex;
-		overflow: auto;
-		flex-wrap: wrap;
-	}
+  #image {
+    background-color: #fff;
+    height: 50%;
+  }
 
-
-
-	// tchat
-	#chat {
-		grid-column-start: 10;
-		grid-column-end: 12;
-		grid-row-start: 1;
-		grid-row-end: 6;
-		width: 100%;
-		display: flex;
-		align-content: center;
-		justify-content: flex-start;
-		flex-direction: column;
-		overflow: auto;
-		overflow-wrap: anywhere;
-		overflow-x: unset;
-	}
-
-	#send_message {
-		width: 80%;
-		font-size: 70%;
-		justify-content: center;
-		justify-self: flex-end;
-		align-self: center;
-		margin: 0.4em;
-		grid-column-start: 11;
-		grid-row-start: 6;
-	}
+  .options {
+    width: 40%;
+    align-items: center;
+    justify-content: space-around;
+    margin-top: 2%;
+    margin-bottom: 2%;
+    margin-right: 4.5%;
+    margin-left: 4.5%;
+  }
 
 
+  // bouton quitter
+  .bouton_choix {
+    width: 80%;
+    justify-content: center;
+    align-items: center;
+    justify-self: center;
+  }
 
-	// grille
-	#x1 {
-		grid-column-start: 3;
-	}
-	#x2 {
-		grid-column-start: 4;
-	}
-	#x3 {
-		grid-column-start: 5;
-	}
-	#x4 {
-		grid-column-start: 6;
-	}
-	#x5 {
-		grid-column-start: 7;
-	}
-	#x6 {
-		grid-column-start: 8;
-	}
-	#x7 {
-		grid-column-start: 9;
-	}
-	#x8 {
-		grid-row-start: 2;
-	}
-	#x9 {
-		grid-row-start: 3;
-	}
-	#x10 {
-		grid-row-start: 4;
-	}
-	#x11 {
-		grid-row-start: 5;
-	}
-	#x12 {
-		grid-row-start: 6;
-	}
-	#x13 {
-		grid-row-start: 7;
-	}
-	#x14 {
-		grid-row-start: 8;
-	}
-	#x15 {
-		grid-row-start: 9;
-	}
-	#x16 {
-		grid-column-start: 9;
-	}
-	#x17 {
-		grid-column-start: 8;
-	}
-	#x18 {
-		grid-column-start: 7;
-	}
-	#x19 {
-		grid-column-start: 6;
-	}
-	#x20 {
-		grid-column-start: 5;
-	}
-	#x21 {
-		grid-column-start: 4;
-	}
-	#x22 {
-		grid-column-start: 3;
-	}
-	#x23 {
-		grid-row-start: 9;
-	}
-	#x24 {
-		grid-row-start: 8;
-	}
-	#x25 {
-		grid-row-start: 7;
-	}
-	#x26 {
-		grid-row-start: 6;
-	}
-	#x27 {
-		grid-row-start: 5;
-	}
-	#x28 {
-		grid-row-start: 4;
-	}
-	#x29 {
-		grid-row-start: 3;
-	}
-	#x30 {
-		grid-row-start: 2;
-	}
+  #boutonoui {
+    grid-column-start: 2;
+    grid-row-start: 2;
+  }
+
+  #boutonnon {
+    grid-column-start: 1;
+    grid-row-start: 2;
+  }
+
+  #quit_game {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    height: 100%;
+    width: 70%;
+    font-size: 2vw;
+    justify-content: center;
+    align-items: center;
+    justify-self: left;
+    margin-top: auto;
+  }
+
+
+  // classement
+  #classement {
+    grid-column-start: 10;
+    grid-column-end: 12;
+    grid-row-start: 7;
+    grid-row-end: 11;
+    display: flex;
+    border: dashed $caramel;
+    color: $gris_fonce;
+    align-items: center;
+    justify-content: space-around;
+    flex-direction: column;
+  }
+
+  #classement_1 {
+    background-color: #fff;
+    width: 80%;
+  }
+
+  #classement_2 {
+    background-color: rgb(255, 232, 232);
+    width: 80%;
+  }
+
+  #classement_3 {
+    background-color: rgb(255, 174, 174);
+    width: 80%;
+  }
+
+  #classement_4 {
+    background-color: rgb(255, 134, 134);
+    width: 80%;
+  }
+
+
+  // inventaire
+  #titre_inventaire {
+    display: grid;
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row-start: 3;
+    justify-content: center;
+    align-items: flex-end;
+    font-size: 3vw;
+    color: $gris_fonce;
+    border: none;
+  }
+
+  #inventaire {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row-start: 4;
+    grid-row-end: 11;
+    border: dashed $caramel;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    display: flex;
+    overflow: auto;
+    flex-wrap: wrap;
+  }
+
+
+  // tchat
+  #chat {
+    grid-column-start: 10;
+    grid-column-end: 12;
+    grid-row-start: 1;
+    grid-row-end: 6;
+    width: 100%;
+    display: flex;
+    align-content: center;
+    justify-content: flex-start;
+    flex-direction: column;
+    overflow: auto;
+    overflow-wrap: anywhere;
+    overflow-x: unset;
+  }
+
+  #send_message {
+    width: 80%;
+    font-size: 70%;
+    justify-content: center;
+    justify-self: flex-end;
+    align-self: center;
+    margin: 0.4em;
+    grid-column-start: 11;
+    grid-row-start: 6;
+  }
+
+
+  // grille
+  #x1 {
+    grid-column-start: 3;
+  }
+
+  #x2 {
+    grid-column-start: 4;
+  }
+
+  #x3 {
+    grid-column-start: 5;
+  }
+
+  #x4 {
+    grid-column-start: 6;
+  }
+
+  #x5 {
+    grid-column-start: 7;
+  }
+
+  #x6 {
+    grid-column-start: 8;
+  }
+
+  #x7 {
+    grid-column-start: 9;
+  }
+
+  #x8 {
+    grid-row-start: 2;
+  }
+
+  #x9 {
+    grid-row-start: 3;
+  }
+
+  #x10 {
+    grid-row-start: 4;
+  }
+
+  #x11 {
+    grid-row-start: 5;
+  }
+
+  #x12 {
+    grid-row-start: 6;
+  }
+
+  #x13 {
+    grid-row-start: 7;
+  }
+
+  #x14 {
+    grid-row-start: 8;
+  }
+
+  #x15 {
+    grid-row-start: 9;
+  }
+
+  #x16 {
+    grid-column-start: 9;
+  }
+
+  #x17 {
+    grid-column-start: 8;
+  }
+
+  #x18 {
+    grid-column-start: 7;
+  }
+
+  #x19 {
+    grid-column-start: 6;
+  }
+
+  #x20 {
+    grid-column-start: 5;
+  }
+
+  #x21 {
+    grid-column-start: 4;
+  }
+
+  #x22 {
+    grid-column-start: 3;
+  }
+
+  #x23 {
+    grid-row-start: 9;
+  }
+
+  #x24 {
+    grid-row-start: 8;
+  }
+
+  #x25 {
+    grid-row-start: 7;
+  }
+
+  #x26 {
+    grid-row-start: 6;
+  }
+
+  #x27 {
+    grid-row-start: 5;
+  }
+
+  #x28 {
+    grid-row-start: 4;
+  }
+
+  #x29 {
+    grid-row-start: 3;
+  }
+
+  #x30 {
+    grid-row-start: 2;
+  }
 </style>
