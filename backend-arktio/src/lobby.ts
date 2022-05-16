@@ -153,27 +153,7 @@ export class Lobby {
                             }
                         };
 
-<<<<<<< HEAD
                         socket.emit("next");
-=======
-                        socket.emit("choix", reponse, (choice: number) => {
-                            console.log(choice);
-                            let next = mycase.next(this.game, this.game.joueur_actuel, step, choice);
-                            end = next.end;
-
-                            if (!end) {
-                                console.log("nextStep");
-                                nextStep();
-                            } else {
-                                if (step > next.step)
-                                    choices.pop();
-                                else
-                                    choices.push(choice);
-
-                                step = next.step;
-                            }
-                        });
->>>>>>> ecc8491c67d1bc64ba8ffdb2bdd1eca59cf74add
                     }
                 });
 
