@@ -55,7 +55,7 @@ export default class CaseOutil implements Case {
     }
 
     next(state: State, playerID: string, step: number, choice: number) : { end: boolean, step: number } {
-        return { end: false, step: 0 };
+        return { end: true, step: -1 };
     }
 
 

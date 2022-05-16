@@ -6,12 +6,14 @@ export default class CaseNews implements Case {
     id_name = "news";
     max_number = 2;
 
+    
+
     play(state: State, playerID: string, choices: number[]) : State {
         return state;
     }
 
     getNews(state: State, playerID: string) {
-        
+
     }
 
     prepare(state: State, playerID: string, step: number) : TypeReponse {
