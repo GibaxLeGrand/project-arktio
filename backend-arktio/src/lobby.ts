@@ -156,6 +156,7 @@ export class Lobby {
                                             choices = [];
                                             end = false;
                                             this.updateGameState();
+                                            socket.emit("end action");
                                         }
                                     }
                                 });
@@ -167,7 +168,7 @@ export class Lobby {
                             let next = mycase.next(this.game, this.game.joueur_actuel, step, choice);
                             end = next.end;
 
-                            if (step > next.step && !end)
+                            if (step > next.step && next.step != -1)
                                 choices.pop();
                             else
                                 choices.push(choice);
@@ -185,7 +186,7 @@ export class Lobby {
                                     end = false;
                                     endturn = true;
                                     this.updateGameState();
-                                    //socket.emit("choix");
+                                    socket.emit("end action");
                                 }
                             }
                         });
