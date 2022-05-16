@@ -197,8 +197,10 @@ export class Lobby {
 
                 socket.on("next turn", () => {
                     if (this.isActualPlayer(player) && endturn) {
+                        console.log("fin de tour");
                         endturn = false;
                         this.nextTurn();
+                        this.updateGameState();
                     }
                 });
             });
