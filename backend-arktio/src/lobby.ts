@@ -192,7 +192,7 @@ export class Lobby {
                         }
 
                         endturn = false;
-                        dice = false;
+                        dice = true;
                         this.io.sockets.in(this.uuid).emit("start turn", this.game);
                     }
                 });
