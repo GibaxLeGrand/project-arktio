@@ -60,7 +60,6 @@ export class Lobby {
             console.log(ordre);
             this.game = State.create(players, ordre);
             
-
             // Au cas où et pour + de lisibilité
             this.game.mois = Mois.SEPTEMBRE;
             this.game.tour = 0;
@@ -77,13 +76,13 @@ export class Lobby {
                         let caseActuelle = this.game.joueurs[this.game.joueur_actuel].caseActuelle;
                         this.game.joueurs[this.game.joueur_actuel].caseActuelle = Math.min(caseActuelle + result, this.game.plateau.length - 1);
 
+                        dice = false;
+                        this.updateGameState();
+
                         callback({
                             titre: `Vous avez fait ${result}`,
                             messages: ["Suivant"],
                         });
-                        dice = false;
-
-                        this.updateGameState();
                     } else {
                         callback({
                             titre: `Ce n'est pas votre tour`,

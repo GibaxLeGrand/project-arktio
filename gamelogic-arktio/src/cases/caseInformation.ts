@@ -6,9 +6,9 @@ export default class CaseInformation implements Case {
     id_name = "info";
     max_number = 3;
 
-    informations: string[] = [];
+    static informations: string[] = [];
 
-    constructor() {
+    static {
         this.informations.push("Campus Vert Strasbourg est l\'Association au sein de l\'Université dédiée à la transition écologique. Si tu souhaites entrer en contact avec des personnes engagées ou participer à tes ateliers concrets n\'hésite pas à frapper à leur porte ! Je veux en savoir plus : https://www.campusvertstrasbourg.org");
         this.informations.push("Envie de t\'engager pour une mission qui a du sens ? Deviens éco-volontaire et prends part à des projets de protection de la biodiversité, d\'agroécologie ou de transition énergétique. En quelques semaines, tu auras l\'opportunité de participer à des actions concrètes au profit du bien commun. Comment devenir éco-volontaire ? Cap sur l\'écovolontariat : https://www.eco-volontaire.com/\nEcovoyageurs : https://www.ecovoyageurs.com/ecovolontariat.html");
         this.informations.push("L\'Université de Strasbourg agit en faveur du développement durable au travers d\'une cellule spécialement dédiée. C'est elle qui fournit les Eco-guides que tu reçois dans ta boîte afin de te sensibiliser aux bonnes pratiques. En savoir plus sur les actions de la Mission développement durable et resposnabilité sociétale de l'Unistra : https://www.unistra.fr/developpement-durable");
@@ -44,7 +44,7 @@ export default class CaseInformation implements Case {
     }
 
     getRandomInformation() : string {
-        return this.informations[Math.floor(Math.random() * this.informations.length)];
+        return CaseInformation.informations[Math.floor(Math.random() * CaseInformation.informations.length)];
     }
 
     prepare(state: State, playerID: string, step: number) : TypeReponse {
