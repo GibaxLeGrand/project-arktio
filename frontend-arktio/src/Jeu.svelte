@@ -3,7 +3,7 @@
     import {router} from "tinro";
     import {get} from "svelte/store";
     import {State, TypeReponse} from "./types/types";
-    import { onMount } from 'svelte';
+    import {onMount} from 'svelte';
 
     // import { loop_guard } from "svelte/internal"; // c'est quoi ça ?
 
@@ -68,10 +68,11 @@
         } else {
             let elem: HTMLElement = document.createElement("span");
             elem.textContent = `C'est le tour de ${$lobbyStore.players.find(x => x.uuid === $stateStore.joueur_actuel).name}...`;
+            container.appendChild(elem);
         }
     }
 
-    $socketStore.on("start turn", (state: State)=> {
+    $socketStore.on("start turn", (state: State) => {
         stateStore.set(state);
         startturn();
     })
@@ -85,6 +86,7 @@
         if ($stateStore.joueur_actuel != $userStore.uuid) {
             let elem: HTMLElement = document.createElement("span");
             elem.textContent = `C'est le tour de ${$lobbyStore.players.find(x => x.uuid === $stateStore.joueur_actuel).name}...`;
+            container.appendChild(elem);
         } else {
             let titre: HTMLElement = document.createElement("div");
             titre.textContent = "Finissez votre tour";
@@ -109,6 +111,7 @@
         if ($stateStore.joueur_actuel != $userStore.uuid) {
             let elem: HTMLElement = document.createElement("span");
             elem.textContent = `C'est le tour de ${$lobbyStore.players.find(x => x.uuid === $stateStore.joueur_actuel).name}...`;
+            container.appendChild(elem);
         } else {
             let titre: HTMLElement = document.createElement("div");
             titre.textContent = possibilites.titre;
@@ -274,7 +277,13 @@
         </div>
 
         <div id="titre_inventaire">Inventaire</div>
-        <div id="inventaire"/>
+        <div id="inventaire">
+            <ul>
+            {#each $stateStore.joueurs[$userStore.uuid].inventaire as _item}
+                <li>{_item.name}</li>
+            {/each}
+            </ul>
+        </div>
         <div id="chat"/>
         <input
                 type="text"
@@ -289,8 +298,8 @@
             Envoyer
         </button>
         <div id="classement">
-            {#each $stateStore.ordre_joueurs as joueurID}
-                <div id={`classement_1`}>{joueurID}</div>
+            {#each $stateStore.ordre_joueurs as joueurID, index}
+                <div id={`classement_${index+1}`}>{$stateStore.joueurs[joueurID]}</div>
             {/each}
         </div>
         <button id="quit_game" on:click={quit_game_handler}
