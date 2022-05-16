@@ -280,7 +280,7 @@
         <div id="inventaire">
             <ul>
             {#each $stateStore.joueurs[$userStore.uuid].inventaire as _item}
-                <li>{_item.name}</li>
+                <li>{_item.nom}</li>
             {/each}
             </ul>
         </div>
@@ -299,7 +299,7 @@
         </button>
         <div id="classement">
             {#each $stateStore.ordre_joueurs as joueurID, index}
-                <div id={`classement_${index+1}`}>{$stateStore.joueurs[joueurID]}</div>
+                <div id={`classement_${index+1}`}>{$lobbyStore.players.find(x=>x.uuid===joueurID).name}</div>
             {/each}
         </div>
         <button id="quit_game" on:click={quit_game_handler}
