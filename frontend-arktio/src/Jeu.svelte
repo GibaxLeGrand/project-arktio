@@ -47,13 +47,11 @@
         stateStore.set(state);
     });
 
-    $socketStore.on("start turn", (state: State)=> {
-        stateStore.set(state);
+    function startturn() {
         let container: HTMLElement = document.getElementById("conteneur");
-
         container.innerHTML = "";
 
-        if (state.joueur_actuel === $userStore.uuid) {
+        if ($stateStore.joueur_actuel === $userStore.uuid) {
 
             let titre: HTMLElement = document.createElement("div");
             titre.textContent = "Lancez votre dé";
@@ -70,6 +68,11 @@
             let elem: HTMLElement = document.createElement("span");
             elem.textContent = `C'est le tour de ${$lobbyStore.players.find(x => x.uuid === state.joueur_actuel).name}...`;
         }
+    }
+
+    $socketStore.on("start turn", (state: State)=> {
+        stateStore.set(state);
+        startturn();
     })
 
     $socketStore.on("end action", () => {
@@ -250,6 +253,8 @@
             _case.appendChild(_pion);
         }
     }
+
+    startturn();
 
 </script>
 
