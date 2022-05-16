@@ -140,14 +140,13 @@ export class Lobby {
                                     let next = mycase.next(that.game, that.game.joueur_actuel, step, choice);
                                     end = next.end;
 
+                                    if (step > next.step && !end)
+                                        choices.pop();
+                                    else
+                                        choices.push(choice);
+
                                     if (!end) {
-                                        if (step > next.step)
-                                            choices.pop();
-                                        else
-                                            choices.push(choice);
-
                                         step = next.step;
-
                                         nextStep();
                                     } else {
                                         if (this.isActualPlayer(player) && end) {
@@ -168,12 +167,12 @@ export class Lobby {
                             let next = mycase.next(this.game, this.game.joueur_actuel, step, choice);
                             end = next.end;
 
-                            if (!end) {
-                                if (step > next.step)
-                                    choices.pop();
-                                else
-                                    choices.push(choice);
+                            if (step > next.step && !end)
+                                choices.pop();
+                            else
+                                choices.push(choice);
 
+                            if (!end) {
                                 step = next.step;
                                 console.log("nextStep");
                                 nextStep();
@@ -186,6 +185,7 @@ export class Lobby {
                                     end = false;
                                     endturn = true;
                                     this.updateGameState();
+                                    //socket.emit("choix");
                                 }
                             }
                         });
