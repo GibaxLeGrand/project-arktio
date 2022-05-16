@@ -191,19 +191,14 @@ export class Lobby {
                             }
                         }
 
-                        this.players.get(p).emit("start turn", this.game);
-
                         endturn = false;
-                        this.updateGameState();
                         dice = false;
+                        this.io.sockets.in(this.uuid).emit("start turn", this.game);
                     }
                 });
             });
 
-            Array.from(this.players.entries())
-            .find((entries) => this.game.joueur_actuel === entries[0].getUUID())[1]
-            .emit("start turn", this.game);
-            this.updateGameState();
+            this.io.sockets.in(this.uuid).emit("start turn", this.game);
         }
     }
 
