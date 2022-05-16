@@ -123,6 +123,7 @@ export class Lobby {
 
                 let choices: number[] = [];
                 let end = false;
+                let endturn = false;
 
                 socket.on("play", () => {
                     if (this.isActualPlayer(player)) {
@@ -140,14 +141,23 @@ export class Lobby {
                                     end = next.end;
 
                                     if (!end) {
-                                        nextStep();
-                                    } else {
                                         if (step > next.step)
                                             choices.pop();
                                         else
                                             choices.push(choice);
 
                                         step = next.step;
+
+                                        nextStep();
+                                    } else {
+                                        if (this.isActualPlayer(player) && end) {
+                                            let mycase: Case = this.getActualPlayerCase();
+                                            this.game = mycase.play(this.game, this.game.joueur_actuel, choices);
+                    
+                                            choices = [];
+                                            end = false;
+                                            this.updateGameState();
+                                        }
                                     }
                                 });
                             }
@@ -159,34 +169,33 @@ export class Lobby {
                             end = next.end;
 
                             if (!end) {
-                                console.log("nextStep");
-                                nextStep();
-                            } else {
                                 if (step > next.step)
                                     choices.pop();
                                 else
                                     choices.push(choice);
 
                                 step = next.step;
+                                console.log("nextStep");
+                                nextStep();
+                            } else {
+                                if (this.isActualPlayer(player) && end) {
+                                    let mycase: Case = this.getActualPlayerCase();
+                                    this.game = mycase.play(this.game, this.game.joueur_actuel, choices);
+            
+                                    choices = [];
+                                    end = false;
+                                    endturn = true;
+                                    this.updateGameState();
+                                }
                             }
                         });
                     }
                 });
 
                 socket.on("next turn", () => {
-                    if (this.isActualPlayer(player)) {
+                    if (this.isActualPlayer(player) && endturn) {
+                        endturn = false;
                         this.nextTurn();
-                    }
-                });
-
-                socket.on("action", () => {
-                    if (this.isActualPlayer(player) && end) {
-                        let mycase: Case = this.getActualPlayerCase();
-                        this.game = mycase.play(this.game, this.game.joueur_actuel, choices);
-
-                        choices = [];
-                        end = false;
-                        this.updateGameState();
                     }
                 });
             });
