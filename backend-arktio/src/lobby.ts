@@ -183,12 +183,15 @@ export class Lobby {
 
                             if (this.game.mois >= 10) {
                                 this.io.sockets.in(this.uuid).emit("end");
+                                return;
                             } else {
                                 for (let i = 0; i < players.length; i++) {
                                     this.game.joueurs[players[i][0].getUUID()].caseActuelle = 0;
                                 }
                             }
                         }
+
+                        this.players.get(p).emit("start turn", this.game);
 
                         endturn = false;
                         this.updateGameState();
@@ -197,6 +200,9 @@ export class Lobby {
                 });
             });
 
+            Array.from(this.players.entries())
+            .find((entries) => this.game.joueur_actuel === entries[0].getUUID())[1]
+            .emit("start turn", this.game);
             this.updateGameState();
         }
     }
