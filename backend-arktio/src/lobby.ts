@@ -330,10 +330,7 @@ export class Lobby {
             }
         }
 
-        if (this.state !== LobbyState.Lobby)
-            this.players.set(player, null);
-        else
-            this.players.delete(player);
+        this.players.delete(player);
 
         this.chat.update();
         socket.leave(this.uuid);
