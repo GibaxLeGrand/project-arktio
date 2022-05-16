@@ -45,10 +45,32 @@
         affiche_message(message);
     }).on("update gamestate", (state: State) => {
         stateStore.set(state);
-        $stateStore.plateau.forEach((case_, index) => {
-            console.log(case_.name, index);
-        });
     });
+
+    $socketStore.on("start turn", (state: State)=> {
+        stateStore.set(state);
+        let container: HTMLElement = document.getElementById("conteneur");
+
+        container.innerHTML = "";
+
+        if (state.joueur_actuel === $userStore.uuid) {
+
+            let titre: HTMLElement = document.createElement("div");
+            titre.textContent = "Lancez votre dé";
+            container.appendChild(titre);
+
+            let _choix: HTMLElement = document.createElement("button");
+            _choix.classList.add(`option0`);
+            _choix.textContent = "Lancer le dé";
+            _choix.onclick = () => {
+                rollDice();
+            };
+            container.appendChild(_choix);
+        } else {
+            let elem: HTMLElement = document.createElement("span");
+            elem.textContent = `C'est le tour de ${$lobbyStore.players.find(x => x.uuid === state.joueur_actuel).name}...`;
+        }
+    })
 
     $socketStore.on("end action", () => {
         let container: HTMLElement = document.getElementById("conteneur");
@@ -58,7 +80,7 @@
 
         if ($stateStore.joueur_actuel != local_uuid) {
             let elem: HTMLElement = document.createElement("span");
-            elem.textContent = `C'est le tour de ${$lobbyStore.players.find(x => $stateStore.joueur_actuel).name}...`;
+            elem.textContent = `C'est le tour de ${$lobbyStore.players.find(x => x.uuid === $stateStore.joueur_actuel).name}...`;
         } else {
             let titre: HTMLElement = document.createElement("div");
             titre.textContent = "Finissez votre tour";
@@ -82,7 +104,7 @@
 
         if ($stateStore.joueur_actuel != local_uuid) {
             let elem: HTMLElement = document.createElement("span");
-            elem.textContent = `C'est le tour de ${$lobbyStore.players.find(x => $stateStore.joueur_actuel).name}...`;
+            elem.textContent = `C'est le tour de ${$lobbyStore.players.find(x => x.uuid === $stateStore.joueur_actuel).name}...`;
         } else {
             let titre: HTMLElement = document.createElement("div");
             titre.textContent = possibilites.titre;
@@ -100,21 +122,23 @@
         }
     });
 
-    $socketStore.emit("dice", (resultat: TypeReponse) => {
-        let container: HTMLElement = document.getElementById("conteneur");
-        container.innerHTML = "";
+    function rollDice() {
+        $socketStore.emit("dice", (resultat: TypeReponse) => {
+            let container: HTMLElement = document.getElementById("conteneur");
+            container.innerHTML = "";
 
-        let resultat_affiche: HTMLElement = document.createElement("div");
-        resultat_affiche.textContent = resultat.titre;
+            let resultat_affiche: HTMLElement = document.createElement("div");
+            resultat_affiche.textContent = resultat.titre;
 
-        let _choix: HTMLElement = document.createElement("button");
-        _choix.classList.add(`option0`);
-        _choix.textContent = resultat.messages[0];
-        _choix.onclick = (() => $socketStore.emit("play"));
-        container.appendChild(_choix);
+            let _choix: HTMLElement = document.createElement("button");
+            _choix.classList.add(`option0`);
+            _choix.textContent = resultat.messages[0];
+            _choix.onclick = (() => $socketStore.emit("play"));
+            container.appendChild(_choix);
 
-        container.appendChild(resultat_affiche);
-    });
+            container.appendChild(resultat_affiche);
+        });
+    }
 
     /**
      * affiche le message dans le chat
