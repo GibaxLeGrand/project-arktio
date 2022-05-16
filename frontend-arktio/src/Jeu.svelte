@@ -1,10 +1,8 @@
 <script lang="ts">
     import {lobbyStore, socketStore, stateStore, userStore} from "./stores/storeLibrary";
     import {router} from "tinro";
-    import * as ioClient from "../../backend-arktio/node_modules/socket.io-client";
     import {get} from "svelte/store";
     import {State, TypeReponse} from "./types/types";
-    import {add_flush_callback, element} from "svelte/internal";
 
     // import { loop_guard } from "svelte/internal"; // c'est quoi ça ?
 
@@ -23,7 +21,6 @@
     const NB_CASES = 30;
 
     let possibilites: { titre: string, messages: string[] };
-    let globalcallback: (number) => void;
 
     let local_uuid: string = $userStore.uuid;
 
