@@ -180,7 +180,8 @@ export class Lobby {
 
                         if (endMonth) {
                             this.game.mois += 1;
-
+                            this.game.joueur_actuel = this.game.ordre_joueurs[0];
+                            
                             if (this.game.mois >= 10) {
                                 this.io.sockets.in(this.uuid).emit("end");
                                 return;
@@ -192,7 +193,7 @@ export class Lobby {
                         }
 
                         endturn = false;
-                        dice = false;
+                        dice = true;
                         this.io.sockets.in(this.uuid).emit("start turn", this.game);
                     }
                 });

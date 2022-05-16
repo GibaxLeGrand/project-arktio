@@ -11,10 +11,10 @@ export default class CaseProbleme implements Case {
     }
 
     prepare(state: State, playerID: string, step: number) : TypeReponse {
-        return { titre: "oui", messages: [] };
+        return { titre: "oui", messages: [""] };
     }
 
     next(state: State, playerID: string, step: number, choice: number) : { end: boolean, step: number } {
-        return { end: false, step: 0 };
+        return { end: true, step: -1 };
     }
 }
