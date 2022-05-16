@@ -210,7 +210,7 @@
         {#each $stateStore.plateau as _case, index}
             <div id={"x" + (index+1)}
                  class={pos_case($stateStore.plateau.indexOf(_case))}
-                 style={`background-size: contain; background-repeat: no-repeat; background-position:center; background-image: url(./Cases/case_${_case.id_name}.PNG);`}>
+                 style={`background-size: contain; background-repeat: no-repeat; background-color: #ffffff; background-position:center; background-image: url(./Cases/case_${_case.id_name}.PNG);`}>
 
             </div>
         {/each}
@@ -267,7 +267,9 @@
 
 
   main {
-    background-color: $turquoise_clair;
+    display: block;
+    width: 100%;
+    background-color: $turquoise;
     font-size: x-large;
     color: #ffffff;
   }
@@ -322,8 +324,8 @@
     display: grid;
     width: 100%;
     height: 100%;
-    border: solid $framboise;
-    border-width: 5px;
+    //border: solid $framboise;
+    //border-width: 5px;
     display: grid;
     grid-gap: 5px;
     grid-template-rows: repeat(10, $taille_case);
@@ -331,10 +333,11 @@
   }
 
   // toutes les cases y compris contener + autres div
+  /*
   .plateau > div {
     border: dashed black;
   }
-
+*/
   // 1 -> 7
   .cases_haut {
     grid-row-start: 1;
@@ -496,6 +499,7 @@
     overflow: auto;
     overflow-wrap: anywhere;
     overflow-x: unset;
+    height: 25em;
   }
 
   #send_message {
