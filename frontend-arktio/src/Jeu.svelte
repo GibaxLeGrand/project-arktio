@@ -68,7 +68,7 @@
             _choix.classList.add(`option0`);
             _choix.textContent = "Fin de tour";
             _choix.onclick = () => {
-                $socketStore.emit("next turn");
+                $socketStore.emit("end turn");
             };
             container.appendChild(_choix);
         }
