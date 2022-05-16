@@ -40,7 +40,7 @@ export class Lobby {
     public launchTheGame(): void {
         if (this.state === LobbyState.Lobby) {
             let players: { [key: string]: Player } = {};
-            let ordre = [];
+            let ordre: string[] = [];
             let buffer: LobbyPlayer[] = Array.from(this.players.keys());
             for (let i = 0; i < buffer.length; i++) {
                 ordre.push(buffer[i].getUUID());
@@ -56,8 +56,10 @@ export class Lobby {
                     avertissement: 0
                 }
             }
-
+            
+            console.log(ordre);
             this.game = State.create(players, ordre);
+            
 
             // Au cas où et pour + de lisibilité
             this.game.mois = Mois.SEPTEMBRE;
@@ -67,37 +69,6 @@ export class Lobby {
             this.players.forEach((socket, player) => {
                 let dice = true;
                 if (socket == null) return;
-
-                socket.on("end turn", () => {
-                    if (this.isActualPlayer(player)) {
-                        let players = Array.from(this.players.entries());
-                        let p = player;
-                        let endMonth = true;
-                        for (let i = 0; i < players.length; i++) {
-                            p = this.nextTurn()!;
-                            if (this.game.joueurs[p.getUUID()].caseActuelle < this.game.plateau.length - 1
-                                && this.players.get(p) != null) {
-                                endMonth = false;
-                                break;
-                            }
-                        }
-
-                        if (endMonth) {
-                            this.game.mois += 1;
-
-                            if (this.game.mois >= 10) {
-                                this.io.sockets.in(this.uuid).emit("end");
-                            } else {
-                                for (let i = 0; i < players.length; i++) {
-                                    this.game.joueurs[players[i][0].getUUID()].caseActuelle = 0;
-                                }
-                            }
-                        }
-
-                        this.updateGameState();
-                        dice = false;
-                    }
-                });
 
                 socket.on("dice", (callback: (result: TypeReponse) => void) => {
                     if (this.isActualPlayer(player) && dice) {
@@ -123,6 +94,7 @@ export class Lobby {
 
                 let choices: number[] = [];
                 let end = false;
+                let endturn = false;
 
                 socket.on("play", () => {
                     if (this.isActualPlayer(player)) {
@@ -139,43 +111,95 @@ export class Lobby {
                                     let next = mycase.next(that.game, that.game.joueur_actuel, step, choice);
                                     end = next.end;
 
+                                    if (step > next.step && !end)
+                                        choices.pop();
+                                    else
+                                        choices.push(choice);
+
                                     if (!end) {
+                                        step = next.step;
                                         nextStep();
                                     } else {
-                                        if (step > next.step)
-                                            choices.pop();
-                                        else
-                                            choices.push(choice);
-
-                                        step = next.step;
+                                        if (this.isActualPlayer(player) && end) {
+                                            let mycase: Case = this.getActualPlayerCase();
+                                            this.game = mycase.play(this.game, this.game.joueur_actuel, choices);
+                    
+                                            choices = [];
+                                            end = false;
+                                            this.updateGameState();
+                                            socket.emit("end action");
+                                        }
                                     }
                                 });
                             }
                         };
 
-                        socket.emit("next");
+                        socket.emit("choix", reponse, (choice: number) => {
+                            console.log(choice);
+                            let next = mycase.next(this.game, this.game.joueur_actuel, step, choice);
+                            end = next.end;
+
+                            if (step > next.step && next.step != -1)
+                                choices.pop();
+                            else
+                                choices.push(choice);
+
+                            if (!end) {
+                                step = next.step;
+                                console.log("nextStep");
+                                nextStep();
+                            } else {
+                                if (this.isActualPlayer(player) && end) {
+                                    let mycase: Case = this.getActualPlayerCase();
+                                    this.game = mycase.play(this.game, this.game.joueur_actuel, choices);
+            
+                                    choices = [];
+                                    end = false;
+                                    endturn = true;
+                                    this.updateGameState();
+                                    socket.emit("end action");
+                                }
+                            }
+                        });
                     }
                 });
 
-                socket.on("next turn", () => {
-                    if (this.isActualPlayer(player)) {
-                        this.nextTurn();
-                    }
-                });
+                socket.on("end turn", () => {
+                    if (this.isActualPlayer(player) && endturn) {
+                        let players = Array.from(this.players.entries());
+                        let p = player;
+                        let endMonth = true;
+                        for (let i = 0; i < players.length; i++) {
+                            p = this.nextTurn()!;
+                            if (this.game.joueurs[p.getUUID()].caseActuelle < this.game.plateau.length - 1
+                                && this.players.get(p) != null) {
+                                endMonth = false;
+                                break;
+                            }
+                        }
 
-                socket.on("action", () => {
-                    if (this.isActualPlayer(player) && end) {
-                        let mycase: Case = this.getActualPlayerCase();
-                        this.game = mycase.play(this.game, this.game.joueur_actuel, choices);
+                        if (endMonth) {
+                            this.game.mois += 1;
+                            this.game.joueur_actuel = this.game.ordre_joueurs[0];
+                            
+                            if (this.game.mois >= 10) {
+                                this.io.sockets.in(this.uuid).emit("end");
+                                return;
+                            } else {
+                                for (let i = 0; i < players.length; i++) {
+                                    this.game.joueurs[players[i][0].getUUID()].caseActuelle = 0;
+                                }
+                            }
+                        }
 
-                        choices = [];
-                        end = false;
-                        this.updateGameState();
+                        endturn = false;
+                        dice = true;
+                        this.io.sockets.in(this.uuid).emit("start turn", this.game);
                     }
                 });
             });
 
-            this.updateGameState();
+            this.io.sockets.in(this.uuid).emit("start turn", this.game);
         }
     }
 
@@ -314,10 +338,7 @@ export class Lobby {
             }
         }
 
-        if (this.state !== LobbyState.Lobby)
-            this.players.set(player, null);
-        else
-            this.players.delete(player);
+        this.players.delete(player);
 
         this.chat.update();
         socket.leave(this.uuid);

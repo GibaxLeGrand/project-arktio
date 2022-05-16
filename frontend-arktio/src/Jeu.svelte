@@ -1,10 +1,9 @@
 <script lang="ts">
     import {lobbyStore, socketStore, stateStore, userStore} from "./stores/storeLibrary";
     import {router} from "tinro";
-    import * as ioClient from "../../backend-arktio/node_modules/socket.io-client";
     import {get} from "svelte/store";
     import {State, TypeReponse} from "./types/types";
-    import {add_flush_callback, element} from "svelte/internal";
+    import {onMount} from 'svelte';
 
     // import { loop_guard } from "svelte/internal"; // c'est quoi ça ?
 
@@ -23,7 +22,6 @@
     const NB_CASES = 30;
 
     let possibilites: { titre: string, messages: string[] };
-    let globalcallback: (number) => void;
 
     let local_uuid: string = $userStore.uuid;
 
@@ -48,10 +46,61 @@
         affiche_message(message);
     }).on("update gamestate", (state: State) => {
         stateStore.set(state);
-        $stateStore.plateau.forEach((case_, index) => {
-            console.log(case_.name, index);
-        });
     });
+
+    export function startturn() {
+        let container: HTMLElement = document.getElementById("conteneur");
+        container.innerHTML = "";
+
+        if ($stateStore.joueur_actuel === $userStore.uuid) {
+
+            let titre: HTMLElement = document.createElement("div");
+            titre.textContent = "Lancez votre dé";
+            container.appendChild(titre);
+
+            let _choix: HTMLElement = document.createElement("button");
+            _choix.classList.add(`option0`);
+            _choix.textContent = "Lancer le dé";
+            _choix.onclick = () => {
+                rollDice();
+            };
+            container.appendChild(_choix);
+        } else {
+            let elem: HTMLElement = document.createElement("span");
+            elem.textContent = `C'est le tour de ${$lobbyStore.players.find(x => x.uuid === $stateStore.joueur_actuel).name}...`;
+            container.appendChild(elem);
+        }
+    }
+
+    $socketStore.on("start turn", (state: State) => {
+        stateStore.set(state);
+        startturn();
+    })
+
+    $socketStore.on("end action", () => {
+        let container: HTMLElement = document.getElementById("conteneur");
+
+        container.innerHTML = "";
+
+
+        if ($stateStore.joueur_actuel != $userStore.uuid) {
+            let elem: HTMLElement = document.createElement("span");
+            elem.textContent = `C'est le tour de ${$lobbyStore.players.find(x => x.uuid === $stateStore.joueur_actuel).name}...`;
+            container.appendChild(elem);
+        } else {
+            let titre: HTMLElement = document.createElement("div");
+            titre.textContent = "Finissez votre tour";
+            container.appendChild(titre);
+
+            let _choix: HTMLElement = document.createElement("button");
+            _choix.classList.add(`option0`);
+            _choix.textContent = "Fin de tour";
+            _choix.onclick = () => {
+                $socketStore.emit("end turn");
+            };
+            container.appendChild(_choix);
+        }
+    })
 
     $socketStore.on("choix", (possibilites: TypeReponse, callback: (number) => void) => {
         let container: HTMLElement = document.getElementById("conteneur");
@@ -59,9 +108,10 @@
         container.innerHTML = "";
 
 
-        if ($stateStore.joueur_actuel != local_uuid) {
+        if ($stateStore.joueur_actuel != $userStore.uuid) {
             let elem: HTMLElement = document.createElement("span");
-            elem.textContent = `C'est le tour de ${$lobbyStore.players.find(x => $stateStore.joueur_actuel).name}...`;
+            elem.textContent = `C'est le tour de ${$lobbyStore.players.find(x => x.uuid === $stateStore.joueur_actuel).name}...`;
+            container.appendChild(elem);
         } else {
             let titre: HTMLElement = document.createElement("div");
             titre.textContent = possibilites.titre;
@@ -79,21 +129,23 @@
         }
     });
 
-    $socketStore.emit("dice", (resultat: TypeReponse) => {
-        let container: HTMLElement = document.getElementById("conteneur");
-        container.innerHTML = "";
+    function rollDice() {
+        $socketStore.emit("dice", (resultat: TypeReponse) => {
+            let container: HTMLElement = document.getElementById("conteneur");
+            container.innerHTML = "";
 
-        let resultat_affiche: HTMLElement = document.createElement("div");
-        resultat_affiche.textContent = resultat.titre;
+            let resultat_affiche: HTMLElement = document.createElement("div");
+            resultat_affiche.textContent = resultat.titre;
 
-        let _choix: HTMLElement = document.createElement("button");
-        _choix.classList.add(`option0`);
-        _choix.textContent = resultat.messages[0];
-        _choix.onclick = (() => $socketStore.emit("play"));
-        container.appendChild(_choix);
+            let _choix: HTMLElement = document.createElement("button");
+            _choix.classList.add(`option0`);
+            _choix.textContent = resultat.messages[0];
+            _choix.onclick = (() => $socketStore.emit("play"));
+            container.appendChild(_choix);
 
-        container.appendChild(resultat_affiche);
-    });
+            container.appendChild(resultat_affiche);
+        });
+    }
 
     /**
      * affiche le message dans le chat
@@ -206,6 +258,9 @@
         }
     }
 
+    onMount(() => {
+        startturn();
+    })
 </script>
 
 <main>
@@ -213,7 +268,7 @@
         {#each $stateStore.plateau as _case, index}
             <div id={"x" + (index+1)}
                  class={pos_case($stateStore.plateau.indexOf(_case))}
-                 style={`background-size: contain; background-repeat: no-repeat; background-position:center; background-image: url(./Cases/case_${_case.id_name}.PNG);`}>
+                 style={`background-size: contain; background-repeat: no-repeat; background-color: #ffffff; background-position:center; background-image: url(./Cases/case_${_case.id_name}.PNG);`}>
 
             </div>
         {/each}
@@ -222,7 +277,13 @@
         </div>
 
         <div id="titre_inventaire">Inventaire</div>
-        <div id="inventaire"/>
+        <div id="inventaire">
+            <ul>
+            {#each $stateStore.joueurs[$userStore.uuid].inventaire as _item}
+                <li>{_item.nom}</li>
+            {/each}
+            </ul>
+        </div>
         <div id="chat"/>
         <input
                 type="text"
@@ -237,8 +298,8 @@
             Envoyer
         </button>
         <div id="classement">
-            {#each $stateStore.ordre_joueurs as joueurID}
-                <div id="classement_1">{$lobbyStore.players.find(x => joueurID).name}</div>
+            {#each $stateStore.ordre_joueurs as joueurID, index}
+                <div id={`classement_${index+1}`}>{$lobbyStore.players.find(x=>x.uuid===joueurID).name}</div>
             {/each}
         </div>
         <button id="quit_game" on:click={quit_game_handler}
@@ -270,7 +331,9 @@
 
 
   main {
-    background-color: $turquoise_clair;
+    display: block;
+    width: 100%;
+    background-color: $turquoise;
     font-size: x-large;
     color: #ffffff;
   }
@@ -325,8 +388,8 @@
     display: grid;
     width: 100%;
     height: 100%;
-    border: solid $framboise;
-    border-width: 5px;
+    //border: solid $framboise;
+    //border-width: 5px;
     display: grid;
     grid-gap: 5px;
     grid-template-rows: repeat(10, $taille_case);
@@ -334,10 +397,11 @@
   }
 
   // toutes les cases y compris contener + autres div
+  /*
   .plateau > div {
     border: dashed black;
   }
-
+*/
   // 1 -> 7
   .cases_haut {
     grid-row-start: 1;
@@ -499,6 +563,7 @@
     overflow: auto;
     overflow-wrap: anywhere;
     overflow-x: unset;
+    height: 25em;
   }
 
   #send_message {

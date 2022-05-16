@@ -4,11 +4,12 @@
   "description": "Game Logic wrapper for Arktio",
   "main": "index.js",
   "scripts": {
-    "build": "tsc --build"
+    "build": "rimraf tsconfig.tsbuildinfo dist && tsc --build"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "rimraf": "^3.0.2",
     "typescript": "^4.5.2"
   }
 }

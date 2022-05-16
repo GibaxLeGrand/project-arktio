@@ -3,15 +3,14 @@ import { LobbyPlayer } from './player';
 import { Lobby, LobbyJSON } from './lobby';
 import * as http from 'http';
 
-
-
 export class LobbyManager {
     private static io: Server;
     private static lobbies: Map<string, Lobby>;
     private static port: string | number;
 
     public static init(server: http.Server, port: string | number) {
-        LobbyManager.io = new Server(server);
+        console.log(server.address());
+        LobbyManager.io = new Server(server, {path: '/socket.io'});
         LobbyManager.lobbies = new Map();
         LobbyManager.port = port;
         LobbyManager.setup();
@@ -29,7 +28,7 @@ export class LobbyManager {
         return false;
     }
 
-    // Genrate 6 digit lobby id
+    // Generate 6 digit lobby id
     private static generateLobbyId(): string {
         let id = '';
         do {
