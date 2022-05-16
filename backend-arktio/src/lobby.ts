@@ -56,8 +56,10 @@ export class Lobby {
                     avertissement: 0
                 }
             }
-
+            
+            console.log(ordre);
             this.game = State.create(players, ordre);
+            
 
             // Au cas où et pour + de lisibilité
             this.game.mois = Mois.SEPTEMBRE;
