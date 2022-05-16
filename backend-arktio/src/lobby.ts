@@ -191,7 +191,7 @@ export class Lobby {
                             }
                         }
 
-                        this.players.get(p).emit("start turn", p.getUUID(), this.state);
+                        this.players.get(p).emit("start turn", this.game);
 
                         endturn = false;
                         this.updateGameState();
