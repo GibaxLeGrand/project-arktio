@@ -82,7 +82,7 @@
         container.innerHTML = "";
 
 
-        if ($stateStore.joueur_actuel != local_uuid) {
+        if ($stateStore.joueur_actuel != $userStore.uuid) {
             let elem: HTMLElement = document.createElement("span");
             elem.textContent = `C'est le tour de ${$lobbyStore.players.find(x => x.uuid === $stateStore.joueur_actuel).name}...`;
         } else {
@@ -106,7 +106,7 @@
         container.innerHTML = "";
 
 
-        if ($stateStore.joueur_actuel != local_uuid) {
+        if ($stateStore.joueur_actuel != $userStore.uuid) {
             let elem: HTMLElement = document.createElement("span");
             elem.textContent = `C'est le tour de ${$lobbyStore.players.find(x => x.uuid === $stateStore.joueur_actuel).name}...`;
         } else {
