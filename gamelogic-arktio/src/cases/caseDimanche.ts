@@ -6,6 +6,10 @@ export default class CaseDimanche implements Case {
     id_name = "dimanche";
     max_number = 4;
 
+    getChoix(state: State, playerID: string) {
+
+    }
+
     play(state: State, playerID: string, choices: number[]) : State {
         return state;
     }
@@ -15,6 +19,6 @@ export default class CaseDimanche implements Case {
     }
 
     next(state: State, playerID: string, step: number, choice: number) : { end: boolean, step: number } {
-        return { end: false, step: 0 };
+        return { end: true, step: -1 };
     }
 }
