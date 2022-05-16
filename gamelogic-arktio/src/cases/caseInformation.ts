@@ -40,6 +40,7 @@ export default class CaseInformation implements Case {
     }
 
     play(state: State, playerID: string, choices: number[]) : State {
+        state.joueurs[playerID].pointTerre += 10;
         return state;
     }
 
@@ -48,7 +49,7 @@ export default class CaseInformation implements Case {
     }
 
     prepare(state: State, playerID: string, step: number) : TypeReponse {
-        return { titre: "Le savais-tu ?", messages: [ this.getRandomInformation() ] };
+        return { titre: "Le savais-tu ? (+10 points Terre)", messages: [ this.getRandomInformation() ] };
     }
 
     next(state: State, playerID: string, step: number, choice: number) : { end: boolean, step: number } {
