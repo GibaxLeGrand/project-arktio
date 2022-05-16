@@ -15,7 +15,7 @@ export default class CaseDimanche implements Case {
     }
 
     prepare(state: State, playerID: string, step: number) : TypeReponse {
-        return { titre: "oui", messages: [] };
+        return { titre: "oui", messages: ["bonjour"] };
     }
 
     next(state: State, playerID: string, step: number, choice: number) : { end: boolean, step: number } {
