@@ -34,11 +34,13 @@
         if ((await data.json()).authenticated) {
             state = RULES.CONNECTED;
             if (get(socketStore) == null) {
+                console.log("socketStore is null");
                 socketStore.set(io.connect());
                 const pinfos = await getPlayerInfos();
                 get(socketStore).on("connect", () => get(socketStore).emit("player information", pinfos.userUUID, (({player}) => userStore.set(player))));
             }
         } else {
+            socketStore.set(null);
             state = RULES.GUEST;
         }
     }
