@@ -153,9 +153,6 @@ export class Lobby {
                             }
                         };
 
-<<<<<<< HEAD
-                        socket.emit("next");
-=======
                         socket.emit("choix", reponse, (choice: number) => {
                             console.log(choice);
                             let next = mycase.next(this.game, this.game.joueur_actuel, step, choice);
@@ -173,7 +170,6 @@ export class Lobby {
                                 step = next.step;
                             }
                         });
->>>>>>> ecc8491c67d1bc64ba8ffdb2bdd1eca59cf74add
                     }
                 });
 
