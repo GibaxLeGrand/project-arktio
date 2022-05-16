@@ -37,6 +37,7 @@
                 get(socketStore).on("connect", () => get(socketStore).emit("player information", pinfos.userUUID, (({player}) => userStore.set(player))));
             }
         } else {
+            socketStore.set(null);
             state = RULES.GUEST;
         }
     }
