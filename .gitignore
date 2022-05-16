@@ -6,3 +6,4 @@ gamelogic-arktio/dist
 package-lock.json
 yarn-lock.json
 node_modules
+/gamelogic-arktio/dist/
