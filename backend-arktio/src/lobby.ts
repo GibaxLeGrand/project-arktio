@@ -70,37 +70,6 @@ export class Lobby {
                 let dice = true;
                 if (socket == null) return;
 
-                socket.on("end turn", () => {
-                    if (this.isActualPlayer(player)) {
-                        let players = Array.from(this.players.entries());
-                        let p = player;
-                        let endMonth = true;
-                        for (let i = 0; i < players.length; i++) {
-                            p = this.nextTurn()!;
-                            if (this.game.joueurs[p.getUUID()].caseActuelle < this.game.plateau.length - 1
-                                && this.players.get(p) != null) {
-                                endMonth = false;
-                                break;
-                            }
-                        }
-
-                        if (endMonth) {
-                            this.game.mois += 1;
-
-                            if (this.game.mois >= 10) {
-                                this.io.sockets.in(this.uuid).emit("end");
-                            } else {
-                                for (let i = 0; i < players.length; i++) {
-                                    this.game.joueurs[players[i][0].getUUID()].caseActuelle = 0;
-                                }
-                            }
-                        }
-
-                        this.updateGameState();
-                        dice = false;
-                    }
-                });
-
                 socket.on("dice", (callback: (result: TypeReponse) => void) => {
                     if (this.isActualPlayer(player) && dice) {
                         let result = 1 + Math.floor(Math.random() * (6 - 1));
@@ -195,12 +164,35 @@ export class Lobby {
                     }
                 });
 
-                socket.on("next turn", () => {
+                socket.on("end turn", () => {
                     if (this.isActualPlayer(player) && endturn) {
-                        console.log("fin de tour");
+                        let players = Array.from(this.players.entries());
+                        let p = player;
+                        let endMonth = true;
+                        for (let i = 0; i < players.length; i++) {
+                            p = this.nextTurn()!;
+                            if (this.game.joueurs[p.getUUID()].caseActuelle < this.game.plateau.length - 1
+                                && this.players.get(p) != null) {
+                                endMonth = false;
+                                break;
+                            }
+                        }
+
+                        if (endMonth) {
+                            this.game.mois += 1;
+
+                            if (this.game.mois >= 10) {
+                                this.io.sockets.in(this.uuid).emit("end");
+                            } else {
+                                for (let i = 0; i < players.length; i++) {
+                                    this.game.joueurs[players[i][0].getUUID()].caseActuelle = 0;
+                                }
+                            }
+                        }
+
                         endturn = false;
-                        this.nextTurn();
                         this.updateGameState();
+                        dice = false;
                     }
                 });
             });
