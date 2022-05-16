@@ -3,6 +3,7 @@
     import {router} from "tinro";
     import {get} from "svelte/store";
     import {State, TypeReponse} from "./types/types";
+    import { onMount } from 'svelte';
 
     // import { loop_guard } from "svelte/internal"; // c'est quoi ça ?
 
@@ -47,7 +48,7 @@
         stateStore.set(state);
     });
 
-    function startturn() {
+    export function startturn() {
         let container: HTMLElement = document.getElementById("conteneur");
         container.innerHTML = "";
 
@@ -66,7 +67,7 @@
             container.appendChild(_choix);
         } else {
             let elem: HTMLElement = document.createElement("span");
-            elem.textContent = `C'est le tour de ${$lobbyStore.players.find(x => x.uuid === state.joueur_actuel).name}...`;
+            elem.textContent = `C'est le tour de ${$lobbyStore.players.find(x => x.uuid === $stateStore.joueur_actuel).name}...`;
         }
     }
 
@@ -254,8 +255,9 @@
         }
     }
 
-    startturn();
-
+    onMount(() => {
+        startturn();
+    })
 </script>
 
 <main>
