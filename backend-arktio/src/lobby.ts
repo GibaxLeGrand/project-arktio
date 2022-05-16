@@ -191,7 +191,6 @@ export class Lobby {
                             }
                         }
 
-                        this.updateGameState();
                         endturn = false;
                         dice = false;
                         this.io.sockets.in(this.uuid).emit("start turn", this.game);
@@ -199,7 +198,6 @@ export class Lobby {
                 });
             });
 
-            this.updateGameState();
             this.io.sockets.in(this.uuid).emit("start turn", this.game);
         }
     }
