@@ -2,14 +2,15 @@ import { Users } from "../models/Users";
 import { getUser } from "./get_user";
 
 // Fonction qui modifie l'email d'un utilisateur et retourne l'utilisateur modifié
-export async function setEmail(id: number, new_email: string): Promise<Users> {
+export async function setEmail(uuid: string, new_email: string): Promise<Users> {
     // On recherche l'utilisateur par son id et on modifie son email
     await Users.query()
         .patch({user_email: new_email})
-        .where("user_id", "=", id);
+        .where("user_uuid", "=", uuid)
+        .throwIfNotFound();
 
     // On retourne l'utilisateur modifié
-    const user: Promise<Users> = getUser(id);
+    const user: Promise<Users> = getUser(uuid);
 
     return user;
 }

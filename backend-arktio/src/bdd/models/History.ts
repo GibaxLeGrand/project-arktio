@@ -1,30 +1,30 @@
 import { Model } from "objection";
 
-export class Party extends Model {
+// Création d'une classe History
+export class History extends Model {
     // Attibuts à définir pour pouvoir utiliser les valeurs.
-    party_id!: number;
-    user_id!: number;
+    history_id!: number;
+    history_start!: Date;
+    history_end!: Date;
 
     // Propiété obligatoire à ajouter qui permet de retrouver la table
     static override get tableName() {
-        return "Party";
+        return "History";
     }
     // Spécifie la colone de la clé primaire de la table
     static override get idColumn() {
-        return "party_id";
+        return "history_id";
     }
-    
-    // D'autres options peuvent être définis, optionnel mais utile
+
+    // D'autres options oeuvent être définis, optionnel mais utile
     // pour essentiellement la validation de la requête demandée.
-    
+
     // Méthode permettant de vérifier les données avant d'insèrer dans la BDD.
-    static get jsonSchema() {
+    static override get jsonSchema() {
         return {
             type: "object",
-            required: ["party_id", "user_id"],
             properties: {
-                party_id: { type: 'number' },
-                user_id: { type: 'number' },
+                history_id: { type: 'number' },
             }
         }
     }

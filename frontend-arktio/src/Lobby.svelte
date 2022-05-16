@@ -1,140 +1,136 @@
 <script lang="ts">
-	import {Route, router} from "tinro";
-	let name_lobby: string = "XXXX";
+    import Tailwindcss from "./Tailwindcss.svelte";
+    import {router} from "tinro";
+    import {lobbyStore, socketStore, stateStore, userStore} from "./stores/storeLibrary";
+    import {get} from "svelte/store";
+    import type {LobbyJSON, PlayerJSON} from "./types/types";
+    import type {State} from "./types/types";
 
-	let pions = [
-		{ id: 0, text: "Aucun" },
-		{ id: 1, text: "Boite de conserve" },
-		{ id: 2, text: "Terre" },
-		{ id: 3, text: "Plante" },
-		{ id: 4, text: "Grain de café" },
-		{ id: 5, text: "Bonnet" },
-		{ id: 6, text: "Papillon" },
-		{ id: 7, text: "Arosoir" },
-		{ id: 8, text: "Nuage" },
-	];
+    export let id: string;
 
-	class Player_lobby {
-		present: boolean;
-		name: string;
-		uuid: string;
-		pion: { id: number; text: string };
+    let pions = [
+        {id: 0, text: "Aucun"},
+        {id: 1, text: "Boite de conserve"},
+        {id: 2, text: "Terre"},
+        {id: 3, text: "Plante"},
+        {id: 4, text: "Grain de café"},
+        {id: 5, text: "Bonnet"},
+        {id: 6, text: "Papillon"},
+        {id: 7, text: "Arrosoir"},
+        {id: 8, text: "Nuage"},
+    ];
 
-		constructor(present: boolean = false, name: string = "") {
-			this.present = present;
-			this.name = name;
-		}
-	}
+    let availablePions: { id: number, text: string }[] = [];
+    let currentPion: number = 0;
 
-	// Joueur-euse local
-	let player_local: Player_lobby = new Player_lobby(true, "Player 1");
-	let is_lobby_owner: boolean = true;
 
-	// Autres joueur-euses dans le lobby
-	let player_1: Player_lobby = new Player_lobby();
-	let player_2: Player_lobby = new Player_lobby();
-	let player_3: Player_lobby = new Player_lobby();
+    function players_ready(): boolean {
+        return $lobbyStore.players.filter(x => x.token != 0).length == $lobbyStore.players.length;
+    }
 
-	let players: Player_lobby[] = [player_1, player_2, player_3];
+    function set_token(tokenEvent: Event) {
+        let tokenId = availablePions[tokenEvent.target["selectedIndex"]].id;
+        $socketStore.emit("update token", tokenId);
+    }
 
-	/**
-	* Fonction pour bloquer les options de pions déjà pris dans le select
-	*/
-		// function update_pions_occupes(){
-		//   let choix_pions = document.getElementById('players').children;
+    function player_quit() {
+        get(socketStore).emit("quit", () => {
+            router.goto("/");
+        });
+    }
 
-		//   for(let i = 0; i++; i < choix_pions.length ){
-		//     choix_pions[i].removeAttribute("disabled");
-		//   }
+    function start_game() {
+        get(socketStore).emit("launch game", () => {
+        });
+    }
 
-		//   for(let player in players){
-		//     choix_pions[player.pion.id+1].setAttribute("disabled", "");
-		//   }
-	// }
 
-	let msg: string | null = null;
-	function send_msg() {
-		msg = msg;
-	}
+    $socketStore
+        .on("update lobby", (lobby: LobbyJSON) => {
+            lobbyStore.set(lobby);
+            userStore.set(lobby.players.find(x => x.uuid == $userStore.uuid));
+        })
+        .on("update gamestate", (state: State) => {
+            stateStore.set(state);
+            state.plateau.forEach((_case, index) => {
+                console.log(_case.name, index);
+            });
+            router.goto("/jeu/");
+        });
+
+    lobbyStore.subscribe(lobby => {
+        availablePions = pions.filter(pion => {
+            return !$lobbyStore.players.find(player => player.token != 0 && player.token === pion.id && $userStore.uuid != player.uuid && (() => {
+                currentPion = pion.id;
+                return true;
+            })());
+        });
+    })
+
 </script>
 
+<Tailwindcss/>
+
 <main>
-	<button id="retour" on:click={()=>router.goto("/")}>Quitter partie</button>
+    <button on:click={player_quit}>Quitter partie</button>
+    <div id="block">
 
-	<div id="block">
-		<div id="players">
-			<h id="lobby_name">Lobby {name_lobby}</h>
-			<label for="players">Joueur-euses :</label>
+        <div id="players">
+            <h2 id="lobby_name">Lobby {id}</h2>
+            <label for="players">Joueur-euses :</label>
+            {#each $lobbyStore.players as player}
+                <div class="player">
+                    <span class="gauche">{player.name}</span>
+                    <span class="droite">{pions[player.token].text}</span>
+                </div>
+            {/each}
+            {#each [1, 2, 3, 4].splice(0, 4 - $lobbyStore.players.length) as i}
+                <div class="player">
+                    <span> | </span>
+                </div>
+            {/each}
 
-			<div class="player">
-				<span class="gauche"
-					>{player_local.present ? player_local.name : "---------"}</span
-				>
-				<span class="droite"
-					>{player_local.pion ? player_local.pion.text : "---------"}</span
-				>
-			</div>
+            <div id="choix_pion">
+                <span>Choissisez un pion :</span>
+                <select value={$userStore.token} on:change={set_token}>
+                    {#each availablePions as pion}
+                        <option value={pion.id}>{pion.text}</option>
+                    {/each}
+                </select>
+            </div>
+        </div>
 
-			<div class="player">
-				<span class="gauche"
-					>{player_1.present ? player_1.name : "---------"}</span
-				>
-				<span class="droite"
-					>{player_1.present ? player_1.pion.text : "---------"}</span
-				>
-			</div>
+        <div id="tchat">
+            <div id="chatbox">
+                <span>Yo</span>
+            </div>
+            <input name="msg" type="text" id="msg" />
+            <button id="envoyer" type="submit">Envoyer</button>
+        </div>
 
-			<div class="player">
-				<span class="gauche"
-					>{player_2.present ? player_2.name : "---------"}</span
-				>
-				<span class="droite"
-					>{player_2.present ? player_2.pion.text : "---------"}</span
-				>
-			</div>
+    </div>
 
-			<div class="player">
-				<span class="gauche"
-					>{player_3.present ? player_3.name : "---------"}</span
-				>
-				<span class="droite"
-					>{player_3.present ? player_3.pion.text : "---------"}</span
-				>
-			</div>
-			<div id="choix_pion">
-				<span>Choissisez un pion :</span>
-				<select bind:value={player_local.pion}>
-					{#each pions as pion}
-						<option value={pion}>{pion.text}</option>
-					{/each}
-				</select>
-			</div>
-		</div>
 
-		<div id="tchat">
-			<div id="chatbox"></div>
-			<input name="msg" type="text" id="msg" bind:value={msg} />
-			<button id="envoyer" type="submit">Envoyer</button>
-		</div>
 
-		
-	</div>
-	
-	
-
-	{#if is_lobby_owner}
-		<button aria-label="Lancer la partie">Commencer partie</button>
-	{:else}
-		<button aria-label="Lancer la partie" disabled>
-			En attente du début de partie
-		</button>
-	{/if}
-	
-
+    {#if ($lobbyStore, players_ready())}
+        {#if $lobbyStore.owner.uuid === $userStore.uuid}
+            <button aria-label="Lancer la partie" on:click={start_game}
+            >Commencer partie
+            </button
+            >
+        {:else}
+            <button aria-label="Lancer la partie" disabled>
+                En attente du début de partie
+            </button>
+        {/if}
+    {:else}
+        <button aria-label="Lancer la partie" disabled>
+            En attente des autres joueurs
+        </button>
+    {/if}
 </main>
 
-
-<!-- CSS 
+<!-- CSS
 <style lang="scss">
 	$turquoise: #00a19a;
 	$blanc: #ffffff;
@@ -252,9 +248,9 @@ select {
     border: solid $gris;
 	color: $turquoise;
 }
-  
+
 #envoyer {
-	width: 5em; 
+	width: 5em;
 	border-radius: 1em;
     border: solid $gris;
 	color: $turquoise;

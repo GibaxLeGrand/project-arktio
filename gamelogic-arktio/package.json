@@ -1,0 +1,14 @@
+{
+  "name": "gamelogic-arktio",
+  "version": "1.0.0",
+  "description": "Game Logic wrapper for Arktio",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc --build"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "typescript": "^4.5.2"
+  }
+}

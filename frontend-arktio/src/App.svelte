@@ -1,132 +1,139 @@
-<!-- Script -->
 <script lang="ts">
-	import {Route, router} from "tinro";
-	import Login from "./login.svelte";
-	import Lobby from "./Lobby.svelte";
-	import Partie from "./partie.svelte";
-	import Register from "./register.svelte";
-	import {routerFetch} from "./scripts/fetchOverride";
-	import {base} from "./stores/locationStore";
-	import {get} from "svelte/store";
-	import {env} from "./scripts/envfile";
-	import {disconnect} from "./scripts/userScripts";
-	import Regles from "./Regles.svelte";
-	import Tailwindcss from "./Tailwindcss.svelte";
-	import Jeu from "./Jeu.svelte";
+    import {get} from "svelte/store";
+    import {Route, router} from "tinro";
+    import Lobby from "./Lobby.svelte";
+    import Login from "./login.svelte";
+    import Partie from "./partie.svelte";
+    import Register from "./register.svelte";
+    import {env} from "./scripts/envfile";
+    import {routerFetch} from "./scripts/fetchOverride";
+    import {disconnect, getPlayerInfos} from "./scripts/userScripts";
+    import {base, lobbyStore, socketStore, userStore} from "./stores/storeLibrary";
+    import Regles from "./Regles.svelte";
+    import Jeu from "./Jeu.svelte";
+    import * as io from "socket.io-client"
+    import Tailwindcss from "./Tailwindcss.svelte";
+    import type {LobbyJSON} from "./types/types";
 
-	router.mode.hash();
+    let cnt = 0;
 
-	base.set(env.root)
-	router.base(get(base));
+    router.mode.hash();
 
-	enum RULES {
-		CONNECTED,
-		GUEST,
-	}
+    base.set(env.root);
+    router.base(get(base));
 
-	let state: RULES = RULES.GUEST;
+    enum RULES {
+        CONNECTED,
+        GUEST,
+    }
 
-	async function isAuth() {
-		const data = await routerFetch("/api/session/isAuth", {method: "GET"});
-		if ((await data.json()).authenticated) {
-			state = RULES.CONNECTED;
-		} else {
-			state = RULES.GUEST;
-		}
-	}
+    let state: RULES = RULES.GUEST;
 
-	router.subscribe(() => {
-		isAuth()
-	})
+    async function isAuth() {
+        const data = await routerFetch("/api/session/isAuth", {method: "GET"});
+        if ((await data.json()).authenticated) {
+            state = RULES.CONNECTED;
+            if (get(socketStore) == null) {
+                socketStore.set(io.connect());
+                const pinfos = await getPlayerInfos();
+                get(socketStore).on("connect", () => get(socketStore).emit("player information", pinfos.userUUID, (({player}) => userStore.set(player))));
+            }
+        } else {
+            state = RULES.GUEST;
+        }
+    }
+
+    router.subscribe(() => {
+        isAuth();
+        console.log($router.path);
+    });
 </script>
 
-
-<!-- Page -->
-<svelte:head>
-	<title>Arktio</title>
-	<link rel="icon" type="image/png" href="logo.png" />
-	<html lang="fr"/>
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta charset="UTF-8">
-</svelte:head>
-
 <main>
-	<Route path="/">
-		<div class="logo">
-			<img alt="logo" src="logo.png"/>
-		</div>
-		<div class="boutons">
-			{#if state === RULES.GUEST}
-				<button
-					id="connexion"
-					on:click={() => {
-					router.goto("/login");
-					}}>Connexion
-				</button>
-				<button
-					id="inscription"
-					on:click={() => {
-					router.goto("/register");
-					}}>Inscription
-				</button>
-			{/if}
-			
-			{#if [RULES.CONNECTED, RULES.GUEST].includes(state)}
-				<button
-					id="create_join_party"
-					on:click={() => {
-					router.goto("/partie");
-					}}>Créer / Rejoindre Partie
-				</button>
+    <Route path="/">
+        <div class="logo">
+            <img on:click={()=>{if (cnt < 10){cnt++} else {cnt = 0}}} alt="logo" src={cnt < 10 ? "logo.png" : "https://cdn.discordapp.com/attachments/942433231599456307/952985982595104878/unknown.png"}/>
+        </div>
+        <div class="boutons">
+            {#if state === RULES.GUEST}
+                <button
+                        id="connexion"
+                        on:click={() => {
+            router.goto("/login");
+          }}
+                >Connexion
+                </button>
+                <button
+                        id="inscription"
+                        on:click={() => {
+            router.goto("/register");
+          }}
+                >Inscription
+                </button>
+            {/if}
+            {#if [RULES.CONNECTED].includes(state) }
+                <button
+                        id="create_join_party"
+                        on:click={() => {
+            router.goto("/partie");
+          }}
+                >Créer / Rejoindre Partie
+                </button>
+            {/if}
+            <button
+                    id="regles"
+                    title="afficher les règles"
+                    on:click={() => router.goto("/Regles")}>Règles
+            </button
+            >
+            {#if [RULES.CONNECTED].includes(state)}
+                <button
+                        id="disconnect"
+                        on:click={async () => {
+            disconnect().then(isAuth);
+          }}
+                >Déconnexion
+                </button>
+            {/if}
+        </div>
+        <footer>
+            <a href="https://m.facebook.com/Arktio/?locale2=fr_FR">Facebook</a>
+            <a href="https://arktio.fr/">Site d'Arktio</a>
+        </footer>
+    </Route>
+    <Route path="/login">
+        <Login/>
+    </Route>
 
-			{/if}
-			<button
-				id="regles"
-				title="afficher les règles"
-				on:click={() => router.goto("/Regles")}>Règles</button
-			>
-			
-			{#if [RULES.CONNECTED].includes(state)}
-				<button
-					id="disconnect"
-					on:click={async () => {
-					disconnect().then(isAuth);
-					}}>Déconnexion
-				</button>
-			{/if}
-		</div>
+    <Route path="/register">
+        <Register/>
+    </Route>
 
-		<footer>
-			<a href="https://m.facebook.com/Arktio/?locale2=fr_FR">Facebook</a>
-			<a href="https://arktio.fr/">Site d'Arktio</a>
-		</footer>
-	</Route>
+    <Route path="/Regles/">
+        <Regles/>
+    </Route>
+    {#if [RULES.CONNECTED].includes(state)}
+        <Route path="/jeu/">
+            <Jeu/>
+        </Route>
+        <Route path="/partie/">
+            <Partie/>
+        </Route>
+        <Route path="/lobby/:id" let:meta>
+            {#if meta.params.id.length === 6 && !isNaN(meta.params.id)}
+                <Lobby id={meta.params.id}/>
+            {:else}
+                <Route fallback redirect="/partie/"/>
+            {/if}
+        </Route>
+    {/if}
 
-	<Route path="/login">
-		<Login/>
-	</Route>
-	<Route path="/lobby">
-		<Lobby/>
-	</Route>
-	<Route path="/register">
-		<Register/>
-	</Route>
-	<Route path="/partie/">
-		<Partie/>
-	</Route>
-	<Route path="/Regles/">
-		<Regles/>
-	</Route>
-	<Route path="/jeu/">
-		<Jeu />
-	</Route>
+    <Route fallback redirect="/"/>
 
-	<Tailwindcss/>
 </main>
 
 
-
-<!-- CSS 
+<!-- CSS
 <style lang="scss">
 	$turquoise: #00a19a;
 	$blanc: #ffffff;
@@ -137,6 +144,7 @@
 	$gris_fonce: #2c2c2c;
 	$font_arktio: Raleway;
 
+  $size: 256px;
 
 main {
 	margin: 0;
@@ -206,5 +214,5 @@ footer {
 
 }
 </style>
-  
+
 -->

@@ -17,8 +17,8 @@ import { Knex } from "knex";
 export async function up(knex: Knex): Promise<void> {
     // Opération de creation d'une table utilisateur
 	return knex.schema.createTable("Users", (table) =>
-	{
-		table.increments("user_id").primary();
+    {
+        table.string("user_uuid").primary();
 		table.string("user_name", 64).notNullable();
 		table.string("user_email", 256).unique().notNullable();
 		table.string("user_password", 256).notNullable();
@@ -29,4 +29,3 @@ export async function down(knex: Knex): Promise<void> {
 	// Opération inverse d'une création de table
 	return knex.schema.dropTableIfExists("Users");
 }
-
