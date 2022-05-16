@@ -18,6 +18,8 @@
     let cnt = 0;
 
     router.mode.hash();
+
+    base.set(env.root);
     router.base(get(base));
 
     enum RULES {
@@ -32,11 +34,12 @@
         if ((await data.json()).authenticated) {
             state = RULES.CONNECTED;
             if (get(socketStore) == null) {
-                socketStore.set(io.connect("", {path: get(base) + "/socket.io"}));
+                socketStore.set(io.connect());
                 const pinfos = await getPlayerInfos();
                 get(socketStore).on("connect", () => get(socketStore).emit("player information", pinfos.userUUID, (({player}) => userStore.set(player))));
             }
         } else {
+            socketStore.set(null);
             state = RULES.GUEST;
         }
     }
