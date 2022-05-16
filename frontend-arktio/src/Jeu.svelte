@@ -50,6 +50,30 @@
         });
     });
 
+    $socketStore.on("end action", () => {
+        let container: HTMLElement = document.getElementById("conteneur");
+
+        container.innerHTML = "";
+
+
+        if ($stateStore.joueur_actuel != local_uuid) {
+            let elem: HTMLElement = document.createElement("span");
+            elem.textContent = `C'est le tour de ${$lobbyStore.players.find(x => $stateStore.joueur_actuel).name}...`;
+        } else {
+            let titre: HTMLElement = document.createElement("div");
+            titre.textContent = "Finissez votre tour";
+            container.appendChild(titre);
+
+            let _choix: HTMLElement = document.createElement("button");
+            _choix.classList.add(`option0`);
+            _choix.textContent = "Fin de tour";
+            _choix.onclick = () => {
+                $socketStore.emit("next turn");
+            };
+            container.appendChild(_choix);
+        }
+    })
+
     $socketStore.on("choix", (possibilites: TypeReponse, callback: (number) => void) => {
         let container: HTMLElement = document.getElementById("conteneur");
 
@@ -234,8 +258,8 @@
             Envoyer
         </button>
         <div id="classement">
-            {#each $stateStore.ordre_joueurs as joueurID}
-                <div id="classement_1">{$lobbyStore.players.find(x => joueurID).name}</div>
+            {#each $stateStore.ordre_joueurs as joueurID, index}
+                <div id={`classement_${index}`}>{$lobbyStore.players.find(x => x===joueurID).name}</div>
             {/each}
         </div>
         <button id="quit_game" on:click={quit_game_handler}
