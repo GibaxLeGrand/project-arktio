@@ -23,7 +23,7 @@ export default class CaseCourse implements Case {
         switch (choices[0]) {
             case 1:
                 state.joueurs[playerID].argent -= 45;
-                state.joueurs[playerID].pointTerre -= this.getSpecialityPoint(state, playerID);
+                state.joueurs[playerID].pointTerre += this.getSpecialityPoint(state, playerID);
 
                 let inventaire = state.joueurs[playerID].inventaire;
                 const index = inventaire.indexOf(ObjetManager.getObjet(25));
