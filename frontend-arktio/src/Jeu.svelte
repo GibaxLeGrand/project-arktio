@@ -45,7 +45,7 @@
     $socketStore.on("recv message", ({player, message}) => {
         affiche_message(message);
     }).on("update gamestate", (state: State) => {
-		stateStore.set(state);
+		    stateStore.set(state);
     });
 
     export function startturn() {
@@ -242,6 +242,8 @@
     }
 
     function affichage_pions() {
+        if ($stateStore === null) return;
+
         document.querySelectorAll("pion").forEach(p => p.remove());
 
         for (let joueurID of $stateStore.ordre_joueurs) {
