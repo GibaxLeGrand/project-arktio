@@ -191,6 +191,7 @@ export class Lobby {
 
                         if (endMonth) {
                             this.game.mois += 1;
+                            this.game.tour += 1;
                             this.game.joueur_actuel = this.game.ordre_joueurs[0];
                             this.game.plateau = CaseManager.generate_board();
                             if (this.game.mois >= 10) {
@@ -339,6 +340,7 @@ export class Lobby {
         if (this.owner === player) {
             if (this.players.size <= 1) {
                 LobbyManager.destroyLobby(this);
+                return;
             } else {
                 let iterator = this.players.entries();
                 let p = iterator.next();
@@ -353,6 +355,35 @@ export class Lobby {
             this.players.delete(player);
         } else {
             this.players.set(player, null);
+            
+            let players = Array.from(this.players.entries());
+            let p = player;
+            let endMonth = true;
+            for (let i = 0; i < players.length; i++) {
+                p = this.nextTurn()!;
+                if (this.game.joueurs[p.getUUID()].caseActuelle < this.game.plateau.length - 1
+                    && this.players.get(p) != null) {
+                    endMonth = false;
+                    break;
+                }
+            }
+
+            if (endMonth) {
+                this.game.mois += 1;
+                this.game.tour += 1;
+                this.game.joueur_actuel = this.game.ordre_joueurs[0];
+                this.game.plateau = CaseManager.generate_board();
+                if (this.game.mois >= 10) {
+                    this.io.sockets.in(this.uuid).emit("end");
+                    return;
+                } else {
+                    for (let i = 0; i < players.length; i++) {
+                        this.game.joueurs[players[i][0].getUUID()].caseActuelle = -1;
+                    }
+                }
+            }
+
+            this.io.sockets.in(this.uuid).emit("start turn", this.game);
         }
 
         this.chat.update();
