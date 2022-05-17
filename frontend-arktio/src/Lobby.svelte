@@ -36,6 +36,7 @@
 
     function player_quit() {
         get(socketStore).emit("quit", () => {
+            $userStore.token = 0;
             router.goto("/");
         });
     }
