@@ -342,12 +342,25 @@ export class Lobby {
                 LobbyManager.destroyLobby(this);
                 return;
             } else {
-                let iterator = this.players.entries();
-                let p = iterator.next();
-                while (p.value[1] === null || p.value[0] === player)
-                    p = iterator.next();
+                let players = Array.from(this.players.entries());
+                let start = players.findIndex(entry => entry[0] === player);
+                let newOwner = null;
 
-                this.setOwner(p.value[0]);
+                if (start !== -1) {
+                    for (let i=0; i<players.length; i++) {
+                        if (players[i][1] !== null && players[i][0] !== player) {
+                            newOwner = players[i][0];
+                            break;
+                        } 
+                    }
+
+                    if (newOwner === null) {
+                        LobbyManager.destroyLobby(this);
+                        return;
+                    } else {
+                        this.setOwner(newOwner);
+                    }      
+                }            
             }
         }
 
