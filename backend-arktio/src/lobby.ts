@@ -100,11 +100,12 @@ export class Lobby {
                     if (this.isActualPlayer(player)) {
                         let mycase: Case = this.getActualPlayerCase();
                         let step = 0;
-                        let reponse = mycase.prepare(this.game, this.game.joueur_actuel, step);
+                        let reponse;
 
                         const nextStep = async () => {
                             console.log("nextStep");
                             if (this.isActualPlayer(player)) {
+                                reponse = mycase.prepare(this.game, this.game.joueur_actuel, step);
                                 socket.emit("choix", reponse, (choice: number) => {
                                     console.log("YAY")
                                     let next = mycase.next(this.game, this.game.joueur_actuel, step, choice);
@@ -137,7 +138,8 @@ export class Lobby {
                                 });
                             }
                         };
-
+                        
+                        reponse = mycase.prepare(this.game, this.game.joueur_actuel, step);
                         socket.emit("choix", reponse, (choice: number) => {
                             console.log(choice);
                             let next = mycase.next(this.game, this.game.joueur_actuel, step, choice);
