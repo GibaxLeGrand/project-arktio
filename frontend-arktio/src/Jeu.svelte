@@ -500,6 +500,8 @@
 	}
 
 	.pion {
+		height: 3em;
+		margin: 0;
 		max-width: 50px;
 		max-height: 50px;
 	}
