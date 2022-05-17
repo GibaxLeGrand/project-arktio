@@ -47,6 +47,7 @@ export class Lobby {
 
                 players[buffer[i].getUUID()] = {
                     id: buffer[i].getUUID(),
+                    nom: buffer[i].getName(),
                     inventaire: [],
                     argent: 1000,
                     pointTerre: 0,
@@ -110,10 +111,14 @@ export class Lobby {
                                     let next = mycase.next(that.game, that.game.joueur_actuel, step, choice);
                                     end = next.end;
 
-                                    if (step > next.step && !end)
+                                    if (step > next.step && next.step != -1) {
                                         choices.pop();
-                                    else
+                                    } else if (step == next.step) {
+                                        choices.pop();
                                         choices.push(choice);
+                                    } else {
+                                        choices.push(choice);
+                                    }
 
                                     if (!end) {
                                         step = next.step;
@@ -138,10 +143,14 @@ export class Lobby {
                             let next = mycase.next(this.game, this.game.joueur_actuel, step, choice);
                             end = next.end;
 
-                            if (step > next.step && next.step != -1)
+                            if (step > next.step && next.step != -1) {
                                 choices.pop();
-                            else
+                            } else if (step == next.step) {
+                                choices.pop();
                                 choices.push(choice);
+                            } else {
+                                choices.push(choice);
+                            }
 
                             if (!end) {
                                 step = next.step;
