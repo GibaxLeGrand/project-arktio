@@ -44,6 +44,7 @@
           })
         );
         const pinfos = await getPlayerInfos();
+        console.log(get(socketStore).connected);
         if (get(socketStore).connected) {
           get(socketStore).emit("player information", pinfos.userUUID, ({ player }) => {
             userStore.set(player)
