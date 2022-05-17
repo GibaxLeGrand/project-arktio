@@ -49,7 +49,7 @@ export class State {
             for (let key in Object.keys(ObjetManager.getObjets())) {
                 let objets = ObjetManager.getObjets()[key];
         
-                if (objets.mois == i) 
+                if (objets.mois === i) 
                     objets_par_mois[i].push(Number(key));
             }
         }
