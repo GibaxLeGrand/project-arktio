@@ -338,7 +338,11 @@ export class Lobby {
             }
         }
 
-        this.players.delete(player);
+        if (this.state === LobbyState.Lobby) {
+            this.players.delete(player);
+        } else {
+            this.players.set(player, null);
+        }
 
         this.chat.update();
         socket.leave(this.uuid);
