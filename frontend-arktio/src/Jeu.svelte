@@ -295,7 +295,6 @@
 </script>
 
 <main>
-<<<<<<< HEAD
   <div class="plateau">
     {#each $stateStore.plateau as _case, index}
       <div
@@ -330,9 +329,9 @@
     <div id="classement">
       {#each $stateStore.ordre_joueurs as joueurID, index}
         <div id={`classement_${index + 1}`}>
-          {$lobbyStore.players.find((x) => x.uuid === joueurID).name}
-          {$stateStore.joueurs[joueurID].argent}
-          {$stateStore.joueurs[joueurID].pointTerre}
+          <p>{$lobbyStore.players.find((x) => x.uuid === joueurID).name}</p>
+          <p>{$stateStore.joueurs[joueurID].argent} €</p>
+          <p>{$stateStore.joueurs[joueurID].pointTerre} pts Terre</p>
         </div>
       {/each}
     </div>
@@ -346,63 +345,6 @@
       </button>
     {/if}
   </div>
-=======
-	<div class="plateau">
-		{#each $stateStore.plateau as _case, index}
-			<div
-				id={`x${index + 1}`}
-				class={pos_case($stateStore.plateau.indexOf(_case))}
-				style={`background-size: contain; background-repeat: no-repeat; background-color: #ffffff; background-position:center; background-image: url(./Cases/case_${_case.id_name}.PNG);`}
-			/>
-		{/each}
-		<div id="conteneur" />
-
-		<div id="titre_inventaire">Inventaire</div>
-		<div id="inventaire">
-			<ul>
-				{#each $stateStore.joueurs[$userStore.uuid].inventaire as _item}
-					<li>{_item.nom}</li>
-				{/each}
-			</ul>
-		</div>
-		<div id="chat" />
-		<input
-			type="text"
-			method="POST"
-			id="input"
-			bind:value={message}
-			on:keydown={(key) => {
-				if (key.key == "Enter") send_message();
-			}}
-		/>
-		<button type="submit" id="send_message" on:click={send_message}>
-			Envoyer
-		</button>
-		<div id="classement">
-			{#each $stateStore.ordre_joueurs as joueurID, index}
-				<div id={`classement_${index + 1}`}>
-					<p>{$lobbyStore.players.find((x) => x.uuid === joueurID).name}</p>
-					<p>{$stateStore.joueurs[joueurID].argent} €</p>
-					<p>{$stateStore.joueurs[joueurID].pointTerre} pts Terre</p>
-				</div>
-			{/each}
-		</div>
-		<button id="quit_game" on:click={quit_game_handler}
-			>{quit_game_button_text}</button
-		>
-		{#if print_yes_no}
-			<button on:click={quit} class="bouton_choix" id="boutonoui"
-				>OUI</button
-			>
-			<button
-				on:click={quit_game_handler}
-				class="bouton_choix"
-				id="boutonnon"
-				>NON
-			</button>
-		{/if}
-	</div>
->>>>>>> aed73fa2b0bc33c3e1cbc60a0ae68d9ee7da2dcd
 </main>
 
 <!-- CSS -->
