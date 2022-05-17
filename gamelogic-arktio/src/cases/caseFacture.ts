@@ -35,22 +35,19 @@ export default class CaseFacture implements Case {
     id_name = "facture";
     max_number = 1;
 
-    private possibilities: Map<Facture, number>;
-    private bufferChoice: Map<string, number>;
+    private static possibilities: Map<Facture, number> = new Map();
+    private static bufferChoice: Map<string, number> = new Map();
 
-    constructor() { 
-        this.possibilities = new Map()
-        this.possibilities.set(new Loyer(), 10);
-        this.possibilities.set(new Charges(), 20);
-        this.possibilities.set(new FraisDeScolarité(), 30);
-        
-        this.bufferChoice = new Map();
+    static { 
+        CaseFacture.possibilities.set(new Loyer(), 10);
+        CaseFacture.possibilities.set(new Charges(), 20);
+        CaseFacture.possibilities.set(new FraisDeScolarité(), 30);
     }
 
     play(state: State, playerID: string, choices: number[]) : State {
-        let facture: Facture = Array.from(this.possibilities.keys())[this.bufferChoice.get(playerID)!];
+        let facture: Facture = Array.from(CaseFacture.possibilities.keys())[CaseFacture.bufferChoice.get(playerID)!];
         state.joueurs[playerID].argent -= facture.value;
-        this.bufferChoice.delete(playerID);
+        CaseFacture.bufferChoice.delete(playerID);
         return state;
     }
 
@@ -58,7 +55,7 @@ export default class CaseFacture implements Case {
         let st = State.createFrom(state);
 
         // Initialisation
-        let chance = new Map(this.possibilities);
+        let chance = new Map(CaseFacture.possibilities);
         if (st.mois !== Mois.SEPTEMBRE) { // Septembre
             for (let k of chance.keys()) {
                 if (k instanceof FraisDeScolarité) 
@@ -85,7 +82,7 @@ export default class CaseFacture implements Case {
             bsum += element[1];
         }
 
-        this.bufferChoice.set(playerID, choice)
+        CaseFacture.bufferChoice.set(playerID, choice)
         return new TypeReponse("Payez votre Facture", ["Vous devez payer " 
             + possibilities[choice][0].nom + " d'un montant de " + possibilities[choice][0].value + " euros"]);
     }

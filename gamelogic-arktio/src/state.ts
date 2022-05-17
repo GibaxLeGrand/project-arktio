@@ -1,5 +1,6 @@
 import { Player } from "./player";
 import {Case, CaseManager} from "./caseManager";
+import {ObjetManager} from "./objetManager";
 
 
 export enum Mois {
@@ -37,16 +38,19 @@ export class State {
     }
 
     static create(joueurs: {[key:string] : Player}, ordre_joueurs: string[]): State {
-
+        console.log(ordre_joueurs);
         // Initialisation tableaux des objets
         let objets_par_mois: {[key:number] : number[]} = {};
-        
-        for (let i=0; i<10; i++) 
+
+        for (let i=0; i<Mois.COUNT; i++)
             objets_par_mois[i] = [];
 
         for (let i = 0; i <Mois.COUNT; i++) {
-            for (let j = 0; j < 3; j++) {
-                objets_par_mois[i].push(i*3+j);
+            for (let key in Object.keys(ObjetManager.getObjets())) {
+                let objets = ObjetManager.getObjets()[key];
+        
+                if (objets.mois === i) 
+                    objets_par_mois[i].push(Number(key));
             }
         }
 

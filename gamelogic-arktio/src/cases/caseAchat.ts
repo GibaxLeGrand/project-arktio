@@ -10,7 +10,7 @@ export default class CaseAchat implements Case {
     play(state: State, playerID: string, choices: number[]) : State {
         let achatsPossibles = this.choiceOfPlayer(state, playerID);
         
-        if (choices[0] != 0 || achatsPossibles.length >= choices[0]) {
+        if (choices[0] != 0 && achatsPossibles.length >= choices[0]) {
             let objet = achatsPossibles[choices[0] - 1];
             if (state.joueurs[playerID].argent < objet.prix) {
                 return state;
@@ -31,7 +31,7 @@ export default class CaseAchat implements Case {
 
     prepare(state: State, playerID: string, step: number) : TypeReponse {
         let s = State.createFrom(state);
-        let choix = this.choiceOfPlayer(state, playerID);
+        let choix = this.choiceOfPlayer(s, playerID);
         let messages = ["Ne rien acheter"];
 
         for (let i=0; i<choix.length; i++) {
@@ -55,7 +55,7 @@ export default class CaseAchat implements Case {
             }
 
             let own = false;
-            for (let j=0; i<state.joueurs[playerID].inventaire.length; j++) {
+            for (let j=0; j<state.joueurs[playerID].inventaire.length; j++) {
                 if (state.joueurs[playerID].inventaire[j] === ObjetManager.getObjet(objetsDuMois[i])) {
                    own = true;
                    break;

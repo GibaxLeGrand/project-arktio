@@ -18,7 +18,7 @@
 		align-items: center;
 		flex-direction: column;
 		height: 100%;
-		width: 100vw;
+		width: 98%;
 	}
 
 	div {
@@ -112,7 +112,7 @@
 	footer {
 		display: inherit;
 		justify-content: center;
-		position: absolute;
+		position: fixed;
 		bottom: 0;
 		width: 100vw;
 		padding: 1em;
@@ -168,7 +168,7 @@
 		display: inherit;
 		flex-direction: column;
 		padding: 1em;
-		height: 50vh;
+		height: 100%;
 		width: 50%;
 	}
 
@@ -185,7 +185,7 @@
 		border-radius: 1em;
 		border: solid var(--gris);
 		width: 80%;
-		height: 100%;
+		height: 18em;
 		color: var(--turquoise);
 	}
 
