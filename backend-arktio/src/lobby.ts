@@ -101,14 +101,13 @@ export class Lobby {
                         let mycase: Case = this.getActualPlayerCase();
                         let step = 0;
                         let reponse = mycase.prepare(this.game, this.game.joueur_actuel, step);
-                        let that = this;
 
                         const nextStep = async () => {
                             console.log("nextStep");
-                            if (that.isActualPlayer(player)) {
+                            if (this.isActualPlayer(player)) {
                                 socket.emit("choix", reponse, (choice: number) => {
                                     console.log("YAY")
-                                    let next = mycase.next(that.game, that.game.joueur_actuel, step, choice);
+                                    let next = mycase.next(this.game, this.game.joueur_actuel, step, choice);
                                     end = next.end;
 
                                     if (step > next.step && next.step != -1) {

@@ -113,6 +113,7 @@
             elem.textContent = `C'est le tour de ${$lobbyStore.players.find(x => x.uuid === $stateStore.joueur_actuel).name}...`;
             container.appendChild(elem);
         } else {
+            console.log("oui bonjour");
             let titre: HTMLElement = document.createElement("div");
             titre.textContent = possibilites.titre;
             container.appendChild(titre);
