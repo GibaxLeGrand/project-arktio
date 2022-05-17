@@ -242,7 +242,7 @@
     }
 
     function affichage_pions() {
-        if ($stateStore === null) return;
+        console.log($lobbyStore, $stateStore);
 
         document.querySelectorAll("pion").forEach(p => p.remove());
 
