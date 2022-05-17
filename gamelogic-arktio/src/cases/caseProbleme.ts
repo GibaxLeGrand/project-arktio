@@ -32,12 +32,15 @@ export default class CaseProbleme implements Case {
                 state.joueurs[playerID].argent -= 50;
                 state.joueurs[playerID].pointTerre += 10;
                 break;
+            case 2: 
+                if (state.joueurs[playerID].inventaire.indexOf(ObjetManager.getObjet(30)) !== -1) {
+                    state.joueurs[playerID].argent -= 100;
+                    state.joueurs[playerID].pointTerre += 20;
+                    state.joueurs[playerID].inventaire.splice(state.joueurs[playerID].inventaire.indexOf(ObjetManager.getObjet(30)));
+                    break;
+                }
             case 1:
                 state.joueurs[playerID].pointTerre -= 15;
-                break;
-            case 2:
-                state.joueurs[playerID].pointTerre += 20;
-                state.joueurs[playerID].inventaire.splice(state.joueurs[playerID].inventaire.indexOf(ObjetManager.getObjet(30)));
                 break;
         }
 
@@ -48,7 +51,7 @@ export default class CaseProbleme implements Case {
         let messages: string[] = [];
 
         messages.push("Choisir la recyclerie Tout n'est malheureusement pas réparable mais il est toujours possible de récupérer les pièces d'objets défectueux pour en réparer d'autres. Rien ne se perd ! Tu trouves même un objet d'occasion pour remplacer celui qui ne marchait plus. Verser 50€ pour gagner 10 Points Terre");
-        messages.push("Jeter l'objet S'il ne fonctionne plus, autant t'offrir quelque chose de mieux ou de plus performant. Jetez l'objet et perdez 15 Points Terre");
+        messages.push("Jeter l'objet S'il ne fonctionne plus, autant t'offrir quelque chose de mieux ou de plus performant. Jetez l'objet et perdez 100€ et 15 Points Terre");
 
         if (state.joueurs[playerID].inventaire.indexOf(ObjetManager.getObjet(30)) !== -1) {
             messages.push("Choisir le Repair Café Apprend à réparer tes objets grâce aux bénévoles du Repair Café. Une option à moindre coût avec un peu de matériel et tu sauras peut-être le faire toi-même la prochaine fois ! Coûte un kit de réparation et fait gagner 20 Point Terre");
