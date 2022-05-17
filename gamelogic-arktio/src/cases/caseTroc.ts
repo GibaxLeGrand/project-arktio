@@ -12,9 +12,7 @@ export default class CaseTroc implements Case {
     private static bufferSelfPageChoice: Map<string, number> = new Map();
 
     play(state: State, playerID: string, choices: number[]) : State {
-        console.log("fin");
         if (choices.length === 1) {
-            console.log("c nul");
             return state;
         }
 
@@ -25,14 +23,16 @@ export default class CaseTroc implements Case {
         let ptroc: Objet = state.joueurs[player].inventaire.splice(ppage * 2 + choices[1] - 1, 1)[0];
         let stroc: Objet = state.joueurs[playerID].inventaire.splice(spage * 2 + choices[2] - 1, 1)[0];
 
-        state.joueurs[player].inventaire.push(stroc);
-        state.joueurs[playerID].inventaire.push(ptroc);
+        if (state.joueurs[player].inventaire.indexOf(stroc) === -1)
+            state.joueurs[player].inventaire.push(stroc);
+        
+        if (state.joueurs[playerID].inventaire.indexOf(ptroc) === -1)
+            state.joueurs[playerID].inventaire.push(ptroc);
 
         CaseTroc.bufferPlayerPageChoice.delete(playerID);
         CaseTroc.bufferPlayerChoice.delete(playerID);
         CaseTroc.bufferSelfPageChoice.delete(playerID);
 
-        console.log("echange fait");
         return state;
     }
 
