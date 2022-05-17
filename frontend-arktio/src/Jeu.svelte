@@ -454,6 +454,11 @@
     height: 50%;
   }
 
+  .pion{
+    max-width:  50px;
+    max-height: 50px;
+  }
+
   .options {
     width: 40%;
     align-items: center;
