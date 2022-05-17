@@ -8,7 +8,7 @@
 	import { router } from "tinro";
 	import { get } from "svelte/store";
 	import { LobbyJSON, State, TypeReponse } from "./types/types";
-	import { onMount } from "svelte";
+    import {onDestroy, onMount} from "svelte";
 
 	// import { loop_guard } from "svelte/internal"; // c'est quoi ça ?
 
@@ -46,18 +46,6 @@
 	}
 
 	// listener pour toute réception de message
-	$socketStore
-		.on("recv message", ({ player, message }) => {
-			affiche_message(message);
-		})
-		.on("update gamestate", (state: State) => {
-			stateStore.set(state);
-		})
-		.on("update lobby", (lobby: LobbyJSON) => {
-			lobbyStore.set(lobby);
-			userStore.set(lobby.players.find((x) => x.uuid == $userStore.uuid));
-		});
-
 	export function startturn() {
 		let container: HTMLElement = document.getElementById("conteneur");
 		container.innerHTML = "";
@@ -85,71 +73,6 @@
 		}
 	}
 
-	$socketStore.on("start turn", (state: State) => {
-		stateStore.set(state);
-		startturn();
-	});
-
-	$socketStore.on("end action", () => {
-		let container: HTMLElement = document.getElementById("conteneur");
-
-		container.innerHTML = "";
-
-		if ($stateStore.joueur_actuel != $userStore.uuid) {
-			let elem: HTMLElement = document.createElement("span");
-			elem.textContent = `C'est le tour de ${
-				$lobbyStore.players.find(
-					(x) => x.uuid === $stateStore.joueur_actuel
-				).name
-			}...`;
-			container.appendChild(elem);
-		} else {
-			let titre: HTMLElement = document.createElement("div");
-			titre.textContent = "Finissez votre tour";
-			container.appendChild(titre);
-
-			let _choix: HTMLElement = document.createElement("button");
-			_choix.classList.add(`option0`);
-			_choix.textContent = "Fin de tour";
-			_choix.onclick = () => {
-				$socketStore.emit("end turn");
-			};
-			container.appendChild(_choix);
-		}
-	});
-
-	$socketStore.on(
-		"choix",
-		(possibilites: TypeReponse, callback: (number) => void) => {
-			let container: HTMLElement = document.getElementById("conteneur");
-
-			container.innerHTML = "";
-
-			if ($stateStore.joueur_actuel != $userStore.uuid) {
-				let elem: HTMLElement = document.createElement("span");
-				elem.textContent = `C'est le tour de ${
-					$lobbyStore.players.find(
-						(x) => x.uuid === $stateStore.joueur_actuel
-					)?.name
-				}...`;
-				container.appendChild(elem);
-			} else {
-				let titre: HTMLElement = document.createElement("div");
-				titre.textContent = possibilites.titre;
-				container.appendChild(titre);
-
-				for (let i = 0; i < possibilites.messages.length; i++) {
-					let _choix: HTMLElement = document.createElement("button");
-					_choix.classList.add(`option${i}`);
-					_choix.textContent = possibilites.messages[i];
-					_choix.onclick = () => {
-						callback(i);
-					};
-					container.appendChild(_choix);
-				}
-			}
-		}
-	);
 
 	function rollDice() {
 		$socketStore.emit("dice", (resultat: TypeReponse) => {
@@ -294,13 +217,86 @@
 		}
 	}
 
-	stateStore.subscribe((state) => {
-		affichage_pions();
-	});
+    $: if ($stateStore) affichage_pions();
 
-	onMount(() => {
-		startturn();
-	});
+    onMount(() => {
+      $socketStore.on("recv message", ({player, message}) => {
+        affiche_message(message);
+      })
+              .on("update gamestate", (state: State) => {
+                stateStore.set(state);
+              })
+              .on("update lobby", (lobby: LobbyJSON) => {
+                lobbyStore.set(lobby);
+                userStore.set(lobby.players.find(x => x.uuid == $userStore.uuid));
+              })
+              .on("start turn", (state: State) => {
+                stateStore.set(state);
+                startturn();
+              })
+              .on("end action", () => {
+                let container: HTMLElement = document.getElementById("conteneur");
+
+                container.innerHTML = "";
+
+
+                if ($stateStore.joueur_actuel != $userStore.uuid) {
+                  let elem: HTMLElement = document.createElement("span");
+                  elem.textContent = `C'est le tour de ${$lobbyStore.players.find(x => x.uuid === $stateStore.joueur_actuel).name}...`;
+                  container.appendChild(elem);
+                } else {
+                  let titre: HTMLElement = document.createElement("div");
+                  titre.textContent = "Finissez votre tour";
+                  container.appendChild(titre);
+
+                  let _choix: HTMLElement = document.createElement("button");
+                  _choix.classList.add(`option0`);
+                  _choix.textContent = "Fin de tour";
+                  _choix.onclick = () => {
+                    $socketStore.emit("end turn");
+                  };
+                  container.appendChild(_choix);
+                }
+              })
+              .on("choix", (possibilites: TypeReponse, callback: (number) => void) => {
+                let container: HTMLElement = document.getElementById("conteneur");
+
+                container.innerHTML = "";
+
+
+                if ($stateStore.joueur_actuel != $userStore.uuid) {
+                  let elem: HTMLElement = document.createElement("span");
+                  elem.textContent = `C'est le tour de ${$lobbyStore.players.find(x => x.uuid === $stateStore.joueur_actuel)?.name}...`;
+                  container.appendChild(elem);
+                } else {
+                  let titre: HTMLElement = document.createElement("div");
+                  titre.textContent = possibilites.titre;
+                  container.appendChild(titre);
+
+                  for (let i = 0; i < possibilites.messages.length; i++) {
+                    let _choix: HTMLElement = document.createElement("button");
+                    _choix.classList.add(`option${i}`);
+                    _choix.textContent = possibilites.messages[i];
+                    _choix.onclick = () => {
+                      callback(i);
+                    };
+                    container.appendChild(_choix);
+                  }
+                }
+              });
+      startturn();
+    });
+
+
+    onDestroy(() => {
+      $socketStore.off("recv message");
+      $socketStore.off("update gamestate");
+      $socketStore.off("update lobby");
+      $socketStore.off("start turn");
+      $socketStore.off("end action");
+      $socketStore.off("choix");
+    });
+
 </script>
 
 <main>
