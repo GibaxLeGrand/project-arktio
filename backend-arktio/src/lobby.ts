@@ -399,11 +399,10 @@ export class Lobby {
             this.io.sockets.in(this.uuid).emit("start turn", this.game);
         }
 
-        this.chat.update();
         socket.leave(this.uuid);
-        this.updateLobby();
-
+        this.chat.update();
         player.setToken(0);
+        this.updateLobby();
     }
 
     public isAccessible(): boolean {
