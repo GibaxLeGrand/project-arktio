@@ -95,11 +95,13 @@
 	/**
 	 * affiche le message dans le chat
 	 */
-	function affiche_message(msg: string) {
+	function affiche_message(player: string, msg: string) {
 		let chat_contener = document.getElementById("chat");
 		const child = document.createElement("div");
-
-		child.innerText = msg;
+		const player_name = $lobbyStore.players.find(
+			(x) => x.uuid === player
+		).name;
+		child.innerText = `${player_name} : ${msg}`;
 		child.style.backgroundColor = "#98d1cd";
 		child.style.width = "fit-content";
 		child.style.height = "fit-content";
@@ -224,7 +226,7 @@
 
     onMount(() => {
       $socketStore.on("recv message", ({player, message}) => {
-        affiche_message(message);
+        affiche_message(player, message);
       })
               .on("update gamestate", (state: State) => {
                 stateStore.set(state);
