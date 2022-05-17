@@ -29,7 +29,7 @@ export default class CaseTroc implements Case {
         CaseTroc.bufferPlayerPageChoice.delete(playerID);
         CaseTroc.bufferPlayerChoice.delete(playerID);
         CaseTroc.bufferSelfPageChoice.delete(playerID);
-        
+
         return state;
     }
 
@@ -49,9 +49,13 @@ export default class CaseTroc implements Case {
         switch (step) {
             case 0: {
                 let messages: string[] = ["Je veux pas!"];
-                this.getTrocablePlayers(state, playerID).forEach(player => {
+                console.log(this.getTrocablePlayers(state, playerID));
+                console.log(state.joueurs);
+                for (let player in this.getTrocablePlayers(state, playerID)) {
+                    console.log(state.joueurs[player].nom);
                     messages.push(state.joueurs[player].nom);
-                });
+
+                }
 
                 return { titre: "Avec qui souhaitez-vous troquer ?", messages: messages };
             }
