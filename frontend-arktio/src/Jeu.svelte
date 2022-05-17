@@ -61,6 +61,7 @@
 			_choix.onclick = () => {
 				rollDice();
 			};
+			_choix.style.borderRadius = "0px";
 			container.appendChild(_choix);
 		} else {
 			let elem: HTMLElement = document.createElement("span");
@@ -86,6 +87,7 @@
 			_choix.classList.add(`option0`);
 			_choix.textContent = resultat.messages[0];
 			_choix.onclick = () => $socketStore.emit("play");
+			_choix.style.borderRadius = "0px";
 			container.appendChild(_choix);
 
 			container.appendChild(resultat_affiche);
@@ -95,11 +97,13 @@
 	/**
 	 * affiche le message dans le chat
 	 */
-	function affiche_message(msg: string) {
+	function affiche_message(player: string, msg: string) {
 		let chat_contener = document.getElementById("chat");
 		const child = document.createElement("div");
-
-		child.innerText = msg;
+		const player_name = $lobbyStore.players.find(
+			(x) => x.uuid === player
+		).name;
+		child.innerText = `${player_name} : ${msg}`;
 		child.style.backgroundColor = "#98d1cd";
 		child.style.width = "fit-content";
 		child.style.height = "fit-content";
@@ -137,6 +141,7 @@
 		console.log("quit");
 		get(socketStore).emit("quit", () => {
 			router.goto("/");
+			$userStore.token = 0;
 			lobbyStore.set(null);
 			stateStore.set(null);
 		});
@@ -223,7 +228,7 @@
 
     onMount(() => {
       $socketStore.on("recv message", ({player, message}) => {
-        affiche_message(message);
+        affiche_message(player, message);
       })
               .on("update gamestate", (state: State) => {
                 stateStore.set(state);
@@ -252,12 +257,12 @@
                   container.appendChild(titre);
 
                   let _choix: HTMLElement = document.createElement("button");
-				  _choix.style.borderRadius = "0px";
                   _choix.classList.add(`option0`);
                   _choix.textContent = "Fin de tour";
                   _choix.onclick = () => {
                     $socketStore.emit("end turn");
                   };
+				  _choix.style.borderRadius = "0px";
                   container.appendChild(_choix);
                 }
               })
@@ -283,6 +288,7 @@
                     _choix.onclick = () => {
                       callback(i);
                     };
+					_choix.style.borderRadius = "0px";
                     container.appendChild(_choix);
                   }
                 }
