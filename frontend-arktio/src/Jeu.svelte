@@ -124,6 +124,7 @@
 			let container: HTMLElement = document.getElementById("conteneur");
 
 			container.innerHTML = "";
+			container.style.borderRadius = "0px";
 
 			if ($stateStore.joueur_actuel != $userStore.uuid) {
 				let elem: HTMLElement = document.createElement("span");
@@ -289,7 +290,9 @@
 				$lobbyStore.players.find((x) => x.uuid === joueurID)?.name
 			}.`;
 			_pion.classList.add("pion");
-
+			_pion.style.width = "3em";
+			_pion.style.height = "3em";
+			_pion.style.margin = "0";
 			_case.appendChild(_pion);
 		}
 	}
