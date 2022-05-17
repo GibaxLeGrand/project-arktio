@@ -243,6 +243,8 @@
               })
               .on("end", () => {
                 let container: HTMLElement = document.getElementById("conteneur");
+                container.innerHTML = "";
+                
                 let elem: HTMLElement = document.createElement("span");
                 let vainqueur: string = "";
                 let max: number | null = null;
