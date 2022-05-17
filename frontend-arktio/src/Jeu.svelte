@@ -247,14 +247,14 @@
         document.querySelectorAll("pion").forEach(p => p.remove());
 
         for (let joueurID of $stateStore.ordre_joueurs) {
-            let _pos: number = $stateStore.joueurs[joueurID].caseActuelle.position;
+            let _pos: number = $stateStore.joueurs[joueurID].caseActuelle;
             let nom_pion: string = pions[$stateStore.joueurs[joueurID].pion].text;
 
             let _case: HTMLElement = document.getElementById(`x${_pos + 1}`);
 
             let _pion: HTMLImageElement = document.createElement("img");
             _pion.src = `./Pions/pion_${nom_pion}.PNG`
-            _pion.alt = `Pion ${nom_pion} de ${$lobbyStore.players[joueurID].name}.`;
+            _pion.alt = `Pion ${nom_pion} de ${$stateStore.joueurs[joueurID].nom}.`;
             _pion.classList.add("pion");
 
             _case.appendChild(_pion);
