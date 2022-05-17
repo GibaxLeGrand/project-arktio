@@ -241,7 +241,7 @@
     }
 
     function affichage_pions() {
-        document.querySelectorAll("pion").forEach(p => p.remove());
+        document.querySelectorAll(".pion").forEach(p => p.remove());
 
         for (let joueurID of $stateStore.ordre_joueurs) {
             let _pos: number = $stateStore.joueurs[joueurID].caseActuelle;
