@@ -314,6 +314,8 @@
 			{#each $stateStore.ordre_joueurs as joueurID, index}
 				<div id={`classement_${index + 1}`}>
 					{$lobbyStore.players.find((x) => x.uuid === joueurID).name}
+					{$stateStore.joueurs[joueurID].argent}
+					{$stateStore.joueurs[joueurID].pointTerre}
 				</div>
 			{/each}
 		</div>
