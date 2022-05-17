@@ -312,7 +312,7 @@
         </button>
         <div id="classement">
             {#each $stateStore.ordre_joueurs as joueurID, index}
-                <div id={`classement_${index+1}`}>{$lobbyStore.players.find(x=>x.uuid===joueurID).name}</div>
+                <div id={`classement_${index+1}`}>{$lobbyStore.players.find(x=>x.uuid===joueurID)?.name}</div>
             {/each}
         </div>
         <button id="quit_game" on:click={quit_game_handler}
