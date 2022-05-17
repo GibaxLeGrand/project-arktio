@@ -191,6 +191,7 @@ export class Lobby {
 
                         if (endMonth) {
                             this.game.mois += 1;
+                            this.game.tour += 1;
                             this.game.joueur_actuel = this.game.ordre_joueurs[0];
                             this.game.plateau = CaseManager.generate_board();
                             if (this.game.mois >= 10) {
@@ -335,27 +336,82 @@ export class Lobby {
         let socket: Socket = this.players.get(player)!;
         socket.removeAllListeners("update token");
         socket.removeAllListeners("quit");
+        socket.removeAllListeners("play").removeAllListeners("end turn").removeAllListeners("dice");
 
         if (this.owner === player) {
             if (this.players.size <= 1) {
+                socket.leave(this.uuid);
+                this.chat.update();
+                player.setToken(0);
+                this.updateLobby();
                 LobbyManager.destroyLobby(this);
+                return;
             } else {
-                let iterator = this.players.entries();
-                let p = iterator.next();
-                while (p.value[1] === null || p.value[0] === player)
-                    p = iterator.next();
+                let players = Array.from(this.players.entries());
+                let start = players.findIndex(entry => entry[0] === player);
+                let newOwner = null;
 
-                this.setOwner(p.value[0]);
+                if (start !== -1) {
+                    for (let i=0; i<players.length; i++) {
+                        if (players[i][1] !== null && players[i][0] !== player) {
+                            newOwner = players[i][0];
+                            break;
+                        } 
+                    }
+
+                    if (newOwner === null) {
+                        socket.leave(this.uuid);
+                        this.chat.update();
+                        player.setToken(0);
+                        this.updateLobby();
+                        LobbyManager.destroyLobby(this);
+                        return;
+                    } else {
+                        this.setOwner(newOwner);
+                    }      
+                }            
             }
         }
 
-        this.players.delete(player);
+        if (this.state === LobbyState.Lobby) {
+            this.players.delete(player);
+        } else {
+            this.players.set(player, null);
+            
+            let players = Array.from(this.players.entries());
+            let p = player;
+            let endMonth = true;
+            for (let i = 0; i < players.length; i++) {
+                p = this.nextTurn()!;
+                if (this.game.joueurs[p.getUUID()].caseActuelle < this.game.plateau.length - 1
+                    && this.players.get(p) != null) {
+                    endMonth = false;
+                    break;
+                }
+            }
 
-        this.chat.update();
+            if (endMonth) {
+                this.game.mois += 1;
+                this.game.tour += 1;
+                this.game.joueur_actuel = this.game.ordre_joueurs[0];
+                this.game.plateau = CaseManager.generate_board();
+                if (this.game.mois >= 10) {
+                    this.io.sockets.in(this.uuid).emit("end");
+                    return;
+                } else {
+                    for (let i = 0; i < players.length; i++) {
+                        this.game.joueurs[players[i][0].getUUID()].caseActuelle = -1;
+                    }
+                }
+            }
+
+            this.io.sockets.in(this.uuid).emit("start turn", this.game);
+        }
+
         socket.leave(this.uuid);
-        this.updateLobby();
-
+        this.chat.update();
         player.setToken(0);
+        this.updateLobby();
     }
 
     public isAccessible(): boolean {

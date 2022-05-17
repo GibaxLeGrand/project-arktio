@@ -37,7 +37,7 @@ export interface Player {
     argent : number;
     pointTerre: number;
     pion : number;
-    caseActuelle : {position: number, type: number};
+    caseActuelle : number;
     statut : number;
     avertissement: number;
 }
