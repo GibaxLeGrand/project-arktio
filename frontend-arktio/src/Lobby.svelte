@@ -48,6 +48,19 @@
     });
   }
 
+  let message: string;
+
+  /**
+   * envoie un message à la base de donnée
+   */
+  function send_message() {
+    if (message === undefined || message === "") {
+      return;
+    }
+    $socketStore.emit("send message", message);
+    message = "";
+  }
+
   /**
    * affiche le message dans le chat
    * // TODO vérifier que ça marche
@@ -155,8 +168,9 @@
       <div id="chatbox">
         <span>Yo</span>
       </div>
-      <input name="msg" type="text" id="msg" />
-      <button id="envoyer" type="submit">Envoyer</button>
+      <input name="msg" type="text" id="msg" bind:value={message} />
+      <button id="envoyer" type="submit" on:click={send_message}>Envoyer</button
+      >
     </div>
   </div>
 
