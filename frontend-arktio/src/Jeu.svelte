@@ -242,13 +242,16 @@
     }
 
     function affichage_pions() {
-        console.log($lobbyStore, $stateStore);
-
         document.querySelectorAll("pion").forEach(p => p.remove());
 
         for (let joueurID of $stateStore.ordre_joueurs) {
             let _pos: number = $stateStore.joueurs[joueurID].caseActuelle;
             let nom_pion: string = pions[$stateStore.joueurs[joueurID].pion].text;
+
+            if (_pos === -1) {
+              // TODO
+              return;
+            }
 
             let _case: HTMLElement = document.getElementById(`x${_pos + 1}`);
 
@@ -273,7 +276,7 @@
 <main>
     <div class="plateau">
         {#each $stateStore.plateau as _case, index}
-            <div id={"x" + (index+1)}
+            <div id={`x${index+1}`}
                  class={pos_case($stateStore.plateau.indexOf(_case))}
                  style={`background-size: contain; background-repeat: no-repeat; background-color: #ffffff; background-position:center; background-image: url(./Cases/case_${_case.id_name}.PNG);`}>
 
