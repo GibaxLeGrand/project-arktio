@@ -44,13 +44,18 @@
           })
         );
         const pinfos = await getPlayerInfos();
-        get(socketStore).on("connect", () =>
-          get(socketStore).emit(
-            "player information",
-            pinfos.userUUID,
-            ({ player }) => userStore.set(player)
-          )
-        );
+        console.log(get(socketStore).connected);
+        if (get(socketStore).connected) {
+          get(socketStore).emit("player information", pinfos.userUUID, ({ player }) => {
+            userStore.set(player)
+          });
+        } else {
+          get(socketStore).on("connect", () => {
+            get(socketStore).emit("player information", pinfos.userUUID, ({ player }) => {
+              userStore.set(player)
+            }); 
+          });
+        }
       }
     } else {
       socketStore.set(null);
