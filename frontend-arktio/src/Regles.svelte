@@ -20,8 +20,6 @@
 </script>
 
 <main>
-  <!-- TODO on peut avoir les pages dans un autre fichier contenant le texte puis incrémenter page ( page étant l'index dans le tableau) -->
-  <!-- FIXME -->
   <div>
     {#if page == 1}
       <section>
@@ -197,7 +195,6 @@
         Coopalim, Panier bio ?
       </section>{/if}
     {#if page == 22}<section>
-        <!-- TODO all 0 PT ??? -->
         Septembre :<br /> Intégration dans un campus durable (outils scolaire et
         acteurs universitaires) <br /><br />Objets associés :<br /> - Abonnement
         cinéma engagé (60€ / 0 PT) : Donne des points terre si le joueur tombe
@@ -287,7 +284,7 @@
         Décembre :<br /><br />
         Objet associés :<br />
         - Jean neuf (25€ / -20 PT)
-        <br />- Livre d’occasion : (5€ / 5 PT) : Donne des points terre si tombe
+        <br />- Livre d'occasion : (5€ / 5 PT) : Donne des points terre si tombe
         sur Un dimanche pour soi (valable une fois)
         <br />- Séjour ski dans les Vosges : (200€ / 10 PT) :Donne des points
         terre si tombe sur Un dimanche pour soi (valable une fois)<br /><br />
@@ -563,7 +560,6 @@
     border: solid $blanc;
     border-radius: 10px;
     flex-direction: column;
-    // background-color: $caramel;
     color: $blanc;
   }
 
@@ -590,9 +586,6 @@
     bottom: 0;
     right: 0;
     font-size: 70%;
-
-    // align-self: flex-end;
-    // justify-items: right;
   }
   #previous {
     position: fixed;
@@ -600,17 +593,12 @@
     bottom: 0;
     left: 0;
     font-size: 70%;
-    // flex-direction: row;
-    // align-self: flex-end;
-    // font-size: 75%;
   }
 
   // WIDTH
   @media (max-width: 1100px) {
     main {
       font-size: 200%;
-    }
-    div {
     }
     button {
       height: fit-content;
