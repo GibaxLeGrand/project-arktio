@@ -86,7 +86,7 @@ async function getPlayerInfos(): Promise<{ userUUID: string, userName: string }>
         }
     })
 
-    if (res.status == 200) {
+    if (res.status == 200 || res.status == 304) {
         const data = await res.json()
         return data;
     } else {
