@@ -394,6 +394,12 @@
 		align-items: normal;
 	}
 
+	img {
+    width: 3rem;
+    height: 3rem;
+    margin: 0;
+  }
+
 	button {
 		width: fit-content;
 		height: fit-content;
@@ -500,8 +506,6 @@
 	}
 
 	.pion {
-		height: 3em;
-		margin: 0;
 		max-width: 50px;
 		max-height: 50px;
 	}
