@@ -2,7 +2,7 @@
     import {lobbyStore, socketStore, stateStore, userStore} from "./stores/storeLibrary";
     import {router} from "tinro";
     import {get} from "svelte/store";
-    import {State, TypeReponse} from "./types/types";
+    import {LobbyJSON, State, TypeReponse} from "./types/types";
     import {onMount} from 'svelte';
 
     // import { loop_guard } from "svelte/internal"; // c'est quoi ça ?
@@ -46,6 +46,9 @@
         affiche_message(message);
     }).on("update gamestate", (state: State) => {
 		    stateStore.set(state);
+    }).on("update lobby", (lobby: LobbyJSON) => {
+        lobbyStore.set(lobby);
+        userStore.set(lobby.players.find(x => x.uuid == $userStore.uuid));
     });
 
     export function startturn() {
