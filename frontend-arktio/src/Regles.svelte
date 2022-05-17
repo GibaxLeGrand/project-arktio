@@ -539,6 +539,8 @@
     border-radius: 10px;
     border: solid $gris;
     background-color: $caramel;
+    margin: 1%;
+    font-size: xx-large;
   }
 
   button:hover {
@@ -557,7 +559,7 @@
     position: fixed;
     padding-bottom: 5%;
     margin: 5%;
-    margin-top: 10%;
+    margin-top: 15%;
     border: solid $blanc;
     border-radius: 10px;
     flex-direction: column;
@@ -612,11 +614,31 @@
     main {
       font-size: 100%;
     }
+    button {
+      height: fit-content;
+      width: fit-content;
+    }
+  }
+  @media (max-width: 450px) {
+    div {
+      margin-top: 30%;
+    }
+
+    section {
+      width: fit-content;
+      height: 90%;
+    }
   }
   // HEIGHT
   @media (max-height: 1100px) {
     #accueil {
       font-size: 75%;
+    }
+  }
+
+  @media (max-height: 600px) {
+    button {
+      width: fit-content;
     }
   }
 </style>
