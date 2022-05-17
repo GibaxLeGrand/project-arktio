@@ -61,6 +61,7 @@
 			_choix.onclick = () => {
 				rollDice();
 			};
+			_choix.style.borderRadius = "0px";
 			container.appendChild(_choix);
 		} else {
 			let elem: HTMLElement = document.createElement("span");
