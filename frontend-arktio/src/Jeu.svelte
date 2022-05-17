@@ -247,7 +247,8 @@
                 let vainqueur: string = "";
                 let max: number | null = null;
 
-                for (let player in Object.entries($stateStore.joueurs)) {
+                for (let player in $stateStore.joueurs) {
+                  console.log(player);
                   if (max === null || (max < $stateStore.joueurs[player].pointTerre)) {
                     vainqueur = $stateStore.joueurs[player].nom;
                     max = $stateStore.joueurs[player].pointTerre;
