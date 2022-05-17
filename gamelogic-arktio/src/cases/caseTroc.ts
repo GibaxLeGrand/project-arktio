@@ -80,7 +80,7 @@ export default class CaseTroc implements Case {
                     messages.push("Suivant");
                 }                
 
-                return { titre: `Choississez l'objet que vous voulez troquez de ${state.joueurs[player].nom}`, messages: messages};
+                return { titre: `Choississez l'objet que vous voulez troquer de ${state.joueurs[player].nom}`, messages: messages};
             }
             case 2: {
                 let messages: string[] = ["Retour"];
@@ -100,7 +100,7 @@ export default class CaseTroc implements Case {
                     messages.push("Suivant");
                 }                
 
-                return { titre: `Choississez l'objet que vous voulez troquez à ${state.joueurs[CaseTroc.bufferPlayerChoice.get(playerID)!].nom}`, messages: messages};
+                return { titre: `Choississez l'objet que vous voulez troquer à ${state.joueurs[CaseTroc.bufferPlayerChoice.get(playerID)!].nom}`, messages: messages};
             }
             default:
                 return { titre: "???", messages: [""] };
