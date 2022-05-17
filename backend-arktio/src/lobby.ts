@@ -340,6 +340,10 @@ export class Lobby {
 
         if (this.owner === player) {
             if (this.players.size <= 1) {
+                socket.leave(this.uuid);
+                this.chat.update();
+                player.setToken(0);
+                this.updateLobby();
                 LobbyManager.destroyLobby(this);
                 return;
             } else {
@@ -356,6 +360,10 @@ export class Lobby {
                     }
 
                     if (newOwner === null) {
+                        socket.leave(this.uuid);
+                        this.chat.update();
+                        player.setToken(0);
+                        this.updateLobby();
                         LobbyManager.destroyLobby(this);
                         return;
                     } else {

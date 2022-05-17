@@ -137,6 +137,7 @@
 		console.log("quit");
 		get(socketStore).emit("quit", () => {
 			router.goto("/");
+			$userStore.token = 0;
 			lobbyStore.set(null);
 			stateStore.set(null);
 		});
