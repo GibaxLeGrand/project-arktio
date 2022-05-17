@@ -252,6 +252,7 @@
                   container.appendChild(titre);
 
                   let _choix: HTMLElement = document.createElement("button");
+				  _choix.style.borderRadius = "0px";
                   _choix.classList.add(`option0`);
                   _choix.textContent = "Fin de tour";
                   _choix.onclick = () => {

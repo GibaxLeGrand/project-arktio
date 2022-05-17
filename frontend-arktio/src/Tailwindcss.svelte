@@ -117,7 +117,7 @@
     width: 100vw;
     padding: 1em;
     margin: 0 auto;
-    background-color: var(--turquoise_clair);
+    background-color: var(--gris_fonce);
   }
 
   /* classe */
