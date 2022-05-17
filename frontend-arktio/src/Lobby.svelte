@@ -103,7 +103,7 @@
             {/each}
 
             <div id="choix_pion">
-                <span>Choissisez un pion :</span>
+                <span>Choississez un pion :</span>
                 <select value={$userStore.token} on:change={set_token}>
                     {#each availablePions as pion}
                         <option value={pion.id}>{pion.text}</option>

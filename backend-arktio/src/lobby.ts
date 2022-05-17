@@ -336,6 +336,7 @@ export class Lobby {
         let socket: Socket = this.players.get(player)!;
         socket.removeAllListeners("update token");
         socket.removeAllListeners("quit");
+        socket.removeAllListeners("play").removeAllListeners("end turn").removeAllListeners("dice");
 
         if (this.owner === player) {
             if (this.players.size <= 1) {
@@ -399,11 +400,10 @@ export class Lobby {
             this.io.sockets.in(this.uuid).emit("start turn", this.game);
         }
 
-        this.chat.update();
         socket.leave(this.uuid);
-        this.updateLobby();
-
+        this.chat.update();
         player.setToken(0);
+        this.updateLobby();
     }
 
     public isAccessible(): boolean {
