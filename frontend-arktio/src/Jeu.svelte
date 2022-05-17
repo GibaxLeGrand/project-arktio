@@ -370,7 +370,7 @@
 		justify-self: space-around;
 		border: solid $gris;
 		background-color: $blanc;
-		//border-radius: 10px;
+		border-radius: 0px;
 		color: $turquoise;
 	}
 
