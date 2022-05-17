@@ -42,13 +42,15 @@ export class State {
         // Initialisation tableaux des objets
         let objets_par_mois: {[key:number] : number[]} = {};
 
-        for (let i=0; i<10; i++)
+        for (let i=0; i<Mois.COUNT; i++)
             objets_par_mois[i] = [];
 
         for (let i = 0; i <Mois.COUNT; i++) {
-            for (let j = 0; j < 3; j++) {
-                objets_par_mois[i].push(i*3+j);
-                console.log(ObjetManager.getObjet(i*3+j).nom);
+            for (let key in Object.keys(ObjetManager.getObjets())) {
+                let objets = ObjetManager.getObjets()[key];
+        
+                if (objets.mois == i) 
+                    objets_par_mois[i].push(Number(key));
             }
         }
 
