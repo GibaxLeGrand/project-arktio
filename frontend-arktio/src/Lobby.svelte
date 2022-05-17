@@ -78,8 +78,6 @@
 
 
 
-
-
 </script>
 
 <Tailwindcss/>
@@ -129,8 +127,7 @@
         {#if $lobbyStore.owner.uuid === $userStore.uuid}
             <button aria-label="Lancer la partie" on:click={start_game}
             >Commencer partie
-            </button
-            >
+            </button            >
         {:else}
             <button aria-label="Lancer la partie" disabled>
                 En attente du début de partie

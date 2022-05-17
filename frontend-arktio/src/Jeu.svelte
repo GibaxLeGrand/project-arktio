@@ -260,6 +260,7 @@
                   _choix.onclick = () => {
                     $socketStore.emit("end turn");
                   };
+				  _choix.style.borderRadius = "0px";
                   container.appendChild(_choix);
                 }
               })
@@ -285,6 +286,7 @@
                     _choix.onclick = () => {
                       callback(i);
                     };
+					_choix.style.borderRadius = "0px";
                     container.appendChild(_choix);
                   }
                 }
