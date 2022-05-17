@@ -141,7 +141,7 @@
   <Route path="/Regles/">
     <Regles />
   </Route>
-  {#if [RULES.CONNECTED].includes(state)}
+  {#if [RULES.CONNECTED].includes(state) && $socketStore}
     <Route path="/jeu/">
       <Jeu />
     </Route>
@@ -152,13 +152,14 @@
       {#if meta.params.id.length === 6 && !isNaN(meta.params.id)}
         <Lobby id={meta.params.id} />
       {:else}
-        <Route fallback redirect="/partie/" />
+        <Route redirect="/partie/" />
       {/if}
     </Route>
   {/if}
 
   <Route fallback redirect="/" />
 </main>
+
 
 <!-- CSS
 <style lang="scss">
