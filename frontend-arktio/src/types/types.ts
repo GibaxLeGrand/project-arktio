@@ -30,9 +30,9 @@ export interface Case {
     id_name: string;
 }
 
-
 export interface Player {
     id: string;
+    nom: string;
     inventaire : Objet[];
     argent : number;
     pointTerre: number;
@@ -41,7 +41,6 @@ export interface Player {
     statut : number;
     avertissement: number;
 }
-
 
 export enum Mois {
     SEPTEMBRE,

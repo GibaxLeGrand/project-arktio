@@ -241,6 +241,22 @@
                 stateStore.set(state);
                 startturn();
               })
+              .on("end", () => {
+                let container: HTMLElement = document.getElementById("conteneur");
+                let elem: HTMLElement = document.createElement("span");
+                let vainqueur: string = "";
+                let max: number | null = null;
+
+                for (let player in Object.entries($stateStore.joueurs)) {
+                  if (max === null || (max < $stateStore.joueurs[player].pointTerre)) {
+                    vainqueur = $stateStore.joueurs[player].nom;
+                    max = $stateStore.joueurs[player].pointTerre;
+                  }
+                }
+                
+                elem.textContent = `C'est la fin de la partie, le vainqueur est ${vainqueur}`;
+                container.appendChild(elem);
+              })
               .on("end action", () => {
                 let container: HTMLElement = document.getElementById("conteneur");
 
