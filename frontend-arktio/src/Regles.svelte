@@ -569,10 +569,11 @@
 
   section {
     display: flex;
+    justify-content: center;
     width: 90%;
-    height: 90%;
-    margin: 5%;
-    padding: 2%;
+    height: 100%;
+    margin: 2%;
+    padding: 0;
     overflow: auto;
     overflow-x: unset;
     overflow-wrap: anywhere;
@@ -609,14 +610,16 @@
     main {
       font-size: 200%;
     }
-  }
-  @media (max-width: 700px) {
-    main {
-      font-size: 100%;
+    div {
     }
     button {
       height: fit-content;
       width: fit-content;
+    }
+  }
+  @media (max-width: 700px) {
+    main {
+      font-size: 100%;
     }
   }
   @media (max-width: 450px) {
@@ -634,11 +637,42 @@
     #accueil {
       font-size: 75%;
     }
+    div {
+      margin-top: 10%;
+    }
   }
 
   @media (max-height: 600px) {
     button {
       width: fit-content;
+    }
+  }
+
+  @media (max-height: 500px) {
+    div {
+      margin-top: 10%;
+    }
+
+    section {
+      height: 100%;
+      padding: 0;
+      margin: 0;
+    }
+    button {
+      font-size: xx-small;
+    }
+  }
+
+  @media (max-height: 400px) {
+    div {
+      height: 40%;
+    }
+  }
+
+  // BOTH
+  @media (max-width: 600px) and (max-height: 500px) {
+    div {
+      margin-top: 15%;
     }
   }
 </style>
