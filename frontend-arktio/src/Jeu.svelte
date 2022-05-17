@@ -249,7 +249,7 @@
         document.querySelectorAll(".pion").forEach(p => p.remove());
 
         for (let joueurID of $stateStore.ordre_joueurs) {
-            let _pos: number = $stateStore.joueurs[joueurID].caseActuelle.position;
+            let _pos: number = $stateStore.joueurs[joueurID].caseActuelle;
             let nom_pion: string = pions[$stateStore.joueurs[joueurID].pion].text;
             let img_pion: string = pions[$stateStore.joueurs[joueurID].pion].img;
 
