@@ -67,7 +67,7 @@
 <svelte:head>
     <title>Arktio</title>
     <meta charset="UTF-8">
-
+    <link rel="icon" type="image/png" href="logo.png" />
 </svelte:head>
 
 <main>
