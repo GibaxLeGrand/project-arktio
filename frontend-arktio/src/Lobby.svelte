@@ -22,7 +22,7 @@
     ];
 
     let availablePions: { id: number, text: string }[] = [];
-    let currentPion: number = 0;
+    let currentPion: number = $userStore.token;
 
 
     function players_ready(): boolean {

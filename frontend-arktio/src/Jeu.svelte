@@ -137,6 +137,7 @@
 		console.log("quit");
 		get(socketStore).emit("quit", () => {
 			router.goto("/");
+			$userStore.token = 0;
 			lobbyStore.set(null);
 			stateStore.set(null);
 		});
@@ -252,7 +253,6 @@
                   container.appendChild(titre);
 
                   let _choix: HTMLElement = document.createElement("button");
-				  _choix.style.borderRadius = "0px";
                   _choix.classList.add(`option0`);
                   _choix.textContent = "Fin de tour";
                   _choix.onclick = () => {
