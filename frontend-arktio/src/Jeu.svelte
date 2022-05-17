@@ -313,9 +313,9 @@
 		<div id="classement">
 			{#each $stateStore.ordre_joueurs as joueurID, index}
 				<div id={`classement_${index + 1}`}>
-					<p>{$lobbyStore.players.find((x) => x.uuid === joueurID).name}</p>
-					<p>{$stateStore.joueurs[joueurID].argent} €</p>
-					<p>{$stateStore.joueurs[joueurID].pointTerre} pts Terre</p>
+					<p id="p_class">{$lobbyStore.players.find((x) => x.uuid === joueurID).name}</p>
+					<p id="p_class">{$stateStore.joueurs[joueurID].argent} €</p>
+					<p id="p_class">{$stateStore.joueurs[joueurID].pointTerre} pts Terre</p>
 				</div>
 			{/each}
 		</div>
@@ -554,6 +554,11 @@
 		display: flex;
 		align-items: center;
 		padding: 1%;
+	}
+
+	#p_class {
+		margin: 0;
+		padding: 0;
 	}
 
 	// inventaire
