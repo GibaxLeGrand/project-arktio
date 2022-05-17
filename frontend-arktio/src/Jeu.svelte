@@ -250,7 +250,7 @@
 
             if (_pos === -1) {
               // TODO
-              return;
+              continue;
             }
 
             let _case: HTMLElement = document.getElementById(`x${_pos + 1}`);
