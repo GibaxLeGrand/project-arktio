@@ -212,7 +212,9 @@
 				$lobbyStore.players.find((x) => x.uuid === joueurID)?.name
 			}.`;
 			_pion.classList.add("pion");
-
+			_pion.style.width = "3em";
+			_pion.style.height = "3em";
+			_pion.style.margin = "0";
 			_case.appendChild(_pion);
 		}
 	}
