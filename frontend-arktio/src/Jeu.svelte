@@ -113,7 +113,7 @@
 
         if ($stateStore.joueur_actuel != $userStore.uuid) {
             let elem: HTMLElement = document.createElement("span");
-            elem.textContent = `C'est le tour de ${$lobbyStore.players.find(x => x.uuid === $stateStore.joueur_actuel).name}...`;
+            elem.textContent = `C'est le tour de ${$lobbyStore.players.find(x => x.uuid === $stateStore.joueur_actuel)?.name}...`;
             container.appendChild(elem);
         } else {
             let titre: HTMLElement = document.createElement("div");
@@ -249,7 +249,7 @@
         document.querySelectorAll(".pion").forEach(p => p.remove());
 
         for (let joueurID of $stateStore.ordre_joueurs) {
-            let _pos: number = $stateStore.joueurs[joueurID].caseActuelle;
+            let _pos: number = $stateStore.joueurs[joueurID].caseActuelle.position;
             let nom_pion: string = pions[$stateStore.joueurs[joueurID].pion].text;
             let img_pion: string = pions[$stateStore.joueurs[joueurID].pion].img;
 
@@ -262,7 +262,7 @@
 
             let _pion: HTMLImageElement = document.createElement("img");
             _pion.src = `./Pions/pion_${img_pion}.PNG`
-            _pion.alt = `Pion ${nom_pion} de ${$stateStore.joueurs[joueurID].nom}.`;
+            _pion.alt = `Pion ${nom_pion} de ${$lobbyStore.players.find((x)=>x.uuid===joueurID)?.name}.`;
             _pion.classList.add("pion");
 
             _case.appendChild(_pion);
