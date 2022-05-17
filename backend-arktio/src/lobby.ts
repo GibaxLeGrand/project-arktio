@@ -51,7 +51,7 @@ export class Lobby {
                     inventaire: [],
                     argent: 1000,
                     pointTerre: 0,
-                    pion: i,
+                    pion: buffer[i].getToken(),
                     caseActuelle: -1,
                     statut: 0,
                     avertissement: 0

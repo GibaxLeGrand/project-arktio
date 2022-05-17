@@ -8,15 +8,15 @@
     // import { loop_guard } from "svelte/internal"; // c'est quoi ça ?
 
     let pions = [
-        {id: 0, text: "Aucun"},
-        {id: 1, text: "Boite de conserve"},
-        {id: 2, text: "Terre"},
-        {id: 3, text: "Plante"},
-        {id: 4, text: "Grain de café"},
-        {id: 5, text: "Bonnet"},
-        {id: 6, text: "Papillon"},
-        {id: 7, text: "Arrosoir"},
-        {id: 8, text: "Nuage"},
+        {id: 0, text: "Aucun", img:""},
+        {id: 1, text: "Boite de conserve", img:"conserve"},
+        {id: 2, text: "Terre", img:"terre"},
+        {id: 3, text: "Plante", img:"plante"},
+        {id: 4, text: "Grain de café", img:"grain"},
+        {id: 5, text: "Bonnet", img:"bonnet"},
+        {id: 6, text: "Papillon", img:"papillon"},
+        {id: 7, text: "Arrosoir", img:"arrosoir"},
+        {id: 8, text: "Nuage", img:"nuage"},
     ];
 
     const NB_CASES = 30;
@@ -113,7 +113,6 @@
             elem.textContent = `C'est le tour de ${$lobbyStore.players.find(x => x.uuid === $stateStore.joueur_actuel).name}...`;
             container.appendChild(elem);
         } else {
-            console.log("oui bonjour");
             let titre: HTMLElement = document.createElement("div");
             titre.textContent = possibilites.titre;
             container.appendChild(titre);
@@ -247,6 +246,7 @@
         for (let joueurID of $stateStore.ordre_joueurs) {
             let _pos: number = $stateStore.joueurs[joueurID].caseActuelle;
             let nom_pion: string = pions[$stateStore.joueurs[joueurID].pion].text;
+            let img_pion: string = pions[$stateStore.joueurs[joueurID].pion].img;
 
             if (_pos === -1) {
               // TODO
@@ -256,7 +256,7 @@
             let _case: HTMLElement = document.getElementById(`x${_pos + 1}`);
 
             let _pion: HTMLImageElement = document.createElement("img");
-            _pion.src = `./Pions/pion_${nom_pion}.PNG`
+            _pion.src = `./Pions/pion_${img_pion}.PNG`
             _pion.alt = `Pion ${nom_pion} de ${$stateStore.joueurs[joueurID].nom}.`;
             _pion.classList.add("pion");
 
