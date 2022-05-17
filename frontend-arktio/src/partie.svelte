@@ -2,7 +2,7 @@
 <script lang="ts">
   import Tailwindcss from "./Tailwindcss.svelte";
   import {router} from "tinro";
-  import {lobbyStore, socketStore} from "./stores/storeLibrary";
+  import {lobbyStore, socketStore, userStore} from "./stores/storeLibrary";
   import {get} from "svelte/store";
   import type {LobbyJSON} from "./types/types";
 

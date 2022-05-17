@@ -5,6 +5,7 @@
     import {get} from "svelte/store";
     import type {LobbyJSON, PlayerJSON} from "./types/types";
     import type {State} from "./types/types";
+    import {onDestroy, onMount} from "svelte";
 
     export let id: string;
 
@@ -44,28 +45,39 @@
         });
     }
 
-
-    $socketStore
-        .on("update lobby", (lobby: LobbyJSON) => {
-            lobbyStore.set(lobby);
-            userStore.set(lobby.players.find(x => x.uuid == $userStore.uuid));
-        })
-        .on("start turn", (state: State) => {
-            stateStore.set(state);
-            state.plateau.forEach((_case, index) => {
-                console.log(_case.name, index);
+    onMount(()=>{
+        $socketStore
+            .on("update lobby", (lobby: LobbyJSON) => {
+                console.log(lobby);
+                lobbyStore.set(lobby);
+                userStore.set(lobby.players.find(x => x.uuid == $userStore.uuid));
+            })
+            .on("start turn", (state: State) => {
+                console.log(state);
+                stateStore.set(state);
+                state.plateau.forEach((_case, index) => {
+                    console.log(_case.name, index);
+                });
+                router.goto("/jeu/");
             });
-            router.goto("/jeu/");
-        });
 
-    lobbyStore.subscribe(lobby => {
-        availablePions = pions.filter(pion => {
-            return !$lobbyStore.players.find(player => player.token != 0 && player.token === pion.id && $userStore.uuid != player.uuid && (() => {
-                currentPion = pion.id;
-                return true;
-            })());
-        });
+        $:  {availablePions = pions.filter(pion => {
+                return !$lobbyStore.players.find(player => player.token != 0 && player.token === pion.id && $userStore.uuid != player.uuid && (() => {
+                    currentPion = pion.id;
+                    return true;
+                })());
+            });
+        }
     })
+
+    onDestroy(()=>{
+        $socketStore.off("update lobby");
+        $socketStore.off("start turn");
+    })
+
+
+
+
 
 </script>
 

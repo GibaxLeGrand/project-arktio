@@ -15,9 +15,9 @@
     userStore,
   } from "./stores/storeLibrary";
   import Regles from "./Regles.svelte";
-  import Jeu from "./Jeu.svelte";
-  import * as io from "socket.io-client";
   import Tailwindcss from "./Tailwindcss.svelte";
+  import Jeu from "./Jeu.svelte";
+  import * as io from "socket.io-client";  
   import type { LobbyJSON } from "./types/types";
 
   let cnt = 0;

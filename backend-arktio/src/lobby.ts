@@ -336,6 +336,7 @@ export class Lobby {
         let socket: Socket = this.players.get(player)!;
         socket.removeAllListeners("update token");
         socket.removeAllListeners("quit");
+        socket.removeAllListeners("play").removeAllListeners("end turn").removeAllListeners("dice");
 
         if (this.owner === player) {
             if (this.players.size <= 1) {
