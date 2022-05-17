@@ -130,6 +130,7 @@ export class Lobby {
                     
                                             choices = [];
                                             end = false;
+                                            endturn = true;
                                             this.updateGameState();
                                             socket.emit("end action");
                                         }
@@ -173,6 +174,7 @@ export class Lobby {
                 });
 
                 socket.on("end turn", () => {
+                    console.log("fin du tour");
                     if (this.isActualPlayer(player) && endturn) {
                         let players = Array.from(this.players.entries());
                         let p = player;

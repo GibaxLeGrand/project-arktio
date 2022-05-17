@@ -12,7 +12,9 @@ export default class CaseTroc implements Case {
     private static bufferSelfPageChoice: Map<string, number> = new Map();
 
     play(state: State, playerID: string, choices: number[]) : State {
+        console.log("fin");
         if (choices.length === 1) {
+            console.log("c nul");
             return state;
         }
 
@@ -30,6 +32,7 @@ export default class CaseTroc implements Case {
         CaseTroc.bufferPlayerChoice.delete(playerID);
         CaseTroc.bufferSelfPageChoice.delete(playerID);
 
+        console.log("echange fait");
         return state;
     }
 
