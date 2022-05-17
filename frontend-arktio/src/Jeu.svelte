@@ -86,6 +86,7 @@
 			_choix.classList.add(`option0`);
 			_choix.textContent = resultat.messages[0];
 			_choix.onclick = () => $socketStore.emit("play");
+			_choix.style.borderRadius = "0px";
 			container.appendChild(_choix);
 
 			container.appendChild(resultat_affiche);
