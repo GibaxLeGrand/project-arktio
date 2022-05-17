@@ -466,7 +466,8 @@
   }
 
   #conteneur > button {
-    border-radius: 0;
+    overflow-y: auto;
+    border-radius: 0 !important;
   }
 
   #event {
