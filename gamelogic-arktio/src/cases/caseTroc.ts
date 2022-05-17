@@ -36,11 +36,11 @@ export default class CaseTroc implements Case {
     getTrocablePlayers(state: State, playerID: string): string[] {
         let result: string[] = [];
 
-        for (let player in state.ordre_joueurs) {
+        state.ordre_joueurs.forEach(player => {
             if (player !== playerID) {
                 result.push(player);
             }
-        }
+        })
 
         return result;
     }
@@ -51,11 +51,10 @@ export default class CaseTroc implements Case {
                 let messages: string[] = ["Je veux pas!"];
                 console.log(this.getTrocablePlayers(state, playerID));
                 console.log(state.joueurs);
-                for (let player in this.getTrocablePlayers(state, playerID)) {
+                this.getTrocablePlayers(state, playerID).forEach(player => {
                     console.log(state.joueurs[player].nom);
                     messages.push(state.joueurs[player].nom);
-
-                }
+                });
 
                 return { titre: "Avec qui souhaitez-vous troquer ?", messages: messages };
             }
