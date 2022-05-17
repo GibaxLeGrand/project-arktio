@@ -52,7 +52,7 @@ export class Lobby {
                     argent: 1000,
                     pointTerre: 0,
                     pion: i,
-                    caseActuelle: 0,
+                    caseActuelle: -1,
                     statut: 0,
                     avertissement: 0
                 }
@@ -189,13 +189,13 @@ export class Lobby {
                         if (endMonth) {
                             this.game.mois += 1;
                             this.game.joueur_actuel = this.game.ordre_joueurs[0];
-                            
+                            this.game.plateau = CaseManager.generate_board();
                             if (this.game.mois >= 10) {
                                 this.io.sockets.in(this.uuid).emit("end");
                                 return;
                             } else {
                                 for (let i = 0; i < players.length; i++) {
-                                    this.game.joueurs[players[i][0].getUUID()].caseActuelle = 0;
+                                    this.game.joueurs[players[i][0].getUUID()].caseActuelle = -1;
                                 }
                             }
                         }
