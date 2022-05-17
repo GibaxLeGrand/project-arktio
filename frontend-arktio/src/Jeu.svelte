@@ -158,15 +158,17 @@
         const child = document.createElement("div");
 
         child.innerText = msg;
-        child.style.backgroundColor = "#ba105a";
-        child.style.width = "fit-content";
-        child.style.height = "fit-content";
-        child.style.display = "flex";
-        child.style.flexDirection = "column";
-        child.style.border = "solid grey";
-        child.style.borderRadius = "10px";
-        child.style.alignSelf = "space-around";
-        child.style.marginTop = "1%";
+		child.style.backgroundColor = "#98d1cd";
+		child.style.width = "fit-content";
+		child.style.height = "fit-content";
+		child.style.display = "flex";
+		child.style.flexDirection = "column";
+		child.style.border = "solid grey";
+		child.style.borderRadius = "10px";
+		child.style.alignSelf = "space-around";
+		child.style.marginTop = "1%";
+		child.style.marginLeft = "2%";
+		child.style.padding = "1%";
         chat_contener.appendChild(child);
         chat_contener.scroll({
             top: 10000,
@@ -271,449 +273,464 @@
 		affichage_pions();
 	});
 
-    onMount(() => {
-        startturn();
-    })
+	onMount(() => {
+		startturn();
+	});
 </script>
 
 <main>
-    <div class="plateau">
-        {#each $stateStore.plateau as _case, index}
-            <div id={`x${index+1}`}
-                 class={pos_case($stateStore.plateau.indexOf(_case))}
-                 style={`background-size: contain; background-repeat: no-repeat; background-color: #ffffff; background-position:center; background-image: url(./Cases/case_${_case.id_name}.PNG);`}>
+	<div class="plateau">
+		{#each $stateStore.plateau as _case, index}
+			<div
+				id={`x${index + 1}`}
+				class={pos_case($stateStore.plateau.indexOf(_case))}
+				style={`background-size: contain; background-repeat: no-repeat; background-color: #ffffff; background-position:center; background-image: url(./Cases/case_${_case.id_name}.PNG);`}
+			/>
+		{/each}
+		<div id="conteneur" />
 
-            </div>
-        {/each}
-        <div id="conteneur">
-
-        </div>
-
-        <div id="titre_inventaire">Inventaire</div>
-        <div id="inventaire">
-            <ul>
-            {#each $stateStore.joueurs[$userStore.uuid].inventaire as _item}
-                <li>{_item.nom}</li>
-            {/each}
-            </ul>
-        </div>
-        <div id="chat"/>
-        <input
-                type="text"
-                method="POST"
-                id="input"
-                bind:value={message}
-                on:keydown={(key) => {
-        if (key.key == "Enter") send_message();
-      }}
-        />
-        <button type="submit" id="send_message" on:click={send_message}>
-            Envoyer
-        </button>
-        <div id="classement">
-            {#each $stateStore.ordre_joueurs as joueurID, index}
-                <div id={`classement_${index+1}`}>{$lobbyStore.players.find(x=>x.uuid===joueurID)?.name}</div>
-            {/each}
-        </div>
-        <button id="quit_game" on:click={quit_game_handler}
-        >{quit_game_button_text}</button
-        >
-        {#if print_yes_no}
-            <button on:click={quit} class="bouton_choix" id="boutonoui">OUI</button>
-            <button on:click={quit_game_handler} class="bouton_choix" id="boutonnon"
-            >NON
-            </button>
-        {/if}
-    </div>
+		<div id="titre_inventaire">Inventaire</div>
+		<div id="inventaire">
+			<ul>
+				{#each $stateStore.joueurs[$userStore.uuid].inventaire as _item}
+					<li>{_item.nom}</li>
+				{/each}
+			</ul>
+		</div>
+		<div id="chat" />
+		<input
+			type="text"
+			method="POST"
+			id="input"
+			bind:value={message}
+			on:keydown={(key) => {
+				if (key.key == "Enter") send_message();
+			}}
+		/>
+		<button type="submit" id="send_message" on:click={send_message}>
+			Envoyer
+		</button>
+		<div id="classement">
+			{#each $stateStore.ordre_joueurs as joueurID, index}
+				<div id={`classement_${index + 1}`}>
+					{$lobbyStore.players.find((x) => x.uuid === joueurID).name}
+				</div>
+			{/each}
+		</div>
+		<button id="quit_game" on:click={quit_game_handler}
+			>{quit_game_button_text}</button
+		>
+		{#if print_yes_no}
+			<button on:click={quit} class="bouton_choix" id="boutonoui"
+				>OUI</button
+			>
+			<button
+				on:click={quit_game_handler}
+				class="bouton_choix"
+				id="boutonnon"
+				>NON
+			</button>
+		{/if}
+	</div>
 </main>
 
 <!-- CSS -->
 <style lang="scss">
-  $nb_cases_horizontal: 5;
-  $nb_cases_vertical: 10; // les cases dans les coins sont comptées
-  $taille_case: 1fr;
+	$nb_cases_horizontal: 5;
+	$nb_cases_vertical: 10; // les cases dans les coins sont comptées
+	$taille_case: 1fr;
 
-  $turquoise: #00a19a;
-  $blanc: #ffffff;
-  $framboise: #ba105a;
-  $caramel: #ffd49a;
-  $turquoise_clair: #98d1cd;
-  $gris: #90908f;
-  $gris_fonce: #2c2c2c;
-  $font_arktio: Raleway;
+	$turquoise: #00a19a;
+	$blanc: #ffffff;
+	$framboise: #ba105a;
+	$caramel: #ffd49a;
+	$turquoise_clair: #98d1cd;
+	$gris: #90908f;
+	$gris_fonce: #2c2c2c;
+	$font_arktio: Raleway;
 
+	main {
+		display: block;
+		width: 100%;
+		background-color: $turquoise;
+		font-size: x-large;
+		color: $blanc;
+	}
 
-  main {
-    display: block;
-    width: 100%;
-    background-color: $turquoise;
-    font-size: x-large;
-    color: #ffffff;
-  }
+	div {
+		display: grid;
+		align-items: normal;
+	}
 
-  div {
-    display: grid;
-    align-items: normal;
-  }
+	button {
+		width: fit-content;
+		height: fit-content;
+		align-self: flex-end;
+		display: inline-flex;
+		justify-self: space-around;
+		border: solid $gris;
+		background-color: $blanc;
+		//border-radius: 10px;
+		color: $turquoise;
+	}
 
-  button {
-    width: fit-content;
-    height: fit-content;
-    align-self: flex-end;
-    display: inline-flex;
-    justify-self: space-around;
-    border: solid $gris;
-    background-color: $blanc;
-    border-radius: 10px;
-    color: $gris_fonce;
-  }
+	button:hover {
+		background-color: rgb(41, 39, 39);
+		color: $blanc;
+	}
 
-  button:hover {
-    background-color: rgb(41, 39, 39);
-    color: $blanc;
-  }
+	button:active {
+		background-color: rgb(150, 150, 150);
+	}
 
-  button:active {
-    background-color: rgb(150, 150, 150);
-  }
+	input {
+		width: 55%;
+		height: fit-content;
+		font-size: 60%;
+		font-family: $font_arktio;
+		display: flex;
+		justify-content: center;
+		justify-self: flex-start;
+		align-self: center;
+		grid-column-start: 10;
+		grid-column-end: 13;
+		grid-row-start: 6;
+		color: black;
+		padding: 0.4em;
+		margin-bottom: initial;
+		border-radius: 10px;
+	}
 
-  input {
-    width: 55%;
-    height: fit-content;
-    font-size: 60%;
-    font-family: $font_arktio;
-    display: flex;
-    justify-content: center;
-    justify-self: flex-start;
-    align-self: center;
-    grid-column-start: 10;
-    grid-column-end: 13;
-    grid-row-start: 6;
-    color: black;
-    padding: 0.4em;
-    margin-bottom: initial;
-    border-radius: 10px;
-  }
+	// plateau
+	.plateau {
+		display: grid;
+		width: 100%;
+		height: 100%;
+		//border: solid $framboise;
+		//border-width: 5px;
+		display: grid;
+		grid-gap: 5px;
+		grid-template-rows: repeat(10, $taille_case);
+		grid-template-columns: repeat(11, $taille_case);
+	}
 
-
-  // plateau
-  .plateau {
-    display: grid;
-    width: 100%;
-    height: 100%;
-    //border: solid $framboise;
-    //border-width: 5px;
-    display: grid;
-    grid-gap: 5px;
-    grid-template-rows: repeat(10, $taille_case);
-    grid-template-columns: repeat(11, $taille_case);
-  }
-
-  // toutes les cases y compris contener + autres div
-  /*
+	// toutes les cases y compris contener + autres div
+	/*
   .plateau > div {
     border: dashed black;
   }
 */
-  // 1 -> 7
-  .cases_haut {
-    grid-row-start: 1;
-  }
+	// 1 -> 7
+	.cases_haut {
+		grid-row-start: 1;
+	}
 
-  // 8 -> 15
-  .cases_droite {
-    grid-column-start: 9;
-  }
+	// 8 -> 15
+	.cases_droite {
+		grid-column-start: 9;
+	}
 
-  // 16 -> 22
-  .cases_bas {
-    grid-row-start: 10;
-  }
+	// 16 -> 22
+	.cases_bas {
+		grid-row-start: 10;
+	}
 
-  // 23 -> 30
-  .cases_gauche {
-    grid-column-start: 3;
-  }
+	// 23 -> 30
+	.cases_gauche {
+		grid-column-start: 3;
+	}
 
+	// bloc action
+	#conteneur {
+		display: block;
+		grid-column-start: 4;
+		grid-column-end: 9;
+		grid-row-start: 2;
+		grid-row-end: 10;
+		//border: dashed red;
+		color: $gris_fonce;
+		padding: 1em;
+	}
 
-  // bloc action
-  #conteneur {
-    display: block;
-    grid-column-start: 4;
-    grid-column-end: 9;
-    grid-row-start: 2;
-    grid-row-end: 10;
-    border: dashed red;
-    color: $gris_fonce;
-  }
+	#event {
+		background-color: $framboise;
+		height: 20%;
+	}
 
-  #event {
-    background-color: $framboise;
-    height: 20%;
-  }
+	#image {
+		background-color: #fff;
+		height: 50%;
+	}
 
-  #image {
-    background-color: #fff;
-    height: 50%;
-  }
+	.pion {
+		max-width: 50px;
+		max-height: 50px;
+	}
 
-  .pion{
-    max-width:  50px;
-    max-height: 50px;
-  }
+	.options {
+		width: 40%;
+		align-items: center;
+		justify-content: space-around;
+		margin-top: 2%;
+		margin-bottom: 2%;
+		margin-right: 4.5%;
+		margin-left: 4.5%;
+	}
 
-  .options {
-    width: 40%;
-    align-items: center;
-    justify-content: space-around;
-    margin-top: 2%;
-    margin-bottom: 2%;
-    margin-right: 4.5%;
-    margin-left: 4.5%;
-  }
+	// bouton quitter
+	.bouton_choix {
+		width: 80%;
+		justify-content: center;
+		align-items: center;
+		justify-self: center;
+	}
 
+	#boutonoui {
+		grid-column-start: 2;
+		grid-row-start: 2;
+	}
 
-  // bouton quitter
-  .bouton_choix {
-    width: 80%;
-    justify-content: center;
-    align-items: center;
-    justify-self: center;
-  }
+	#boutonnon {
+		grid-column-start: 1;
+		grid-row-start: 2;
+	}
 
-  #boutonoui {
-    grid-column-start: 2;
-    grid-row-start: 2;
-  }
+	#quit_game {
+		grid-column-start: 1;
+		grid-column-end: 3;
+		height: 100%;
+		width: 70%;
+		font-size: 1em;
+		justify-content: center;
+		align-items: center;
+		justify-self: left;
+		margin-top: auto;
+	}
 
-  #boutonnon {
-    grid-column-start: 1;
-    grid-row-start: 2;
-  }
+	// classement
+	#classement {
+		grid-column-start: 10;
+		grid-column-end: 12;
+		grid-row-start: 7;
+		grid-row-end: 11;
+		display: flex;
+		border: solid #90908f;
+		color: $gris_fonce;
+		align-items: center;
+		justify-content: space-around;
+		flex-direction: column;
+		background-color: $blanc;
+	}
 
-  #quit_game {
-    grid-column-start: 1;
-    grid-column-end: 3;
-    height: 100%;
-    width: 70%;
-    font-size: 2vw;
-    justify-content: center;
-    align-items: center;
-    justify-self: left;
-    margin-top: auto;
-  }
+	#classement_1 {
+		background-color: $caramel;
+		width: 80%;
+		display: flex;
+		align-items: center;
+		padding: 1%;
+	}
 
+	#classement_2 {
+		background-color: $turquoise_clair;
+		width: 80%;
+		display: flex;
+		align-items: center;
+		padding: 1%;
+	}
 
-  // classement
-  #classement {
-    grid-column-start: 10;
-    grid-column-end: 12;
-    grid-row-start: 7;
-    grid-row-end: 11;
-    display: flex;
-    border: dashed $caramel;
-    color: $gris_fonce;
-    align-items: center;
-    justify-content: space-around;
-    flex-direction: column;
-  }
+	#classement_3 {
+		background-color: $framboise;
+		width: 80%;
+		display: flex;
+		align-items: center;
+		padding: 1%;
+	}
 
-  #classement_1 {
-    background-color: #fff;
-    width: 80%;
-  }
+	#classement_4 {
+		background-color: $gris;
+		width: 80%;
+		display: flex;
+		align-items: center;
+		padding: 1%;
+	}
 
-  #classement_2 {
-    background-color: rgb(255, 232, 232);
-    width: 80%;
-  }
+	// inventaire
+	#titre_inventaire {
+		display: grid;
+		grid-column-start: 1;
+		grid-column-end: 3;
+		grid-row-start: 3;
+		justify-content: center;
+		align-items: flex-end;
+		font-size: 3vw;
+		color: $gris_fonce;
+		border: none;
+	}
 
-  #classement_3 {
-    background-color: rgb(255, 174, 174);
-    width: 80%;
-  }
+	#inventaire {
+		grid-column-start: 1;
+		grid-column-end: 3;
+		grid-row-start: 4;
+		grid-row-end: 11;
+		border: solid $gris;
+		width: 100%;
+		align-items: center;
+		justify-content: space-between;
+		display: flex;
+		overflow: auto;
+		flex-wrap: wrap;
+		background-color: $blanc;
+		color: $turquoise;
+	}
 
-  #classement_4 {
-    background-color: rgb(255, 134, 134);
-    width: 80%;
-  }
+	// tchat
+	#chat {
+		grid-column-start: 10;
+		grid-column-end: 12;
+		grid-row-start: 1;
+		grid-row-end: 6;
+		width: 100%;
+		display: flex;
+		align-content: center;
+		justify-content: flex-start;
+		flex-direction: column;
+		overflow: auto;
+		overflow-wrap: anywhere;
+		overflow-x: unset;
+		height: 25em;
+		background-color: white;
+		border: solid $gris;
+	}
 
+	#send_message {
+		width: 80%;
+		font-size: 70%;
+		justify-content: center;
+		justify-self: flex-end;
+		align-self: center;
+		margin: 0.4em;
+		grid-column-start: 11;
+		grid-row-start: 6;
+	}
 
-  // inventaire
-  #titre_inventaire {
-    display: grid;
-    grid-column-start: 1;
-    grid-column-end: 3;
-    grid-row-start: 3;
-    justify-content: center;
-    align-items: flex-end;
-    font-size: 3vw;
-    color: $gris_fonce;
-    border: none;
-  }
+	// grille
+	#x1 {
+		grid-column-start: 3;
+	}
 
-  #inventaire {
-    grid-column-start: 1;
-    grid-column-end: 3;
-    grid-row-start: 4;
-    grid-row-end: 11;
-    border: dashed $caramel;
-    width: 100%;
-    align-items: center;
-    justify-content: space-between;
-    display: flex;
-    overflow: auto;
-    flex-wrap: wrap;
-  }
+	#x2 {
+		grid-column-start: 4;
+	}
 
+	#x3 {
+		grid-column-start: 5;
+	}
 
-  // tchat
-  #chat {
-    grid-column-start: 10;
-    grid-column-end: 12;
-    grid-row-start: 1;
-    grid-row-end: 6;
-    width: 100%;
-    display: flex;
-    align-content: center;
-    justify-content: flex-start;
-    flex-direction: column;
-    overflow: auto;
-    overflow-wrap: anywhere;
-    overflow-x: unset;
-    height: 25em;
-  }
+	#x4 {
+		grid-column-start: 6;
+	}
 
-  #send_message {
-    width: 80%;
-    font-size: 70%;
-    justify-content: center;
-    justify-self: flex-end;
-    align-self: center;
-    margin: 0.4em;
-    grid-column-start: 11;
-    grid-row-start: 6;
-  }
+	#x5 {
+		grid-column-start: 7;
+	}
 
+	#x6 {
+		grid-column-start: 8;
+	}
 
-  // grille
-  #x1 {
-    grid-column-start: 3;
-  }
+	#x7 {
+		grid-column-start: 9;
+	}
 
-  #x2 {
-    grid-column-start: 4;
-  }
+	#x8 {
+		grid-row-start: 2;
+	}
 
-  #x3 {
-    grid-column-start: 5;
-  }
+	#x9 {
+		grid-row-start: 3;
+	}
 
-  #x4 {
-    grid-column-start: 6;
-  }
+	#x10 {
+		grid-row-start: 4;
+	}
 
-  #x5 {
-    grid-column-start: 7;
-  }
+	#x11 {
+		grid-row-start: 5;
+	}
 
-  #x6 {
-    grid-column-start: 8;
-  }
+	#x12 {
+		grid-row-start: 6;
+	}
 
-  #x7 {
-    grid-column-start: 9;
-  }
+	#x13 {
+		grid-row-start: 7;
+	}
 
-  #x8 {
-    grid-row-start: 2;
-  }
+	#x14 {
+		grid-row-start: 8;
+	}
 
-  #x9 {
-    grid-row-start: 3;
-  }
+	#x15 {
+		grid-row-start: 9;
+	}
 
-  #x10 {
-    grid-row-start: 4;
-  }
+	#x16 {
+		grid-column-start: 9;
+	}
 
-  #x11 {
-    grid-row-start: 5;
-  }
+	#x17 {
+		grid-column-start: 8;
+	}
 
-  #x12 {
-    grid-row-start: 6;
-  }
+	#x18 {
+		grid-column-start: 7;
+	}
 
-  #x13 {
-    grid-row-start: 7;
-  }
+	#x19 {
+		grid-column-start: 6;
+	}
 
-  #x14 {
-    grid-row-start: 8;
-  }
+	#x20 {
+		grid-column-start: 5;
+	}
 
-  #x15 {
-    grid-row-start: 9;
-  }
+	#x21 {
+		grid-column-start: 4;
+	}
 
-  #x16 {
-    grid-column-start: 9;
-  }
+	#x22 {
+		grid-column-start: 3;
+	}
 
-  #x17 {
-    grid-column-start: 8;
-  }
+	#x23 {
+		grid-row-start: 9;
+	}
 
-  #x18 {
-    grid-column-start: 7;
-  }
+	#x24 {
+		grid-row-start: 8;
+	}
 
-  #x19 {
-    grid-column-start: 6;
-  }
+	#x25 {
+		grid-row-start: 7;
+	}
 
-  #x20 {
-    grid-column-start: 5;
-  }
+	#x26 {
+		grid-row-start: 6;
+	}
 
-  #x21 {
-    grid-column-start: 4;
-  }
+	#x27 {
+		grid-row-start: 5;
+	}
 
-  #x22 {
-    grid-column-start: 3;
-  }
+	#x28 {
+		grid-row-start: 4;
+	}
 
-  #x23 {
-    grid-row-start: 9;
-  }
+	#x29 {
+		grid-row-start: 3;
+	}
 
-  #x24 {
-    grid-row-start: 8;
-  }
-
-  #x25 {
-    grid-row-start: 7;
-  }
-
-  #x26 {
-    grid-row-start: 6;
-  }
-
-  #x27 {
-    grid-row-start: 5;
-  }
-
-  #x28 {
-    grid-row-start: 4;
-  }
-
-  #x29 {
-    grid-row-start: 3;
-  }
-
-  #x30 {
-    grid-row-start: 2;
-  }
+	#x30 {
+		grid-row-start: 2;
+	}
 </style>
