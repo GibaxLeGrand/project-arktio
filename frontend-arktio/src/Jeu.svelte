@@ -45,7 +45,7 @@
     $socketStore.on("recv message", ({player, message}) => {
         affiche_message(message);
     }).on("update gamestate", (state: State) => {
-        stateStore.set(state);
+		stateStore.set(state);
     });
 
     export function startturn() {
@@ -257,7 +257,11 @@
 
             _case.appendChild(_pion);
         }
-    }
+	}
+	
+	$stateStore.subscribe( state => {
+		affichage_pions();
+	});
 
     onMount(() => {
         startturn();
