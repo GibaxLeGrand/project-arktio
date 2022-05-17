@@ -47,11 +47,12 @@ export class Lobby {
 
                 players[buffer[i].getUUID()] = {
                     id: buffer[i].getUUID(),
+                    nom: buffer[i].getName(),
                     inventaire: [],
                     argent: 1000,
                     pointTerre: 0,
-                    pion: i,
-                    caseActuelle: 0,
+                    pion: buffer[i].getToken(),
+                    caseActuelle: -1,
                     statut: 0,
                     avertissement: 0
                 }
@@ -60,7 +61,6 @@ export class Lobby {
             console.log(ordre);
             this.game = State.create(players, ordre);
             
-
             // Au cas où et pour + de lisibilité
             this.game.mois = Mois.SEPTEMBRE;
             this.game.tour = 0;
@@ -77,13 +77,13 @@ export class Lobby {
                         let caseActuelle = this.game.joueurs[this.game.joueur_actuel].caseActuelle;
                         this.game.joueurs[this.game.joueur_actuel].caseActuelle = Math.min(caseActuelle + result, this.game.plateau.length - 1);
 
+                        dice = false;
+                        this.updateGameState();
+
                         callback({
                             titre: `Vous avez fait ${result}`,
                             messages: ["Suivant"],
                         });
-                        dice = false;
-
-                        this.updateGameState();
                     } else {
                         callback({
                             titre: `Ce n'est pas votre tour`,
@@ -100,21 +100,25 @@ export class Lobby {
                     if (this.isActualPlayer(player)) {
                         let mycase: Case = this.getActualPlayerCase();
                         let step = 0;
-                        let reponse = mycase.prepare(this.game, this.game.joueur_actuel, step);
-                        let that = this;
+                        let reponse;
 
                         const nextStep = async () => {
                             console.log("nextStep");
-                            if (that.isActualPlayer(player)) {
+                            if (this.isActualPlayer(player)) {
+                                reponse = mycase.prepare(this.game, this.game.joueur_actuel, step);
                                 socket.emit("choix", reponse, (choice: number) => {
                                     console.log("YAY")
-                                    let next = mycase.next(that.game, that.game.joueur_actuel, step, choice);
+                                    let next = mycase.next(this.game, this.game.joueur_actuel, step, choice);
                                     end = next.end;
 
-                                    if (step > next.step && !end)
+                                    if (step > next.step && next.step != -1) {
                                         choices.pop();
-                                    else
+                                    } else if (step == next.step) {
+                                        choices.pop();
                                         choices.push(choice);
+                                    } else {
+                                        choices.push(choice);
+                                    }
 
                                     if (!end) {
                                         step = next.step;
@@ -126,6 +130,7 @@ export class Lobby {
                     
                                             choices = [];
                                             end = false;
+                                            endturn = true;
                                             this.updateGameState();
                                             socket.emit("end action");
                                         }
@@ -133,16 +138,21 @@ export class Lobby {
                                 });
                             }
                         };
-
+                        
+                        reponse = mycase.prepare(this.game, this.game.joueur_actuel, step);
                         socket.emit("choix", reponse, (choice: number) => {
                             console.log(choice);
                             let next = mycase.next(this.game, this.game.joueur_actuel, step, choice);
                             end = next.end;
 
-                            if (step > next.step && next.step != -1)
+                            if (step > next.step && next.step != -1) {
                                 choices.pop();
-                            else
+                            } else if (step == next.step) {
+                                choices.pop();
                                 choices.push(choice);
+                            } else {
+                                choices.push(choice);
+                            }
 
                             if (!end) {
                                 step = next.step;
@@ -165,6 +175,7 @@ export class Lobby {
                 });
 
                 socket.on("end turn", () => {
+                    console.log("fin du tour");
                     if (this.isActualPlayer(player) && endturn) {
                         let players = Array.from(this.players.entries());
                         let p = player;
@@ -181,13 +192,13 @@ export class Lobby {
                         if (endMonth) {
                             this.game.mois += 1;
                             this.game.joueur_actuel = this.game.ordre_joueurs[0];
-                            
+                            this.game.plateau = CaseManager.generate_board();
                             if (this.game.mois >= 10) {
                                 this.io.sockets.in(this.uuid).emit("end");
                                 return;
                             } else {
                                 for (let i = 0; i < players.length; i++) {
-                                    this.game.joueurs[players[i][0].getUUID()].caseActuelle = 0;
+                                    this.game.joueurs[players[i][0].getUUID()].caseActuelle = -1;
                                 }
                             }
                         }

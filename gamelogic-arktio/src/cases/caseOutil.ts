@@ -7,11 +7,7 @@ export default class CaseOutil implements Case {
     id_name = "outil";
     max_number = 2;
 
-    private bufferChoice: Map<string, Objet | null>;
-
-    constructor() { 
-        this.bufferChoice = new Map();
-    }
+    private static bufferChoice: Map<string, Objet | null> =  new Map();
 
     getRandomObjet(state: State, playerID: string, ...objets: Objet[]) : Objet | null {
         let inventaire : Objet[] = state.joueurs[playerID].inventaire;
@@ -33,8 +29,8 @@ export default class CaseOutil implements Case {
     }
 
     play(state: State, playerID: string, choices: number[]) : State {
-        let outil : Objet | null = this.bufferChoice.get(playerID)!;
-        this.bufferChoice.delete(playerID);
+        let outil : Objet | null = CaseOutil.bufferChoice.get(playerID)!;
+        CaseOutil.bufferChoice.delete(playerID);
 
         if (outil != null) {
             state.joueurs[playerID].inventaire.push(outil);
@@ -46,7 +42,7 @@ export default class CaseOutil implements Case {
     prepare(state: State, playerID: string, step: number) : TypeReponse {
         let s: State = State.createFrom(state);
         let outil: Objet | null = this.getChoix(s, playerID);
-        this.bufferChoice.set(playerID, outil);
+        CaseOutil.bufferChoice.set(playerID, outil);
 
         if (outil == null) 
             return { titre: "Vous n'avez rien trouvé", messages: ["Il ne se passe absolument rien"] };

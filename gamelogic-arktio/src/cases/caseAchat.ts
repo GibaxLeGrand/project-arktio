@@ -31,7 +31,7 @@ export default class CaseAchat implements Case {
 
     prepare(state: State, playerID: string, step: number) : TypeReponse {
         let s = State.createFrom(state);
-        let choix = this.choiceOfPlayer(state, playerID);
+        let choix = this.choiceOfPlayer(s, playerID);
         let messages = ["Ne rien acheter"];
 
         for (let i=0; i<choix.length; i++) {
@@ -55,7 +55,7 @@ export default class CaseAchat implements Case {
             }
 
             let own = false;
-            for (let j=0; i<state.joueurs[playerID].inventaire.length; j++) {
+            for (let j=0; j<state.joueurs[playerID].inventaire.length; j++) {
                 if (state.joueurs[playerID].inventaire[j] === ObjetManager.getObjet(objetsDuMois[i])) {
                    own = true;
                    break;
