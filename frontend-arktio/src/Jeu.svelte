@@ -259,7 +259,7 @@
         }
 	}
 	
-	$stateStore.subscribe( state => {
+	stateStore.subscribe(state => {
 		affichage_pions();
 	});
 
