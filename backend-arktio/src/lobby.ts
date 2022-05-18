@@ -286,12 +286,16 @@ export class Lobby {
     }
 
     public contain(player: LobbyPlayer): boolean {
+        let contains: boolean = false;
         this.players.forEach((socket, p) => {
-            if (player === p)
-                return true;
+            if (player.getUUID() === p.getUUID())
+            {
+                contains = true;
+                return;
+            }
         });
 
-        return false;
+        return contains;
     }
 
     public addPlayer(player: LobbyPlayer, socket: Socket): boolean {

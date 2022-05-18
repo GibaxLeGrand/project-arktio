@@ -18,9 +18,8 @@ export class LobbyManager {
 
     public static isInLobby(player: LobbyPlayer) :boolean{
         let array = Array.from(this.lobbies.entries());
-    
         for (let i=0; i<array.length; i++) {
-            if (array[i][1].contain(player)) {
+            if (array[i][1].getPlayers().find(p=>p.getUUID() === player.getUUID())) {
                 return true;
             }
         }
@@ -48,8 +47,9 @@ export class LobbyManager {
 
                 socket.removeAllListeners("player information");
 
-                socket.on("create lobby", (callback: (({ lobby } : { lobby: LobbyJSON }) => void)) => {
+                socket.on("create lobby", (callback: (({ valid, lobby } : { valid:boolean, lobby: LobbyJSON }) => void)) => {
                     if (this.isInLobby(player)) {
+                        callback({ valid:false, lobby: null});
                         return;
                     }
 
@@ -58,11 +58,12 @@ export class LobbyManager {
                     this.lobbies.set(lobbyUUID, lobby);
                 
                     lobby.addPlayer(player, socket);
-                    callback({ lobby: lobby.toJSON() });
+                    callback({ valid:true, lobby: lobby.toJSON() });
                 });
 
                 socket.on("join lobby", (lobbyUUID: string, callback: (({ valid, lobby } : { valid: boolean, lobby: LobbyJSON }) => void)) => { 
                     if (this.isInLobby(player)) {
+                        callback({ valid: false, lobby: null});
                         return;
                     }
                     
@@ -89,8 +90,12 @@ export class LobbyManager {
                 });
 
                 socket.on("disconnect", (reason) => {
+                    console.log("Client disconnected: %s", reason);
                     this.lobbies.forEach((lobby, uuid) => {
+                        console.log("Lobby: %s", uuid);
+                        console.log(lobby);
                         if (lobby.contain(player)) {
+                            console.log("Player %s disconnected from lobby %s", player.getUUID(), uuid);
                             lobby.removePlayer(player);
                         }
                     });

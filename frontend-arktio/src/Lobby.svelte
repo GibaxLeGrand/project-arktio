@@ -170,6 +170,7 @@
         name="msg"
         type="text"
         id="msg"
+        style="display: flex; align-items: flex-start"
         bind:value={message}
         on:keydown={(key) => {
           if (key.key == "Enter") send_message();

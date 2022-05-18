@@ -56,6 +56,23 @@ export enum Mois {
     COUNT
 }
 
+const listemois : string[] = [
+    "de Septembre",
+    "d'Octobre",
+    "de Novembre",
+    "de Décembre",
+    "de Janvier",
+    "de Février",
+    "de Mars",
+    "d'Avril",
+    "de Mai",
+    "de Juin"
+];
+
+export function getMois(mois : Mois) : string {
+    return listemois[mois];
+}
+
 export class State {
     joueurs: {[key:string] : Player} = {};
     plateau: Case[] = [];
