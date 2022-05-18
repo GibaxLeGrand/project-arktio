@@ -91,6 +91,7 @@ export class LobbyManager {
                 socket.on("disconnect", (reason) => {
                     this.lobbies.forEach((lobby, uuid) => {
                         if (lobby.contain(player)) {
+                            console.log("Player %s quit lobby %s", player.getUUID(), uuid);
                             lobby.removePlayer(player);
                         }
                     });
