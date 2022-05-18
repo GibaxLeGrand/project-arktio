@@ -1,4 +1,4 @@
-<style global>
+<style global lang="scss">
   :root {
     --turquoise: #00a19a;
     --blanc: #ffffff;
@@ -18,7 +18,7 @@
     align-items: center;
     flex-direction: column;
     height: 100%;
-    width: 98%;
+    width: 100%;
   }
 
   div {
@@ -167,9 +167,31 @@
   #tchat {
     display: inherit;
     flex-direction: column;
+    text-align: left;
+      justify-content: flex-start;
     padding: 1em;
     height: 100%;
     width: 50%;
+  }
+
+  #chat::-webkit-scrollbar {
+    width: 16px;
+    background-color: #F5F5F500;
+  }
+
+  #chat::-webkit-scrollbar-thumb
+  {
+    border-radius: 10px;
+    width: 8px;
+    -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,.3);
+    border: 3px solid var(--blanc);
+    background-color: #555;
+  }
+
+  #month {
+    font-family: var(--font_arktio);
+    text-align: center;
+    font-size: xx-large;
   }
 
   #msg,
@@ -178,7 +200,12 @@
   }
 
   #chatbox {
+    overflow: hidden;
     text-align: left;
+      display: flex;
+      align-items: flex-start;
+      flex-direction: column;
+      word-break: break-all;
     margin: 1em auto;
     padding: 1em;
     background: var(--blanc);
@@ -187,7 +214,22 @@
     width: 80%;
     height: 18em;
     color: var(--turquoise);
+    overflow-y: scroll;
   }
+  #chatbox::-webkit-scrollbar {
+    width: 16px;
+    background-color: #F5F5F500;
+  }
+
+  #chatbox::-webkit-scrollbar-thumb
+  {
+    border-radius: 10px;
+    width: 8px;
+    -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,.3);
+    border: 3px solid var(--blanc);
+    background-color: #555;
+  }
+
 
   #choix_pion {
     background-color: var(--caramel);

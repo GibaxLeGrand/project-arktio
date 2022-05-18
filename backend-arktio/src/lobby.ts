@@ -192,7 +192,14 @@ export class Lobby {
                         if (endMonth) {
                             this.game.mois += 1;
                             this.game.tour += 1;
-                            this.game.joueur_actuel = this.game.ordre_joueurs[0];
+
+                            for (let i = 0; i < this.game.ordre_joueurs.length; i++) {
+                                if (Array.from(this.players.entries()).find(entry => entry[0].getUUID() == this.game.ordre_joueurs[i])[1] != null) {
+                                    this.game.joueur_actuel = this.game.ordre_joueurs[i];
+                                    break;
+                                }
+                            }
+
                             this.game.plateau = CaseManager.generate_board();
                             if (this.game.mois >= 10) {
                                 this.io.sockets.in(this.uuid).emit("end");
@@ -286,12 +293,16 @@ export class Lobby {
     }
 
     public contain(player: LobbyPlayer): boolean {
+        let contains: boolean = false;
         this.players.forEach((socket, p) => {
-            if (player === p)
-                return true;
+            if (player.getUUID() === p.getUUID())
+            {
+                contains = true;
+                return;
+            }
         });
 
-        return false;
+        return contains;
     }
 
     public addPlayer(player: LobbyPlayer, socket: Socket): boolean {
@@ -393,7 +404,14 @@ export class Lobby {
             if (endMonth) {
                 this.game.mois += 1;
                 this.game.tour += 1;
-                this.game.joueur_actuel = this.game.ordre_joueurs[0];
+
+                for (let i = 0; i < this.game.ordre_joueurs.length; i++) {
+                    if (Array.from(this.players.entries()).find(entry => entry[0].getUUID() == this.game.ordre_joueurs[i])[1] != null) {
+                        this.game.joueur_actuel = this.game.ordre_joueurs[i];
+                        break;
+                    }
+                }
+                
                 this.game.plateau = CaseManager.generate_board();
                 if (this.game.mois >= 10) {
                     this.io.sockets.in(this.uuid).emit("end");

@@ -27,9 +27,13 @@
 
   async function new_game() {
     // Create random 6 int id
-    get(socketStore).emit("create lobby", ({ lobby } : { lobby: LobbyJSON }) => {
-      lobbyStore.set(lobby);
-      router.goto("/lobby/" + lobby.uuid);
+    get(socketStore).emit("create lobby", ({valid, lobby } : {valid: boolean, lobby: LobbyJSON }) => {
+        if (valid) {
+            lobbyStore.set(lobby);
+            router.goto("/lobby/" + lobby.uuid);
+        } else {
+            alert("Une erreur est survenue lors de la création du lobby");
+        }
     });
   }
 
@@ -39,7 +43,7 @@
         lobbyStore.set(lobby);
         router.goto("/lobby/" + lobby.uuid);
       } else {
-        alert("Invalid id");
+          alert("Une erreur est survenue lors dans l'entrée dans lobby");
       }
     });
   }
@@ -57,7 +61,7 @@
   <div class="boutons">
     <form class="connection">
       <button id="creer" on:click={()=>new_game()}>Créer une partie</button>
-      <input bind:value={id_partie} on:input|preventDefault={(event)=>validate_input(event.target["value"])} />
+      <input bind:value={id_partie} on:input|preventDefault={(event)=>validate_input(event.target["value"])} placeholder=" ID de la partie : (123456)"/>
       <button id="rejoindre" on:click={join_game}>Rejoindre une partie</button>
       <button id="retour" on:click={()=>router.goto("/")}>Retour</button>
     </form>

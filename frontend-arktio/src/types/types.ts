@@ -30,9 +30,9 @@ export interface Case {
     id_name: string;
 }
 
-
 export interface Player {
     id: string;
+    nom: string;
     inventaire : Objet[];
     argent : number;
     pointTerre: number;
@@ -41,7 +41,6 @@ export interface Player {
     statut : number;
     avertissement: number;
 }
-
 
 export enum Mois {
     SEPTEMBRE,
@@ -55,6 +54,23 @@ export enum Mois {
     MAI,
     JUIN,
     COUNT
+}
+
+const listemois : string[] = [
+    "de Septembre",
+    "d'Octobre",
+    "de Novembre",
+    "de Décembre",
+    "de Janvier",
+    "de Février",
+    "de Mars",
+    "d'Avril",
+    "de Mai",
+    "de Juin"
+];
+
+export function getMois(mois : Mois) : string {
+    return listemois[mois];
 }
 
 export class State {

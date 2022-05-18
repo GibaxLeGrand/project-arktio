@@ -7,7 +7,7 @@
 	} from "./stores/storeLibrary";
 	import { router } from "tinro";
 	import { get } from "svelte/store";
-	import { LobbyJSON, State, TypeReponse } from "./types/types";
+	import {getMois, LobbyJSON, Player, PlayerJSON, State, TypeReponse} from "./types/types";
     import {onDestroy, onMount} from "svelte";
 
 	// import { loop_guard } from "svelte/internal"; // c'est quoi ça ?
@@ -47,7 +47,7 @@
 
 	// listener pour toute réception de message
 	export function startturn() {
-		let container: HTMLElement = document.getElementById("conteneur");
+		let container: HTMLElement = document.getElementById("entries");
 		container.innerHTML = "";
 
 		if ($stateStore.joueur_actuel === $userStore.uuid) {
@@ -77,11 +77,12 @@
 
 	function rollDice() {
 		$socketStore.emit("dice", (resultat: TypeReponse) => {
-			let container: HTMLElement = document.getElementById("conteneur");
+			let container: HTMLElement = document.getElementById("entries");
 			container.innerHTML = "";
 
 			let resultat_affiche: HTMLElement = document.createElement("div");
 			resultat_affiche.textContent = resultat.titre;
+			container.appendChild(resultat_affiche);
 
 			let _choix: HTMLElement = document.createElement("button");
 			_choix.classList.add(`option0`);
@@ -89,8 +90,6 @@
 			_choix.onclick = () => $socketStore.emit("play");
 			_choix.style.borderRadius = "0px";
 			container.appendChild(_choix);
-
-			container.appendChild(resultat_affiche);
 		});
 	}
 
@@ -241,8 +240,27 @@
                 stateStore.set(state);
                 startturn();
               })
+              .on("end", () => {
+                let container: HTMLElement = document.getElementById("entries");
+                container.innerHTML = "";
+                
+                let elem: HTMLElement = document.createElement("span");
+                let vainqueur: string = "";
+                let max: number | null = null;
+
+                for (let player in $stateStore.joueurs) {
+                  console.log(player);
+                  if (max === null || (max < $stateStore.joueurs[player].pointTerre)) {
+                    vainqueur = $stateStore.joueurs[player].nom;
+                    max = $stateStore.joueurs[player].pointTerre;
+                  }
+                }
+                
+                elem.textContent = `C'est la fin de la partie, le vainqueur est ${vainqueur}`;
+                container.appendChild(elem);
+              })
               .on("end action", () => {
-                let container: HTMLElement = document.getElementById("conteneur");
+                let container: HTMLElement = document.getElementById("entries");
 
                 container.innerHTML = "";
 
@@ -267,7 +285,7 @@
                 }
               })
               .on("choix", (possibilites: TypeReponse, callback: (number) => void) => {
-                let container: HTMLElement = document.getElementById("conteneur");
+                let container: HTMLElement = document.getElementById("entries");
 
                 container.innerHTML = "";
 
@@ -296,6 +314,19 @@
       startturn();
     });
 
+	function sortPlayers(playerDict: {[key:string]:Player}): Player[] {
+		const players: Player[] = Object.values(playerDict);
+		return players.sort((a, b) => {
+			if (a.pointTerre > b.pointTerre) {
+				return -1;
+			} else if (a.pointTerre < b.pointTerre) {
+				return 1;
+			} else {
+				return 0;
+			}
+		});
+	}
+
 
     onDestroy(() => {
       $socketStore.off("recv message");
@@ -317,7 +348,10 @@
 				style={`background-size: contain; background-repeat: no-repeat; background-color: #ffffff; background-position:center; background-image: url(./Cases/case_${_case.id_name}.PNG);`}
 			/>
 		{/each}
-		<div id="conteneur" />
+		<div id="conteneur">
+			<h2 id="month">Mois {getMois($stateStore.mois)}</h2>
+			<div id="entries"></div>
+		</div>
 
 		<div id="titre_inventaire">Inventaire</div>
 		<div id="inventaire">
@@ -341,15 +375,17 @@
 			Envoyer
 		</button>
 		<div id="classement">
-			{#each $stateStore.ordre_joueurs as joueurID, index}
+			{#each sortPlayers($stateStore.joueurs) as joueur, index}
 				<div id={`classement_${index + 1}`}>
-					<p id="p_class">
-						{$lobbyStore.players.find((x) => x.uuid === joueurID)
-							.name}
+					<img class="pion_joueur"
+						src={`./Pions/pion_${pions[joueur.pion].img}.PNG`}
+						alt={`Icone du pion ${pions[joueur.pion].text} de ${$lobbyStore.players.find(x=>x.uuid==joueur.id).name}`}>
+					<p id="p_class" >
+						{$lobbyStore.players.find(x=>x.uuid==joueur.id).name}
 					</p>
-					<p id="p_class">{$stateStore.joueurs[joueurID].argent} €</p>
+					<p id="p_class">{joueur.argent} €</p>
 					<p id="p_class">
-						{$stateStore.joueurs[joueurID].pointTerre} pts Terre
+						{joueur.pointTerre} pts Terre
 					</p>
 				</div>
 			{/each}
@@ -387,6 +423,11 @@
 	$font_arktio: Raleway;
 
 	main {
+		// disable selection
+		-webkit-touch-callout: none;
+		-webkit-user-select: none;
+		-khtml-user-select: none;
+		-moz-user-select: none;
 		display: block;
 		width: 100%;
 		background-color: $turquoise;
@@ -515,6 +556,12 @@
 		max-height: 50px;
 	}
 
+	.pion_joueur{
+		max-height: 40px;
+		max-width: 40px;
+		float: left;
+	}
+
 	.options {
 		width: 40%;
 		align-items: center;
@@ -565,7 +612,8 @@
 		border: solid #90908f;
 		color: $gris_fonce;
 		align-items: center;
-		justify-content: space-around;
+		justify-content: space-between;
+		padding: 1em 0;
 		flex-direction: column;
 		background-color: $blanc;
 	}

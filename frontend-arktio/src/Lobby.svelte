@@ -165,10 +165,17 @@
     </div>
 
     <div id="tchat">
-      <div id="chatbox">
-        <span>Yo</span>
-      </div>
-      <input name="msg" type="text" id="msg" bind:value={message} />
+      <div id="chatbox" />
+      <input
+        name="msg"
+        type="text"
+        id="msg"
+        style="display: flex; align-items: flex-start"
+        bind:value={message}
+        on:keydown={(key) => {
+          if (key.key == "Enter") send_message();
+        }}
+      />
       <button id="envoyer" type="submit" on:click={send_message}>Envoyer</button
       >
     </div>
