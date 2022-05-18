@@ -1,4 +1,4 @@
-import { Server, Socket, } from 'socket.io';
+import { Server, Socket } from 'socket.io';
 import { LobbyPlayer } from './player';
 import { Lobby, LobbyJSON } from './lobby';
 import * as http from 'http';
@@ -10,7 +10,7 @@ export class LobbyManager {
 
     public static init(server: http.Server, port: string | number) {
         console.log(server.address());
-        LobbyManager.io = new Server(server, {path: '/socket.io'});
+        LobbyManager.io = new Server(server, {path: '/socket.io', pingInterval: 2_000, pingTimeout:5_000});
         LobbyManager.lobbies = new Map();
         LobbyManager.port = port;
         LobbyManager.setup();
