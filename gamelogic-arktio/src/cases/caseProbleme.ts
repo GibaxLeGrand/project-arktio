@@ -34,12 +34,12 @@ export default class CaseProbleme implements Case {
                 break;
             case 2: 
                 if (state.joueurs[playerID].inventaire.indexOf(ObjetManager.getObjet(30)) !== -1) {
-                    state.joueurs[playerID].argent -= 100;
                     state.joueurs[playerID].pointTerre += 20;
                     state.joueurs[playerID].inventaire.splice(state.joueurs[playerID].inventaire.indexOf(ObjetManager.getObjet(30)), 1);
                     break;
                 }
             case 1:
+                state.joueurs[playerID].argent -= 100;
                 state.joueurs[playerID].pointTerre -= 15;
                 break;
         }
