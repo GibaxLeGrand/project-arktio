@@ -52,7 +52,7 @@
 
 		if ($stateStore.joueur_actuel === $userStore.uuid) {
 			let titre: HTMLElement = document.createElement("div");
-			titre.textContent = "&#127922 Lancez votre dé &#127922";
+			titre.textContent = "🎲 Lancez votre dé 🎲";
 			container.appendChild(titre);
 
 			let _choix: HTMLElement = document.createElement("button");
