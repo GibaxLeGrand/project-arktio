@@ -61,7 +61,7 @@
   <div class="boutons">
     <form class="connection">
       <button id="creer" on:click={()=>new_game()}>Créer une partie</button>
-      <input bind:value={id_partie} on:input|preventDefault={(event)=>validate_input(event.target["value"])} />
+      <input bind:value={id_partie} on:input|preventDefault={(event)=>validate_input(event.target["value"])} placeholder=" ID de la partie : (123456)"/>
       <button id="rejoindre" on:click={join_game}>Rejoindre une partie</button>
       <button id="retour" on:click={()=>router.goto("/")}>Retour</button>
     </form>
