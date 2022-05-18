@@ -377,7 +377,10 @@
 		<div id="classement">
 			{#each sortPlayers($stateStore.joueurs) as joueur, index}
 				<div id={`classement_${index + 1}`}>
-					<p id="p_class">
+					<img class="pion_joueur"
+						src={`./Pions/pion_${pions[joueur.pion].img}.PNG`}
+						alt={`Icone du pion ${pions[joueur.pion].text} de ${$lobbyStore.players.find(x=>x.uuid==joueur.id).name}`}>
+					<p id="p_class" >
 						{$lobbyStore.players.find(x=>x.uuid==joueur.id).name}
 					</p>
 					<p id="p_class">{joueur.argent} €</p>
@@ -551,6 +554,12 @@
 	.pion {
 		max-width: 50px;
 		max-height: 50px;
+	}
+
+	.pion_joueur{
+		max-height: 40px;
+		max-width: 40px;
+		float: left;
 	}
 
 	.options {
