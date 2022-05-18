@@ -112,7 +112,8 @@ export class Lobby {
                                     end = next.end;
 
                                     if (step > next.step && next.step != -1) {
-                                        choices.pop();
+                                        for (let i=next.step; i<step; i++)
+                                            choices.pop();
                                     } else if (step == next.step) {
                                         choices.pop();
                                         choices.push(choice);
@@ -146,7 +147,8 @@ export class Lobby {
                             end = next.end;
 
                             if (step > next.step && next.step != -1) {
-                                choices.pop();
+                                for (let i=next.step; i<step; i++)
+                                    choices.pop();
                             } else if (step == next.step) {
                                 choices.pop();
                                 choices.push(choice);
